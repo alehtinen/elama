@@ -367,7 +367,7 @@ main {
     top: 50%;
     transform: translateY(-50%);
     transition: all 0.3s ease;
-    z-index: 10;
+    z-index: 100001;
 }
 
 .info-icon:hover {
@@ -387,8 +387,8 @@ main {
     font-size: 14px;
     font-weight: normal;
     white-space: normal;
-    width: calc(100vw - 40px);
-    max-width: 500px;
+    width: 90%;
+    max-width: 450px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
@@ -396,7 +396,7 @@ main {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
     z-index: 99999;
     line-height: 1.6;
-    max-height: calc(100vh - 100px);
+    max-height: 70vh;
     overflow-y: auto;
     box-sizing: border-box;
 }
@@ -461,10 +461,11 @@ main {
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 12px;
+    font-size: 14px;
     color: #f97316;
     transition: transform 0.3s ease;
     pointer-events: none;
+    z-index: 5;
 }
 
 .expandable-item.expanded .expand-icon {
@@ -472,11 +473,15 @@ main {
 }
 
 .expandable-item-content .info-icon {
-    right: 40px;
+    right: 35px;
+}
+
+.expandable-item-content .expand-icon {
+    right: 10px;
 }
 
 .expandable-item-content {
-    padding-right: 70px !important;
+    padding-right: 65px !important;
 }
 
 .nested-content {
@@ -510,11 +515,15 @@ main {
 }
 
 .expandable-subsection .nested-subsection-title.expandable {
-    padding-right: 70px;
+    padding-right: 65px;
 }
 
 .expandable-subsection .nested-subsection-title .info-icon {
-    right: 40px;
+    right: 35px;
+}
+
+.expandable-subsection .nested-subsection-title .expand-icon {
+    right: 10px;
 }
 
 .expandable-subsection .expand-icon {
@@ -522,9 +531,10 @@ main {
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 12px;
+    font-size: 14px;
     color: #f97316;
     transition: transform 0.3s ease;
+    z-index: 5;
 }
 
 .expandable-subsection.expanded .expand-icon {
@@ -710,22 +720,32 @@ footer {
 
 @media (max-width: 1024px) and (min-width: 769px) {
     /* Tablet */
+    .sidebar {
+        padding: 15px;
+        overflow-y: auto;
+    }
+    
+    .sidebar-content {
+        margin-bottom: 10px;
+    }
+    
     .pdf-buttons {
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        margin-top: 20px;
-        padding-top: 15px;
+        gap: 8px;
+        margin-top: 10px;
+        padding-top: 10px;
         border-top: 2px solid var(--border-color);
+        position: sticky;
+        bottom: 0;
+        background-color: var(--bg-secondary);
+        padding-bottom: 10px;
     }
     
     .pdf-buttons .btn-download {
         width: 100%;
-        font-size: 0.9rem;
-    }
-    
-    .sidebar {
-        padding: 15px;
+        font-size: 0.85rem;
+        padding: 10px 16px;
     }
 }
 
@@ -751,12 +771,11 @@ footer {
     }
     
     .info-icon::after {
-        width: calc(100vw - 30px);
-        max-width: none;
-        padding: 16px;
+        width: calc(100% - 40px);
+        max-width: 90vw;
+        padding: 18px;
         font-size: 13px;
-        max-height: calc(100vh - 80px);
-        margin: 0 15px;
+        max-height: 65vh;
     }
 }
 

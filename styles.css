@@ -33,7 +33,7 @@ body {
     position: fixed;
     top: 20px;
     left: 20px;
-    z-index: 1000;
+    z-index: 100000;
     background-color: var(--bg-secondary);
     border: 2px solid var(--accent-color);
     border-radius: 8px;
@@ -88,7 +88,7 @@ body {
     background-color: var(--bg-secondary);
     border-right: 2px solid var(--border-color);
     padding: 20px;
-    z-index: 900;
+    z-index: 99900;
     overflow-y: auto;
     transition: transform 0.3s ease;
     display: flex;
@@ -394,7 +394,7 @@ main {
     transition: opacity 0.3s ease;
     border: 2px solid var(--accent-color);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
-    z-index: 10000;
+    z-index: 99999;
     line-height: 1.6;
     max-height: calc(100vh - 100px);
     overflow-y: auto;
@@ -421,9 +421,10 @@ main {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 99998;
     opacity: 1;
+    pointer-events: auto;
 }
 
 /* Expandable items */
@@ -755,6 +756,7 @@ footer {
         padding: 16px;
         font-size: 13px;
         max-height: calc(100vh - 80px);
+        margin: 0 15px;
     }
 }
 

@@ -1050,6 +1050,9 @@ function initializeInfoIcons() {
     // Handle both click and touch events
     const handleInfoClick = (e) => {
         const infoIcon = e.target.closest('.info-icon');
+        const clickedOnBackdrop = activeInfoIcon && !infoIcon && 
+                                  (e.target === document.body || 
+                                   !e.target.closest('.info-icon::after'));
         
         if (infoIcon) {
             e.preventDefault();
@@ -1070,17 +1073,32 @@ function initializeInfoIcons() {
                 activeInfoIcon = infoIcon;
             }
             return false;
-        } else if (!e.target.closest('.info-icon::after')) {
-            // Clicked outside info icon and tooltip - close any active tooltip
+        } else if (clickedOnBackdrop || !infoIcon) {
+            // Clicked on backdrop or outside - close any active tooltip
             if (activeInfoIcon) {
                 activeInfoIcon.classList.remove('active');
                 activeInfoIcon = null;
+                e.preventDefault();
+                e.stopPropagation();
             }
         }
     };
     
     document.addEventListener('click', handleInfoClick, true);
     document.addEventListener('touchend', handleInfoClick, true);
+    
+    // Close tooltip when clicking on the backdrop area
+    document.addEventListener('touchstart', (e) => {
+        if (activeInfoIcon && !e.target.closest('.info-icon')) {
+            const rect = e.target.getBoundingClientRect();
+            // If clicking outside the tooltip content area
+            if (!e.target.closest('.info-icon::after')) {
+                e.preventDefault();
+                activeInfoIcon.classList.remove('active');
+                activeInfoIcon = null;
+            }
+        }
+    }, { passive: false });
     
     // Prevent expandable item clicks from interfering with info tooltips
     const preventExpandOnInfo = (e) => {

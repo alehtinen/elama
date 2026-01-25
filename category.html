@@ -85,9 +85,9 @@
                         <!-- Filled by JavaScript -->
                     </p>
                 </div>
-                <div class="flex items-center gap-1 sm:gap-2 flex-wrap">
+                <div class="flex items-center gap-1 flex-wrap">
                     <!-- Bookmarks Download -->
-                    <button onclick="showExportModal('bookmark')" class="px-2 sm:px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm">
+                    <button onclick="showExportModal('bookmark')" class="p-2 sm:px-3 sm:py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
                         </svg>
@@ -96,37 +96,49 @@
                     </button>
                     
                     <!-- Combined PDF Download -->
-                    <button onclick="showExportModal('pdf')" class="px-2 sm:px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm">
+                    <button onclick="showExportModal('pdf')" class="p-2 sm:px-3 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        <span class="lang-fi">PDF</span>
-                        <span class="lang-en hidden">PDF</span>
+                        <span class="hidden sm:inline lang-fi">PDF</span>
+                        <span class="hidden sm:inline lang-en">PDF</span>
                     </button>
                     
                     <!-- ZIP Download -->
-                    <button onclick="showExportModal('zip')" class="px-2 sm:px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm">
+                    <button onclick="showExportModal('zip')" class="p-2 sm:px-3 sm:py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"></path>
                         </svg>
-                        <span class="lang-fi">ZIP</span>
-                        <span class="lang-en hidden">ZIP</span>
+                        <span class="hidden sm:inline lang-fi">ZIP</span>
+                        <span class="hidden sm:inline lang-en">ZIP</span>
                     </button>
                     
-                    <button id="langToggle" class="px-2 sm:px-3 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium text-xs sm:text-sm">
+                    <button id="langToggle" class="p-2 sm:px-3 sm:py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium text-xs sm:text-sm">
                         EN
                     </button>
+                    <!-- Theme Toggle -->
                     <button id="themeToggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
                         </svg>
                     </button>
+                    <!-- Category Nav Burger (mobile only) -->
+                    <div class="relative md:hidden">
+                        <button id="categoryNavBtn" onclick="toggleCategoryNav()" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        <div id="categoryNavMenu" class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50">
+                            <!-- Filled by JavaScript -->
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <!-- Navigation -->
-            <nav class="border-t border-gray-200 dark:border-gray-700 py-3">
-                <div class="flex gap-4" id="categoryNav">
+            <!-- Navigation (hidden on mobile, shown on desktop) -->
+            <nav class="hidden md:block border-t border-gray-200 dark:border-gray-700 py-3">
+                <div class="flex gap-4 justify-center" id="categoryNav">
                     <!-- Filled by JavaScript -->
                 </div>
             </nav>
@@ -238,8 +250,8 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        <span class="lang-fi">Lataa kategoria PDF</span>
-                        <span class="lang-en hidden">Download category PDF</span>
+                        <span class="lang-fi">PDF</span>
+                        <span class="lang-en hidden">PDF</span>
                     </button>
                     
                     <!-- Sorting Burger Menu -->
@@ -248,10 +260,10 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                             </svg>
-                            <span class="lang-fi">Järjestä</span>
-                            <span class="lang-en hidden">Sort</span>
+                            <span class="hidden sm:inline lang-fi">Järjestä</span>
+                            <span class="hidden sm:inline lang-en">Sort</span>
                         </button>
-                        <div id="sortMenu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-10">
+                        <div id="sortMenu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50">
                             <button data-sort="default" onclick="changeSortMode('default')" class="sort-menu-item w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg text-gray-900 dark:text-white">
                                 <span class="lang-fi">Oletus</span>
                                 <span class="lang-en hidden">Default</span>
@@ -278,29 +290,38 @@
                 </div>
             </div>
 
-            <!-- Search Bar -->
-            <div class="mb-6">
+            <!-- Search Bar and Tag Filters -->
+            <div class="mb-6 flex gap-2">
                 <input 
                     type="text" 
                     id="searchInput" 
-                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                    class="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                     placeholder="">
+                <!-- Filter button -->
+                <button onclick="toggleTagFilters()" class="px-4 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg font-medium flex items-center gap-2 whitespace-nowrap">
+                    <span>
+                        <span class="lang-fi">Suodata tageilla</span>
+                        <span class="lang-en hidden">Filter by tags</span>
+                    </span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
             </div>
 
-            <!-- Tag Filters -->
+            <!-- Tag Filters Container -->
             <div class="mb-6">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        <span class="lang-fi">Suodata tageilla:</span>
-                        <span class="lang-en hidden">Filter by tags:</span>
-                    </h3>
-                    <button id="multiSelectToggle" class="px-3 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-sm font-medium">
-                        <span class="lang-fi">Valitse useita</span>
-                        <span class="lang-en hidden">Multi-select</span>
-                    </button>
-                </div>
-                <div id="tagFilters" class="flex flex-wrap gap-2">
-                    <!-- Tags will be inserted here by JavaScript -->
+                <!-- Tag filters container (hidden by default on all screens) -->
+                <div id="tagFiltersContainer" class="hidden">
+                    <div class="flex justify-end items-center mb-3">
+                        <button id="multiSelectToggle" class="px-3 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-sm font-medium">
+                            <span class="lang-fi">Valitse useita</span>
+                            <span class="lang-en hidden">Multi-select</span>
+                        </button>
+                    </div>
+                    <div id="tagFilters" class="flex flex-wrap gap-2">
+                        <!-- Tags will be inserted here by JavaScript -->
+                    </div>
                 </div>
             </div>
 
@@ -356,9 +377,11 @@
         // Generate navigation menu
         function generateCategoryNav() {
             const nav = document.getElementById('categoryNav');
+            const mobileNav = document.getElementById('categoryNavMenu');
             if (!nav || !window.mainTagDefinitions) return;
             
             nav.innerHTML = '';
+            if (mobileNav) mobileNav.innerHTML = '';
             
             // Add "All" link
             const allLink = document.createElement('a');
@@ -367,9 +390,20 @@
             allLink.innerHTML = '<span class="lang-fi">← Kaikki</span><span class="lang-en hidden">← All</span>';
             nav.appendChild(allLink);
             
+            // Add mobile "All" link
+            if (mobileNav) {
+                const mobileAllLink = document.createElement('a');
+                mobileAllLink.href = 'index.html';
+                mobileAllLink.className = 'block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors';
+                mobileAllLink.innerHTML = '<span class="lang-fi">← Kaikki</span><span class="lang-en hidden">← All</span>';
+                mobileNav.appendChild(mobileAllLink);
+            }
+            
             // Add category links
             Object.keys(window.mainTagDefinitions).forEach(mainTagId => {
                 const mainTagDef = window.mainTagDefinitions[mainTagId];
+                
+                // Desktop link
                 const link = document.createElement('a');
                 link.href = `category.html?category=${mainTagId}`;
                 
@@ -381,6 +415,21 @@
                 
                 link.textContent = mainTagDef[currentLang];
                 nav.appendChild(link);
+                
+                // Mobile link
+                if (mobileNav) {
+                    const mobileLink = document.createElement('a');
+                    mobileLink.href = `category.html?category=${mainTagId}`;
+                    
+                    if (mainTagId === categoryId) {
+                        mobileLink.className = 'block px-4 py-3 bg-primary text-white font-medium';
+                    } else {
+                        mobileLink.className = 'block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors';
+                    }
+                    
+                    mobileLink.textContent = mainTagDef[currentLang];
+                    mobileNav.appendChild(mobileLink);
+                }
             });
         }
         

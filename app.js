@@ -139,8 +139,8 @@ function generateHeroCards() {
                     <div class="w-16 h-16 bg-${mainTagDef.color}-100 dark:bg-${mainTagDef.color}-900 rounded-2xl flex items-center justify-center flex-shrink-0">
                         ${iconHtml}
                     </div>
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
+                    <div class="min-w-0 flex-1">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white break-words">
                             ${mainTagDef[currentLang]}
                         </h3>
                         <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
@@ -295,14 +295,14 @@ function updateViewToggle() {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
             </svg>
-            <span>${currentLang === 'fi' ? 'Ruudukko' : 'Grid'}</span>
+            <span class="hidden sm:inline">${currentLang === 'fi' ? 'Ruudukko' : 'Grid'}</span>
         `;
     } else {
         toggle.innerHTML = `
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
             </svg>
-            <span>${currentLang === 'fi' ? 'Lista' : 'List'}</span>
+            <span class="hidden sm:inline">${currentLang === 'fi' ? 'Lista' : 'List'}</span>
         `;
     }
 }
@@ -423,19 +423,21 @@ function renderContent(searchTerm = '') {
                         ${tagLabel}
                     </h3>
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <div class="inline-block min-w-full align-middle">
+                            <div class="overflow-hidden">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead class="bg-gray-50 dark:bg-gray-900">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                <tr class="sm:table-row h-2 sm:h-auto">
+                                    <th class="px-6 py-0 sm:py-3 text-left text-xs font-medium text-transparent sm:text-gray-500 dark:sm:text-gray-400 uppercase tracking-wider">
                                         ${currentLang === 'fi' ? 'Otsikko' : 'Title'}
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    <th class="hidden md:table-cell px-6 py-0 sm:py-3 text-left text-xs font-medium text-transparent sm:text-gray-500 dark:sm:text-gray-400 uppercase tracking-wider">
                                         ${currentLang === 'fi' ? 'Kuvaus' : 'Description'}
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    <th class="hidden lg:table-cell px-6 py-0 sm:py-3 text-left text-xs font-medium text-transparent sm:text-gray-500 dark:sm:text-gray-400 uppercase tracking-wider">
                                         ${currentLang === 'fi' ? 'Tagit' : 'Tags'}
                                     </th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-16"></th>
+                                    <th class="px-6 py-0 sm:py-3 text-center text-xs font-medium text-transparent sm:text-gray-500 dark:sm:text-gray-400 uppercase tracking-wider w-16"></th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -452,12 +454,12 @@ function renderContent(searchTerm = '') {
                                                     ${item.title[currentLang]}
                                                 </div>
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="hidden md:table-cell px-6 py-4">
                                                 <div class="text-sm text-gray-600 dark:text-gray-400 max-w-md line-clamp-2">
                                                     ${item.description[currentLang]}
                                                 </div>
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="hidden lg:table-cell px-6 py-4">
                                                 <div class="flex flex-wrap gap-1">
                                                     ${item.tags.map(tag => {
                                                         const tagDef = window.tagDefinitions[tag];
@@ -479,6 +481,8 @@ function renderContent(searchTerm = '') {
                                 }).join('')}
                             </tbody>
                         </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -592,6 +596,34 @@ function toggleSortMenu() {
     const menu = document.getElementById('sortMenu');
     if (menu) {
         menu.classList.toggle('hidden');
+    }
+}
+
+function toggleCategoryNav() {
+    const menu = document.getElementById('categoryNavMenu');
+    if (menu) {
+        menu.classList.toggle('hidden');
+    }
+}
+
+function toggleTagFilters() {
+    const container = document.getElementById('tagFiltersContainer');
+    if (container) {
+        const isHidden = container.classList.contains('hidden');
+        if (isHidden) {
+            container.classList.remove('hidden');
+            container.classList.add('block');
+        } else {
+            container.classList.add('hidden');
+            container.classList.remove('block');
+        }
+    }
+}
+
+function toggleMultiSelect() {
+    const button = document.getElementById('multiSelectToggle');
+    if (button) {
+        button.click();
     }
 }
 

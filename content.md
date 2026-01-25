@@ -3,7 +3,7 @@
 ## Main Tags
 
 
-arki: Arki | Everyday Life | green | 
+arki: Arki | Everyday | green | 
 opiskelu: Opiskelu | Studies | blue | 
 terveys: Terveys | Health | purple | 
 työttömyys: Työttömyys | Unemployment | red | 

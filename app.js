@@ -471,7 +471,7 @@ function renderContent(searchTerm = '') {
                                     <th class="hidden xl:table-cell px-6 py-0 sm:py-3 text-left text-xs font-medium text-transparent sm:text-gray-500 dark:sm:text-gray-400 uppercase tracking-wider">
                                         ${currentLang === 'fi' ? 'Tagit' : 'Tags'}
                                     </th>
-                                    <th class="hidden lg:table-cell px-6 py-0 sm:py-3 text-left text-xs font-medium text-transparent sm:text-gray-500 dark:sm:text-gray-400 uppercase tracking-wider w-32">
+                                    <th class="hidden lg:table-cell px-6 py-0 sm:py-3 text-center text-xs font-medium text-transparent sm:text-gray-500 dark:sm:text-gray-400 uppercase tracking-wider w-32">
                                         ${currentLang === 'fi' ? 'Päivämäärä' : 'Date'}
                                     </th>
                                     <th class="px-6 py-0 sm:py-3 text-center text-xs font-medium text-transparent sm:text-gray-500 dark:sm:text-gray-400 uppercase tracking-wider w-16"></th>
@@ -770,7 +770,7 @@ function showItemModal(index) {
     const modalTags = document.getElementById('modalTags');
     modalTags.innerHTML = item.tags.map(tag => {
         const tagDef = window.tagDefinitions[tag];
-        return tagDef ? `<span class="px-3 py-1 text-sm rounded-full bg-${tagDef.color}-100 dark:bg-${tagDef.color}-900 text-${tagDef.color}-800 dark:text-${tagDef.color}-200">${tagDef[currentLang]}</span>` : '';
+        return tagDef ? `<span onclick="filterByTagFromModal('${tag}')" class="px-3 py-1 text-sm rounded-full bg-${tagDef.color}-100 dark:bg-${tagDef.color}-900 text-${tagDef.color}-800 dark:text-${tagDef.color}-200 cursor-pointer hover:bg-${tagDef.color}-200 dark:hover:bg-${tagDef.color}-800 transition-colors">${tagDef[currentLang]}</span>` : '';
     }).join('');
     
     // Show dates
@@ -800,6 +800,35 @@ function showTipModal(item) {
 
 function closeTipModal() {
     document.getElementById('tipModal').classList.add('hidden');
+}
+
+// Filter by tag from modal
+function filterByTagFromModal(tag) {
+    // Close the modal
+    closeTipModal();
+    
+    // Clear category filter to show all content
+    currentMainTag = null;
+    
+    // Regenerate navigation to highlight "All" button
+    if (typeof generateCategoryNav === 'function') {
+        generateCategoryNav();
+    }
+    
+    // Show tag filters if hidden
+    const container = document.getElementById('tagFiltersContainer');
+    if (container && container.classList.contains('hidden')) {
+        container.classList.remove('hidden');
+        container.classList.add('block');
+    }
+    
+    // Clear existing filters and add the clicked tag
+    activeFilters.clear();
+    activeFilters.add(tag);
+    
+    // Update UI
+    renderTagFilters();
+    renderContent();
 }
 
 // Close modal on outside click

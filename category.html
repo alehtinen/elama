@@ -378,6 +378,13 @@
         const urlParams = new URLSearchParams(window.location.search);
         const categoryId = urlParams.get('category');
         
+        // Show all content (clear category filter)
+        function showAllContent() {
+            currentMainTag = null;
+            generateCategoryNav();
+            renderContent();
+        }
+        
         // Generate navigation menu
         function generateCategoryNav() {
             const nav = document.getElementById('categoryNav');
@@ -387,19 +394,43 @@
             nav.innerHTML = '';
             if (mobileNav) mobileNav.innerHTML = '';
             
-            // Add "All" link
-            const allLink = document.createElement('a');
-            allLink.href = 'index.html';
-            allLink.className = 'px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors font-medium';
-            allLink.innerHTML = '<span class="lang-fi">← Kaikki</span><span class="lang-en">← All</span>';
+            // Add "Home" link
+            const homeLink = document.createElement('a');
+            homeLink.href = 'index.html';
+            homeLink.className = 'px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors font-medium';
+            homeLink.textContent = currentLang === 'fi' ? '← Etusivu' : '← Home';
+            nav.appendChild(homeLink);
+            
+            // Add mobile "Home" link
+            if (mobileNav) {
+                const mobileHomeLink = document.createElement('a');
+                mobileHomeLink.href = 'index.html';
+                mobileHomeLink.className = 'block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors';
+                mobileHomeLink.textContent = currentLang === 'fi' ? '← Etusivu' : '← Home';
+                mobileNav.appendChild(mobileHomeLink);
+            }
+            
+            // Add "All" button (shows all content on this page)
+            const allLink = document.createElement('button');
+            allLink.onclick = showAllContent;
+            if (!currentMainTag) {
+                allLink.className = 'px-4 py-2 rounded-lg bg-primary text-white font-medium';
+            } else {
+                allLink.className = 'px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors font-medium';
+            }
+            allLink.textContent = currentLang === 'fi' ? 'Kaikki' : 'All';
             nav.appendChild(allLink);
             
-            // Add mobile "All" link
+            // Add mobile "All" button
             if (mobileNav) {
-                const mobileAllLink = document.createElement('a');
-                mobileAllLink.href = 'index.html';
-                mobileAllLink.className = 'block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors';
-                mobileAllLink.innerHTML = '<span class="lang-fi">← Kaikki</span><span class="lang-en">← All</span>';
+                const mobileAllLink = document.createElement('button');
+                mobileAllLink.onclick = showAllContent;
+                if (!currentMainTag) {
+                    mobileAllLink.className = 'block px-4 py-3 bg-primary text-white font-medium w-full text-left';
+                } else {
+                    mobileAllLink.className = 'block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors w-full text-left';
+                }
+                mobileAllLink.textContent = currentLang === 'fi' ? 'Kaikki' : 'All';
                 mobileNav.appendChild(mobileAllLink);
             }
             
@@ -411,13 +442,13 @@
                 const link = document.createElement('a');
                 link.href = `category.html?category=${mainTagId}`;
                 
-                if (mainTagId === categoryId) {
+                if (mainTagId === currentMainTag) {
                     link.className = 'px-4 py-2 rounded-lg bg-primary text-white font-medium';
                 } else {
                     link.className = 'px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors font-medium';
                 }
                 
-                link.innerHTML = `<span class="lang-fi">${mainTagDef.fi}</span><span class="lang-en">${mainTagDef.en}</span>`;
+                link.textContent = mainTagDef[currentLang];
                 nav.appendChild(link);
                 
                 // Mobile link
@@ -425,13 +456,13 @@
                     const mobileLink = document.createElement('a');
                     mobileLink.href = `category.html?category=${mainTagId}`;
                     
-                    if (mainTagId === categoryId) {
+                    if (mainTagId === currentMainTag) {
                         mobileLink.className = 'block px-4 py-3 bg-primary text-white font-medium';
                     } else {
                         mobileLink.className = 'block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors';
                     }
                     
-                    mobileLink.innerHTML = `<span class="lang-fi">${mainTagDef.fi}</span><span class="lang-en">${mainTagDef.en}</span>`;
+                    mobileLink.textContent = mainTagDef[currentLang];
                     mobileNav.appendChild(mobileLink);
                 }
             });

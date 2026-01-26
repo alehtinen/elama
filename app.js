@@ -899,7 +899,8 @@ function renderAllLinks(filterCategory = null) {
                 itemTitle: itemTitle,
                 name: itemTitle,
                 url: item.url,
-                description: item.description[currentLang]
+                description: item.description[currentLang],
+                item: item
             });
         }
         
@@ -918,7 +919,8 @@ function renderAllLinks(filterCategory = null) {
                     itemTitle: itemTitle,
                     name: link.name || itemTitle,
                     url: link.url,
-                    description: link.description || ''
+                    description: link.description || '',
+                    item: item
                 });
             }
         });
@@ -949,14 +951,14 @@ function renderAllLinks(filterCategory = null) {
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    ${allLinks.map(link => `
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    ${allLinks.map((link, index) => `
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" data-link-index="${index}">
                             ${showCategory ? `<td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">${link.category}</td>` : ''}
                             <td class="px-4 py-3 text-sm text-gray-900 dark:text-white">${link.itemTitle}</td>
                             <td class="px-4 py-3 text-sm text-gray-900 dark:text-white break-words">${link.name}</td>
                             <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 break-words">${link.description}</td>
                             <td class="px-4 py-3 text-sm">
-                                <a href="${link.url}" target="_blank" class="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline">
+                                <a href="${link.url}" target="_blank" class="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline" onclick="event.stopPropagation()">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                                     </svg>
@@ -968,6 +970,23 @@ function renderAllLinks(filterCategory = null) {
                 </tbody>
             </table>
         `;
+        
+        // Add click handlers to rows - use setTimeout to ensure DOM is ready
+        setTimeout(() => {
+            content.querySelectorAll('tr[data-link-index]').forEach((row) => {
+                const index = parseInt(row.getAttribute('data-link-index'));
+                const link = allLinks[index];
+                if (link && link.item) {
+                    // Store item reference on the element
+                    row._itemData = link.item;
+                    row.addEventListener('click', function() {
+                        if (this._itemData) {
+                            showTipModal(this._itemData);
+                        }
+                    });
+                }
+            });
+        }, 0);
     } else {
         content.innerHTML = `<p class="text-gray-600 dark:text-gray-400">${currentLang === 'fi' ? 'Ei linkkejä' : 'No links found'}</p>`;
     }

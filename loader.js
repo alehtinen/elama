@@ -165,7 +165,14 @@ function parseMarkdownContent(markdown) {
             } else if (trimmedLine.startsWith('Type: ')) {
                 currentItem.type = trimmedLine.substring(6).trim();
             } else if (trimmedLine.startsWith('Main Tag: ')) {
-                currentItem.mainTag = trimmedLine.substring(10).trim();
+                const mainTagValue = trimmedLine.substring(10).trim();
+                // Support multiple main tags separated by commas
+                if (mainTagValue.includes(',')) {
+                    currentItem.mainTags = mainTagValue.split(',').map(t => t.trim());
+                    currentItem.mainTag = currentItem.mainTags[0]; // Backward compatibility
+                } else {
+                    currentItem.mainTag = mainTagValue;
+                }
             } else if (trimmedLine.startsWith('Tags: ')) {
                 const tagList = trimmedLine.substring(6).trim();
                 currentItem.tags = tagList.split(',').map(t => t.trim());
@@ -187,6 +194,9 @@ function parseMarkdownContent(markdown) {
                 currentItem.updated = trimmedLine.substring(9).trim();
             } else if (trimmedLine.startsWith('Last Checked: ')) {
                 currentItem.lastChecked = trimmedLine.substring(14).trim();
+            } else if (trimmedLine.startsWith('PDF: ')) {
+                const pdfValue = trimmedLine.substring(5).trim().toLowerCase();
+                currentItem.downloadablePDF = pdfValue === 'true' || pdfValue === 'yes';
             } else if (trimmedLine.startsWith('Description FI: ') || trimmedLine.startsWith('Description (fi): ')) {
                 currentItem.description.fi = trimmedLine.includes('(fi)') ? trimmedLine.substring(18).trim() : trimmedLine.substring(16).trim();
             } else if (trimmedLine.startsWith('Description EN: ') || trimmedLine.startsWith('Description (en): ')) {

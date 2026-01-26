@@ -9,6 +9,7 @@ terveys: Terveys | Health | purple |
 työttömyys: Työttömyys | Unemployment | red | 
 vapaa-aika: Vapaa-aika | Leisure | indigo
 tampere: Tampere | Tampere | orange
+ilmaiset: Ilmaista | Free stuff | cyan
 
 ## Types
 
@@ -46,6 +47,7 @@ networking: Verkostoituminen | Networking | pink
 experience: Kokemus | Experience | amber
 online-presence: Verkkonäkyvyys | Online Presence | cyan
 online: Verkko | Online | teal
+outdoors: Ulkoilu | Outdoors | red
 
 ## Content
 
@@ -95,275 +97,93 @@ Links EN: https://www.bank.fi/en/financial-advice/|Bank of Finland|Financial man
 Added: 20.01.2024
 Updated: 23.01.2024
 
-### Kela-tuet | Kela Benefits
-Type: link
-Main Tag: työttömyys
-Tags: support, subsidy
-URL: https://www.kela.fi/
-Description FI: Kelan sivuilta löydät tietoa kaikista sosiaaliturvan etuuksista.
-Description EN: Kela's website contains information about all social security benefits.
-Links: https://www.kela.fi/|Kela|Sosiaaliturvan etusivu
-Links FI: https://www.kela.fi/tyottomyysturva|Työttömyysturva|Tietoa työttömyysetuuksista, https://www.kela.fi/asumistuki|Asumistuki|Hae asumistukea
-Links EN: https://www.kela.fi/web/en/unemployment|Unemployment benefits|Information about unemployment benefits, https://www.kela.fi/web/en/housing-allowance|Housing allowance|Apply for housing allowance
-Added: 15.01.2024
-
-### Liikunta hyvinvoinnin tukena | Exercise for Well-being
-Type: tip
-Main Tag: terveys
-Tags: sports, wellbeing, free
-Description FI: Säännöllinen liikunta parantaa fyysistä ja henkistä hyvinvointia. Aloita pienillä askelilla, kuten 15 minuutin päivittäisellä kävelyllä.
-Description EN: Regular exercise improves physical and mental well-being. Start with small steps, like a 15-minute daily walk.
-Body FI: Liikunta on yksi parhaista tavoista parantaa kokonaisvaltaista hyvinvointia:
-
-**Hyödyt:**
-- Parempi mieliala ja vähemmän stressiä
-- Parempi uni
-- Enemmän energiaa
-- Parempi fyysinen kunto
-
-**Aloitusvinkkejä:**
-* Aloita pienellä - 15 minuuttia päivässä riittää
-* Valitse laji josta pidät
-* Liiku kaverin kanssa
-* Käytä ilmaisia ulkoliikuntapaikkoja
-
-Säännöllisyys on tärkeämpää kuin intensiteetti!
-Body EN: Exercise is one of the best ways to improve overall well-being:
-
-**Benefits:**
-- Better mood and less stress
-- Better sleep
-- More energy
-- Better physical fitness
-
-**Tips for getting started:**
-* Start small - 15 minutes a day is enough
-* Choose a sport you enjoy
-* Exercise with a friend
-* Use free outdoor exercise facilities
-
-Consistency is more important than intensity!
-Links: https://www.ukkinstituutti.fi/liikkumisensuositukset|UKK-instituutti|Liikkumisen suositukset, https://www.kaypahoito.fi/hoi50075|Käypä hoito|Liikunnan vaikutukset terveyteen
-Added: 18.01.2024
-Updated: 22.01.2024
-
-### Opiskelun rahoitus | Study Financing
-Type: link
-Main Tag: opiskelu
-Tags: education, support, subsidy
-URL: https://www.kela.fi/opintotuki
-Description FI: Tietoa opintotuesta, opintolainasta ja muista opiskelun rahoitusmahdollisuuksista.
-Description EN: Information about student financial aid, student loans and other study financing options.
-Links: https://www.kela.fi/opintotuki|Opintotuki|Kelan opintotukisivu
-Added: 16.01.2024
-
-### Työmarkkinatori - Avoimet työpaikat | Labour Market - Open Positions
-Type: link
-Main Tag: työttömyys
-Tags: work, public-service, job-search
-URL: https://tyomarkkinatori.fi/henkiloasiakkaat/avoimet-tyopaikat/
-Description FI: TE-toimiston virallinen työnvälityspalvelu, jossa voit hakea työpaikkoja, jättää oman työhakemuksesi työnantajien nähtäväksi ja saada tietoa koulutuksista.
-Description EN: Official employment service where you can search for jobs, submit your job application for employers to view, and get information about training.
-Links: https://tyomarkkinatori.fi/henkiloasiakkaat/avoimet-tyopaikat/|Työmarkkinatori|Avoimet työpaikat
-Added: 23.01.2026
-
-### Ruoan säilyttäminen oikein | Proper Food Storage
+### Vuokra-asunnon haku | Finding a Rental Apartment
 Type: tip
 Main Tag: arki
-Tags: resources, free, skills
-Description FI: Säilytä vihannekset jääkaapin alaosassa ja leipä huoneenlämmössä. Pakasta ylimääräiset ruuat pienissä annoksissa. Näin vältät ruokahävikkiä ja säästät rahaa.
-Description EN: Store vegetables in the bottom of the fridge and bread at room temperature. Freeze extra food in small portions. This way you avoid food waste and save money.
-Links: https://www.ruokavirasto.fi/henkiloasiakkaat/tietoa-elintarvikkeista/sailyttaminen/
-Added: 22.01.2024
+PDF: true
+Tags: resources, support
+Description FI: Ohjeita ja linkkejä vuokra-asunnon hakuun. Tärkeimmät asuntoilmoitussivustot ja vinkkejä asunnon löytämiseen.
+Description EN: Guide and links for finding a rental apartment. Most important rental websites and tips for finding a home.
+Body FI: Vuokra-asuntoa etsiessä kannattaa käyttää useita kanavia löytääksesi sopivan asunnon.
 
-### Opintopolku - Koulutushaku | Opintopolku - Education Search
+**Tärkeimmät asuntoilmoitussivustot:**
+- Käy läpi alla olevat linkit säännöllisesti
+- Aseta hakuvahdit sähköpostiin
+- Ole nopea - hyvät asunnot menevät nopeasti
+
+**Muita vaihtoehtoja:**
+- Facebook-ryhmät: Etsi alueesi vuokra-asunto -ryhmiä (esim. "Vuokra-asunnot Tampere", "Asunnot vuokralle [kaupunki]")
+- Ilmoita itse asunnon tarpeestasi sosiaalisessa mediassa
+- Ota yhteyttä asuntoyhtiöihin ja vuokranantajiin suoraan
+
+**Vinkkejä:**
+- Valmistaudu esittäytymään ja kertomaan itsestäsi
+- Pidä tarvittavat paperit valmiina (palkkatodistus, työtodistus, tarvittaessa takaus)
+- Varaudu maksamaan takuuvuokra
+Body EN: When searching for a rental apartment, it's good to use multiple channels to find a suitable home.
+
+**Main rental websites:**
+- Check the links below regularly
+- Set up email alerts
+- Be quick - good apartments are rented fast
+
+**Other options:**
+- Facebook groups: Search for rental apartment groups in your area (e.g., "Rental apartments [city name]")
+- Post about your apartment needs on social media
+- Contact housing companies and landlords directly
+
+**Tips:**
+- Be prepared to introduce yourself
+- Keep necessary documents ready (salary statement, employment certificate, guarantor if needed)
+- Be prepared to pay a security deposit
+Links: https://www.oikotie.fi/vuokra-asunnot|Oikotie vuokra-asunnot|Suomen suurin asuntoilmoitussivusto, https://www.vuokraovi.com/|Vuokraovi|Vuokra-asuntojen ilmoituspalvelu, https://www.tori.fi/koko_suomi/asunnot|Tori.fi vuokra-asunnot|Ilmoituksia vuokra-asunnoista
+Added: 26.01.2026
+Last Checked: 26.01.2026
+Updated: 26.01.2026
+
+### Ulkoilumahdollisuuksia Tampereen alueella| Outdoor activities in Tampere
 Type: link
-Main Tag: opiskelu
-Tags: education, public-service
-URL: https://opintopolku.fi
-Description FI: Opetus- ja kulttuuriministeriön ylläpitämä palvelu, josta löydät kaikki Suomen koulutukset ja oppilaitokset.
-Description EN: Service maintained by the Ministry of Education and Culture where you can find all Finnish education programs and educational institutions.
-Links: https://opintopolku.fi|Opintopolku|Koulutushaku
-Added: 23.01.2026
+Main Tag: tampere
+Tags: outdoors, tampere, leisure
+PDF: true
+URL: https://ulkoilutampereenseutu.fi/
+Description FI: Karttapalvelu ja linkkejä joista näkee ulkoilumahdollisuudet Tampereen alueella. Osa linkeistä näyttää myös muiden alueiden mahdollisuuksia.
+Description EN: A map service that shows different kind of outdoors activities and their locations at Tampere area.
+Links FI: https://ulkoilutampereenseutu.fi/|Tampereen ulkoilukartta|Kartta josta näkee ulkoilumahdollisuudet Tampereella, https://kartat.tampere.fi/oskari/|Oskari-karttapalvelu|Tampereen kaupugin karttapalvelu, https://www.tulikartta.fi/index.php?type=Kaikki&lataus=1|Tulikartta|Tulentekopaikat Suomessa, https://www.luontoon.fi/fi|Luontoo.fi|Metsähallituksen ylläpitämä ulkoilutietosivu
+Links EN: https://outdoorstampereregion.fi/|Tampere's outdoors activity map|Map to find outdoor activity places, https://outdoorstampere.fi/en/|Info about nature and hiking at Tampere|Tampere's nature and hiking destinations at your fingertips
+Added: 26.01.2026
+Last Checked: 26.01.2026
+Updated: 26.01.2026
 
-### Mielenterveyden tuki | Mental Health Support
-Type: tip
-Main Tag: terveys
-Tags: support, wellbeing, free
-Description FI: Jos tunnet olosi masentuneeksi tai ahdistuneeksi, älä epäröi hakea apua. Voit soittaa Mieli ry:n kriisipuhelimeen tai varata ajan terveyskeskukseen.
-Description EN: If you feel depressed or anxious, don't hesitate to seek help. You can call the Mental Health Finland crisis hotline or book an appointment at a health center.
-Links: https://mieli.fi/fi/tukea-ja-apua/kriisipuhelin/, https://www.thl.fi/fi/web/mielenterveys/mielenterveyden-edistaminen
-Added: 19.01.2024
-
-### TAMK - Tampereen ammattikorkeakoulu | TAMK - Tampere University of Applied Sciences
+### Ilmaiset tapahtumat Tampereella | Free Events in Tampere
 Type: link
-Main Tag: opiskelu
-Tags: education, university, tampere
-URL: https://www.tuni.fi/tamk
-Description FI: Monialainen ammattikorkeakoulu joka tarjoaa laadukasta koulutusta tekniikasta terveydenhoitoon, liiketaloudesta kulttuurialaan.
-Description EN: Multidisciplinary university of applied sciences offering quality education from technology to healthcare, business to culture.
-Links: https://www.tuni.fi/tamk|TAMK|Tampereen ammattikorkeakoulu
-Added: 23.01.2026
+Main Tag: ilmaiset, tampere
+Tags: free, tampere, culture, leisure
+URL: https://tapahtumat.tampere.fi/fi-FI/search?categories=6170601b7a45476ff366cb18&contentTab=time-sensetive&sort=startDate
+Description FI: Tampereen kaupungin tapahtumakalenterista löydät kaikki ilmaiset tapahtumat. Kulttuuritapahtumat, konsertit, näyttelyt ja paljon muuta.
+Description EN: Find all free events in Tampere from the city's event calendar. Cultural events, concerts, exhibitions and much more.
+Added: 26.01.2026
+Last Checked: 26.01.2026
+Updated: 26.01.2026
 
-### Verkostoitumisen vinkit | Networking Tips
-Type: tip
-Main Tag: työttömyys
-Tags: networking, skills, career
-Description FI: Käytä LinkedIniä aktiivisesti, osallistu alan tapahtumiin ja kerro tutuille että etsit töitä. Moni työpaikka täyttyy suositusten kautta.
-Description EN: Use LinkedIn actively, attend industry events and tell your acquaintances that you're looking for work. Many jobs are filled through recommendations.
-Links: https://www.linkedin.com/, https://www.te-palvelut.fi/tyonhakijalle/verkostoidu-tyonhaussa
-Added: 21.01.2024
-
-### Ilmaiset liikuntapaikat Tampereella | Free Sports Facilities in Tampere
-Type: tip
-Main Tag: terveys
-Tags: sports, tampere, free, leisure
-Description FI: Tampereella on paljon ilmaisia liikuntapaikkoja: ulkokuntoiluvälineitä, frisbeegolfratoja, luistelukenttiä ja lenkkipolkuja. Katso kartta kaupungin sivuilta.
-Description EN: Tampere has many free sports facilities: outdoor gym equipment, disc golf courses, ice skating rinks and running tracks. Check the map on the city website.
-Links: https://www.tampere.fi/liikunta-ja-ulkoilu/liikuntapaikat
-Added: 17.01.2024
-
-### Duunitori - Työpaikat | Duunitori - Job Listings
+### Ilmaiset harrastukset Tampereella | Free Hobbies in Tampere
 Type: link
-Main Tag: työttömyys
-Tags: work, job-search
-URL: https://duunitori.fi/tyopaikat/alue/tampere
-Description FI: Suomen suurin yksityinen työpaikkasivusto, joka kokoaa ilmoituksia sadoilta eri työnantajilta.
-Description EN: Finland's largest private job listing site that aggregates postings from hundreds of employers.
-Links: https://duunitori.fi/tyopaikat/alue/tampere|Duunitori Tampere|Tampereen työpaikat
-Added: 23.01.2026
+Main Tag: ilmaiset, tampere
+Tags: free, tampere, sports, leisure
+URL: https://harrastukset.tampere.fi/fi-FI/search?categories=63f605eba51e6a8f66f52696&sort=startDate&listType=standard&contentTab=time-sensetive
+Description FI: Tampereen kaupungin harrastuskalenterista löydät ilmaiset harrastusmahdollisuudet. Liikuntaa, taidetta, musiikkia ja muita aktiviteetteja.
+Description EN: Find free hobby opportunities from Tampere's hobby calendar. Sports, arts, music and other activities.
+Added: 26.01.2026
+Last Checked: 26.01.2026
+Updated: 26.01.2026
 
-### Opiskelumotivaation ylläpito | Maintaining Study Motivation
-Type: tip
-Main Tag: opiskelu
-Tags: motivation, skills, learning
-Description FI: Aseta itsellesi pienet tavoitteet, palkitse onnistumisista ja pidä taukoja säännöllisesti. Opiskele kaverin kanssa jos motivaatio laskee.
-Description EN: Set yourself small goals, reward successes and take regular breaks. Study with a friend if motivation drops.
-Links: https://www.oph.fi/fi/opiskelijan-ohjaus/opiskelutaidot
-Added: 16.01.2024
-
-### Tampereen kaupunginkirjasto | Tampere City Library
+### Ruoka-apu Tampereella | Food Aid in Tampere
 Type: link
-Main Tag: arki
-Tags: culture, free, tampere, resources
-URL: https://www.tampere.fi/kirjasto
-Description FI: Kirjastosta lainaat kirjoja, elokuvia ja musiikkia ilmaiseksi. Voit myös käyttää tietokoneita, tulostaa ja osallistua tapahtumiin.
-Description EN: Borrow books, movies and music for free from the library. You can also use computers, print and participate in events.
-Links: https://www.tampere.fi/kirjasto|Tampereen kirjasto|Kaupunginkirjaston pääsivu
-Added: 18.01.2024
-Tags: work, support, subsidy
-Added: 23.01.2026
-Description (fi): Työnantajalle maksettava tuki, joka edellyttää TE-toimiston kirjallista päätöstä. Tuki voi olla jopa 50% palkkakustannuksista ja sen tarkoituksena on helpottaa työllistämistä.
-Description (en): Subsidy paid to employers requiring a written decision from the TE office. The subsidy can be up to 50% of salary costs and aims to facilitate employment.
-
-### Palkkatuki | Wage Subsidy
-Type: link
-Main Tag: työttömyys
-Tags: work, support, subsidy
-Added: 23.01.2026
-Description (fi): Työnantajalle myönnettävä taloudellinen tuki vaikeasti työllistyvien henkilöiden palkkaamiseen. Tuki voi olla enintään 50% työntekijän palkkauskustannuksista.
-Description (en): Financial support granted to employers for hiring hard-to-employ individuals. The subsidy can be up to 50% of employee's wage costs.
-
-### Työharjoittelu | Work Training
-Type: tip
-Main Tag: työttömyys
-Tags: work, training, support
-Added: 23.01.2026
-Description (fi): TE-toimiston järjestämä tuettu harjoittelujakso, jonka tavoitteena on ammatillisen osaamisen kehittäminen. Harjoittelu kestää tavallisesti 3-6 kuukautta ja sen aikana työttömyysturva säilyy.
-Description (en): Supported training period organized by the TE office aimed at developing professional skills. Training typically lasts 3-6 months and unemployment benefits continue during this time.
-
-### Työkokeilu | Trial Work
-Type: tip
-Main Tag: työttömyys
-Tags: work, trial, training
-Added: 23.01.2026
-Description (fi): Mahdollisuus kokeilla työtä ilman varsinaista työsuhdetta 1-6 kuukauden ajaksi. Kokeilun aikana säilyy työttömyysturva.
-Description (en): Opportunity to try work without an actual employment relationship for 1-6 months. Unemployment benefits continue during the trial.
-
-### Kuntouttava työtoiminta | Rehabilitative Work
-Type: tip
-Main Tag: työttömyys
-Tags: work, rehabilitation, support
-Added: 23.01.2026
-Description (fi): Tarkoitettu pitkään työttömänä olleille henkilöille, joiden työ- tai toimintakyky on heikentynyt. Tavoitteena on parantaa osallistujan elämänhallintaa ja edellytyksiä työllistymiseen.
-Description (en): Intended for long-term unemployed individuals whose work or functional capacity has weakened. The goal is to improve participant's life management and employment prospects.
-
-### Oppisopimuskoulutus | Apprenticeship Training
-Type: tip
-Main Tag: opiskelu
-Tags: education, work, training
-Added: 23.01.2026
-Description (fi): Työssäoppimista jossa opiskelija on työsuhteessa työnantajaan ja saa palkkaa. Suurin osa oppimisesta tapahtuu työpaikalla käytännön tehtävissä.
-Description (en): Work-based learning where the student is employed by the employer and receives a salary. Most of the learning takes place at the workplace in practical tasks.
-
-### Ammatillinen kuntoutus | Vocational Rehabilitation
-Type: tip
-Main Tag: opiskelu
-Tags: education, rehabilitation, support
-Added: 23.01.2026
-Description (fi): Kelan tai työeläkelaitoksen rahoittama koulutus henkilöille, joilla terveydelliset syyt vaikeuttavat työssä jatkamista tai työhön pääsyä.
-Description (en): Education funded by Kela or pension institutions for people whose health reasons make it difficult to continue working or to access work.
-
-### Koulutuskokeilu | Training Trial
-Type: tip
-Main Tag: opiskelu
-Tags: education, trial, short-term
-Added: 23.01.2026
-Description (fi): 1-10 päivän mittainen tutustumisjakso koulutusalaan tai oppilaitokseen. Hyvä tapa selvittää sopiiko tietty koulutusala sinulle.
-Description (en): 1-10 day introduction period to a field of education or educational institution. Good way to find out if a certain field of education suits you.
-
-### Starttivalmennus | Start Coaching
-Type: tip
-Main Tag: työttömyys
-Tags: coaching, motivation, short-term
-Added: 23.01.2026
-Description (fi): Intensiivinen 1-4 viikon mittainen valmennus suunnan löytämiseen ja motivaation vahvistamiseen. Auttaa kirkastamaan tulevaisuuden tavoitteita.
-Description (en): Intensive 1-4 week coaching to find direction and strengthen motivation. Helps clarify future goals.
-
-### Taitovalmennus | Skills Coaching
-Type: tip
-Main Tag: työttömyys
-Tags: coaching, skills, short-term
-Added: 23.01.2026
-Description (fi): Lyhytkestoista valmennusta jossa voit kehittää digitaitoja, kielitaitoa, asiakaspalvelutaitoja tai muita työelämätaitoja.
-Description (en): Short-term coaching where you can develop digital skills, language skills, customer service skills or other work life skills.
-
-### Hyödynnä kirjaston palvelut | Utilize Library Services
-Type: tip
-Main Tag: arki
-Tags: resources, free, learning
-Added: 23.01.2026
-Description (fi): Kirjastot tarjoavat ilmaisen työpisteen, Wi-Fin, tietokannat, kurssit ja tilaisuudet. Myös työnhakuun liittyviä materiaaleja ja ohjausta.
-Description (en): Libraries offer free workspace, Wi-Fi, databases, courses and events. Also job search materials and guidance.
-
-### Verkostoidu vapaaehtoistoiminnassa | Network Through Volunteering
-Type: tip
-Main Tag: työttömyys
-Tags: volunteer, networking, experience
-Added: 23.01.2026
-Description (fi): Vapaaehtoistoiminta tarjoaa mahdollisuuden laajentaa verkostoja, oppia uutta ja saada työkokemusta. Voi avata ovia työelämään.
-Description (en): Volunteering offers opportunities to expand networks, learn new things and gain work experience. Can open doors to employment.
-
-### Päivitä LinkedIn-profiilisi | Update Your LinkedIn Profile
-Type: tip
-Main Tag: työttömyys
-Tags: job-search, online-presence, networking
-Added: 23.01.2026
-Description (fi): Pidä LinkedIn-profiilisi ajan tasalla työkokemuksella, osaamisella ja suosituksilla. Aktiivinen läsnäolo voi tuoda työmahdollisuuksia.
-Description (en): Keep your LinkedIn profile up to date with work experience, skills and recommendations. Active presence can bring job opportunities.
-
-### Hyödynnä maksuttomat verkkokurssit | Use Free Online Courses
-Type: tip
-Main Tag: opiskelu
-Tags: education, online, free
-Added: 23.01.2026
-Description (fi): Monet alustat (Coursera, edX, Khan Academy) tarjoavat ilmaisia kursseja. Hyvä tapa oppia uutta ja päivittää osaamista.
-Description (en): Many platforms (Coursera, edX, Khan Academy) offer free courses. Good way to learn new things and update skills.
-
-### Osallistu työnhakuvalmennukseen | Participate in Job Search Coaching
-Type: tip
-Main Tag: työttömyys
-Tags: job-search, coaching, support
-Added: 23.01.2026
-Description (fi): TE-palvelut ja monet järjestöt tarjoavat ilmaista työnhakuvalmennusta. Saat apua CV:n, hakemusten ja haastatteluiden kanssa.
-Description (en): TE services and many organizations offer free job search coaching. Get help with CV, applications and interviews.
+Main Tag: ilmaiset, tampere
+Tags: free, tampere, support, resources
+URL: https://ruoka-apu.fi/?viewType=list&page=1&startDate=2026-01-26&city=7283
+Description FI: Ruoka-apu.fi palvelusta löydät kaikki Tampereen alueen ruoka-avun jakelupisteet ja -ajat. Ilmaista tai edullista ruokaa tarvitseville.
+Description EN: Find all food aid distribution points and times in the Tampere area from Ruoka-apu.fi. Free or affordable food for those in need.
+Added: 26.01.2026
+Last Checked: 26.01.2026
+Updated: 26.01.2026

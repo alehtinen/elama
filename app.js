@@ -123,7 +123,9 @@ function generateHeroCards() {
     
     mainTags.forEach(mainTagId => {
         const mainTagDef = window.mainTagDefinitions[mainTagId];
-        const count = window.contentData.filter(item => item.mainTag === mainTagId).length;
+        const count = window.contentData.filter(item => 
+            item.mainTag === mainTagId || (item.mainTags && item.mainTags.includes(mainTagId))
+        ).length;
         
         const card = document.createElement('a');
         card.href = `category.html?category=${mainTagId}`;
@@ -199,7 +201,10 @@ function getUniqueTags() {
     if (!window.contentData) return [];
     
     const items = currentMainTag 
-        ? window.contentData.filter(item => item.mainTag === currentMainTag)
+        ? window.contentData.filter(item => 
+            item.mainTag === currentMainTag || 
+            (item.mainTags && item.mainTags.includes(currentMainTag))
+          )
         : window.contentData;
     
     const tags = new Set();
@@ -313,7 +318,10 @@ function filterItems(items, searchTerm = '') {
     
     // Filter by current main tag
     if (currentMainTag) {
-        filtered = filtered.filter(item => item.mainTag === currentMainTag);
+        filtered = filtered.filter(item => 
+            item.mainTag === currentMainTag || 
+            (item.mainTags && item.mainTags.includes(currentMainTag))
+        );
     }
     
     // Filter by active tag filters
@@ -766,6 +774,21 @@ function showItemModal(index) {
         modalLinks.innerHTML = '';
     }
     
+    // Show PDF download button if enabled for this item
+    const modalPdfButton = document.getElementById('modalPdfButton');
+    if (item.downloadablePDF) {
+        modalPdfButton.innerHTML = `
+            <button onclick="downloadItemPDF(${index})" class="inline-flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                PDF
+            </button>
+        `;
+    } else {
+        modalPdfButton.innerHTML = '';
+    }
+    
     // Show tags below links
     const modalTags = document.getElementById('modalTags');
     modalTags.innerHTML = item.tags.map(tag => {
@@ -802,7 +825,646 @@ function closeTipModal() {
     document.getElementById('tipModal').classList.add('hidden');
 }
 
+// Show all links modal
+function showAllLinksModal(filterCategory = null) {
+    if (!window.contentData) return;
+    
+    const modal = document.getElementById('allLinksModal');
+    const content = document.getElementById('allLinksContent');
+    const filterContainer = document.getElementById('allLinksFilter');
+    
+    // Build category filter checkboxes if not showing single category
+    if (!filterCategory && filterContainer) {
+        filterContainer.innerHTML = '';
+        Object.keys(window.mainTagDefinitions).forEach(mainTagId => {
+            const mainTagDef = window.mainTagDefinitions[mainTagId];
+            const label = document.createElement('label');
+            label.className = 'flex items-center gap-2 cursor-pointer text-sm';
+            label.innerHTML = `
+                <input type="checkbox" value="${mainTagId}" checked class="w-4 h-4 text-blue-600 rounded" onchange="renderAllLinks()">
+                <span class="text-gray-900 dark:text-white">${mainTagDef[currentLang]}</span>
+            `;
+            filterContainer.appendChild(label);
+        });
+    }
+    
+    // Hide/show filter section based on whether we're filtering by category
+    const filterSection = filterContainer?.closest('.mb-4');
+    if (filterSection) {
+        if (filterCategory) {
+            filterSection.classList.add('hidden');
+        } else {
+            filterSection.classList.remove('hidden');
+        }
+    }
+    
+    // Render links
+    renderAllLinks(filterCategory);
+    
+    modal.classList.remove('hidden');
+}
+
+// Render all links table based on current filter
+function renderAllLinks(filterCategory = null) {
+    const content = document.getElementById('allLinksContent');
+    const filterContainer = document.getElementById('allLinksFilter');
+    
+    // Get selected categories from checkboxes
+    let selectedCategories = null;
+    if (!filterCategory && filterContainer) {
+        const checkboxes = filterContainer.querySelectorAll('input[type="checkbox"]:checked');
+        selectedCategories = Array.from(checkboxes).map(cb => cb.value);
+    }
+    
+    // Collect all links from filtered items
+    const allLinks = [];
+    const seenUrls = new Set(); // Track seen URLs to avoid duplicates
+    
+    window.contentData.forEach(item => {
+        // Filter by category if specified
+        const itemMainTags = item.mainTags || [item.mainTag];
+        if (filterCategory && !itemMainTags.includes(filterCategory)) return;
+        if (selectedCategories && !itemMainTags.some(tag => selectedCategories.includes(tag))) return;
+        
+        const mainTagDef = window.mainTagDefinitions[item.mainTag];
+        const categoryName = mainTagDef ? mainTagDef[currentLang] : '';
+        const itemTitle = item.title[currentLang];
+        
+        // Primary URL
+        if (item.url && !seenUrls.has(item.url)) {
+            seenUrls.add(item.url);
+            allLinks.push({
+                category: categoryName,
+                categoryId: item.mainTag,
+                itemTitle: itemTitle,
+                name: itemTitle,
+                url: item.url,
+                description: item.description[currentLang]
+            });
+        }
+        
+        // Additional links
+        let additionalLinks = [];
+        if (item.links) additionalLinks = [...additionalLinks, ...item.links];
+        if (currentLang === 'fi' && item.linksFI) additionalLinks = [...additionalLinks, ...item.linksFI];
+        if (currentLang === 'en' && item.linksEN) additionalLinks = [...additionalLinks, ...item.linksEN];
+        
+        additionalLinks.forEach(link => {
+            if (!seenUrls.has(link.url)) {
+                seenUrls.add(link.url);
+                allLinks.push({
+                    category: categoryName,
+                    categoryId: item.mainTag,
+                    itemTitle: itemTitle,
+                    name: link.name || itemTitle,
+                    url: link.url,
+                    description: link.description || ''
+                });
+            }
+        });
+    });
+    
+    // Generate table
+    if (allLinks.length > 0) {
+        const showCategory = !filterCategory; // Hide category column if filtering by single category
+        content.innerHTML = `
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-900">
+                    <tr>
+                        ${showCategory ? `<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                            ${currentLang === 'fi' ? 'Kategoria' : 'Category'}
+                        </th>` : ''}
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                            ${currentLang === 'fi' ? 'Kohde' : 'Item'}
+                        </th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                            ${currentLang === 'fi' ? 'Nimi' : 'Name'}
+                        </th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                            ${currentLang === 'fi' ? 'Kuvaus' : 'Description'}
+                        </th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                            ${currentLang === 'fi' ? 'Linkki' : 'Link'}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    ${allLinks.map(link => `
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                            ${showCategory ? `<td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">${link.category}</td>` : ''}
+                            <td class="px-4 py-3 text-sm text-gray-900 dark:text-white">${link.itemTitle}</td>
+                            <td class="px-4 py-3 text-sm text-gray-900 dark:text-white break-words">${link.name}</td>
+                            <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 break-words">${link.description}</td>
+                            <td class="px-4 py-3 text-sm">
+                                <a href="${link.url}" target="_blank" class="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                    ${currentLang === 'fi' ? 'Avaa' : 'Open'}
+                                </a>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    } else {
+        content.innerHTML = `<p class="text-gray-600 dark:text-gray-400">${currentLang === 'fi' ? 'Ei linkkejä' : 'No links found'}</p>`;
+    }
+}
+
+// Toggle all links filter visibility
+function toggleAllLinksFilter() {
+    const filter = document.getElementById('allLinksFilter');
+    if (filter) {
+        filter.classList.toggle('hidden');
+    }
+}
+
+// Close all links modal
+function closeAllLinksModal() {
+    document.getElementById('allLinksModal').classList.add('hidden');
+}
+
+// Download All Links as PDF
+function downloadAllLinksPDF() {
+    if (!window.contentData) return;
+    
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    const title = currentLang === 'fi' ? 'Kaikki Linkit' : 'All Links';
+    const pageHeight = 280;
+    const leftMargin = 14;
+    const rightMargin = 196;
+    let y = 20;
+    
+    // Helper function to check if we need a new page
+    function checkPageBreak(requiredSpace) {
+        if (y + requiredSpace > pageHeight) {
+            doc.addPage();
+            y = 20;
+            return true;
+        }
+        return false;
+    }
+    
+    // Title
+    doc.setFontSize(16);
+    doc.setFont(undefined, 'bold');
+    doc.text(title, leftMargin, y);
+    y += 10;
+    
+    // Collect all links
+    const allLinks = [];
+    window.contentData.forEach(item => {
+        const mainTagDef = window.mainTagDefinitions[item.mainTag];
+        const categoryName = mainTagDef ? mainTagDef[currentLang] : '';
+        
+        // Add primary URL if exists
+        if (item.url) {
+            allLinks.push({
+                category: categoryName,
+                itemTitle: item.title[currentLang],
+                name: item.title[currentLang],
+                description: item.description[currentLang] || '',
+                url: item.url
+            });
+        }
+        
+        // Add additional links
+        let additionalLinks = [];
+        if (item.links) additionalLinks = [...additionalLinks, ...item.links];
+        if (currentLang === 'fi' && item.linksFI) additionalLinks = [...additionalLinks, ...item.linksFI];
+        if (currentLang === 'en' && item.linksEN) additionalLinks = [...additionalLinks, ...item.linksEN];
+        
+        additionalLinks.forEach(link => {
+            allLinks.push({
+                category: categoryName,
+                itemTitle: item.title[currentLang],
+                name: link.name || item.title[currentLang],
+                description: link.description || '',
+                url: link.url
+            });
+        });
+    });
+    
+    // Headers
+    const categoryLabel = currentLang === 'fi' ? 'Kategoria' : 'Category';
+    const nameLabel = currentLang === 'fi' ? 'Nimi' : 'Name';
+    const urlLabel = currentLang === 'fi' ? 'Linkki' : 'Link';
+    
+    // Add each link
+    allLinks.forEach((link, index) => {
+        checkPageBreak(20);
+        
+        // Category
+        doc.setFontSize(9);
+        doc.setFont(undefined, 'bold');
+        doc.text(`${categoryLabel}:`, leftMargin, y);
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(8);
+        const categoryLines = doc.splitTextToSize(link.category, rightMargin - leftMargin - 20);
+        doc.text(categoryLines, leftMargin + 22, y);
+        y += categoryLines.length * 4;
+        
+        // Name
+        doc.setFontSize(9);
+        doc.setFont(undefined, 'bold');
+        doc.text(`${nameLabel}:`, leftMargin, y);
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(8);
+        const nameLines = doc.splitTextToSize(link.name, rightMargin - leftMargin - 20);
+        doc.text(nameLines, leftMargin + 22, y);
+        y += nameLines.length * 4;
+        
+        // URL
+        doc.setFontSize(9);
+        doc.setFont(undefined, 'bold');
+        doc.text(`${urlLabel}:`, leftMargin, y);
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(8);
+        doc.setTextColor(0, 0, 255);
+        const urlLines = doc.splitTextToSize(link.url, rightMargin - leftMargin - 20);
+        doc.text(urlLines, leftMargin + 22, y);
+        doc.setTextColor(0, 0, 0);
+        y += urlLines.length * 4;
+        
+        // Description if exists
+        if (link.description) {
+            const descLabel = currentLang === 'fi' ? 'Kuvaus' : 'Description';
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'bold');
+            doc.text(`${descLabel}:`, leftMargin, y);
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(8);
+            const descLines = doc.splitTextToSize(link.description, rightMargin - leftMargin - 20);
+            doc.text(descLines, leftMargin + 22, y);
+            y += descLines.length * 4;
+        }
+        
+        y += 5; // spacing between entries
+        
+        // Divider line
+        if (index < allLinks.length - 1) {
+            checkPageBreak(5);
+            doc.setDrawColor(200);
+            doc.line(leftMargin, y, rightMargin, y);
+            y += 5;
+        }
+    });
+    
+    // Save the PDF
+    const fileName = currentLang === 'fi' ? 'Kaikki_linkit.pdf' : 'All_Links.pdf';
+    doc.save(fileName);
+}
+
+// Close all links modal
+function closeAllLinksModal() {
+    document.getElementById('allLinksModal').classList.add('hidden');
+}
+
+// Download PDF for a single item
+function downloadItemPDF(index) {
+    const item = currentRenderedItems[index];
+    if (!item || !item.downloadablePDF) return;
+    
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    const title = item.title[currentLang];
+    const mainTagDef = window.mainTagDefinitions[item.mainTag];
+    const categoryName = mainTagDef ? mainTagDef[currentLang] : '';
+    
+    let y = 20;
+    const pageHeight = 280;
+    const leftMargin = 20;
+    const rightMargin = 190;
+    
+    // Title
+    doc.setFontSize(20);
+    doc.setFont(undefined, 'bold');
+    const titleLines = doc.splitTextToSize(title, rightMargin - leftMargin);
+    titleLines.forEach(line => {
+        y = checkPageBreak(doc, y, 15, pageHeight);
+        doc.text(line, leftMargin, y);
+        y += 8;
+    });
+    y += 5;
+    
+    // Category
+    if (categoryName) {
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(100, 100, 100);
+        doc.text(`${currentLang === 'fi' ? 'Kategoria' : 'Category'}: ${categoryName}`, leftMargin, y);
+        doc.setTextColor(0, 0, 0);
+        y += 10;
+    }
+    
+    // Description
+    if (item.description && item.description[currentLang]) {
+        y = checkPageBreak(doc, y, 15, pageHeight);
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'italic');
+        const descLines = doc.splitTextToSize(item.description[currentLang], rightMargin - leftMargin);
+        descLines.forEach(line => {
+            y = checkPageBreak(doc, y, 8, pageHeight);
+            doc.text(line, leftMargin, y);
+            y += 6;
+        });
+        y += 8;
+    }
+    
+    // Separator
+    doc.setLineWidth(0.5);
+    doc.setDrawColor(150, 150, 150);
+    doc.line(leftMargin, y, rightMargin, y);
+    y += 10;
+    
+    // Body content
+    if (item.body && item.body[currentLang]) {
+        y = checkPageBreak(doc, y, 15, pageHeight);
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'normal');
+        
+        // Simple markdown processing for PDF
+        const bodyText = item.body[currentLang]
+            .replace(/\*\*([^*]+)\*\*/g, '$1') // Remove bold markers
+            .replace(/\*([^*]+)\*/g, '$1') // Remove italic markers
+            .replace(/`([^`]+)`/g, '$1'); // Remove code markers
+        
+        const bodyLines = doc.splitTextToSize(bodyText, rightMargin - leftMargin);
+        bodyLines.forEach(line => {
+            y = checkPageBreak(doc, y, 8, pageHeight);
+            doc.text(line, leftMargin, y);
+            y += 5;
+        });
+        y += 10;
+    }
+    
+    // Links
+    let linksToShow = [];
+    if (item.links) linksToShow = [...linksToShow, ...item.links];
+    if (currentLang === 'fi' && item.linksFI) linksToShow = [...linksToShow, ...item.linksFI];
+    if (currentLang === 'en' && item.linksEN) linksToShow = [...linksToShow, ...item.linksEN];
+    
+    if (linksToShow.length > 0 || item.url) {
+        y = checkPageBreak(doc, y, 20, pageHeight);
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text(currentLang === 'fi' ? 'Linkit:' : 'Links:', leftMargin, y);
+        y += 8;
+        
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        
+        // Primary URL if exists
+        if (item.url) {
+            y = checkPageBreak(doc, y, 12, pageHeight);
+            doc.setTextColor(0, 0, 255);
+            doc.textWithLink(item.url, leftMargin, y, { url: item.url });
+            doc.setTextColor(0, 0, 0);
+            y += 6;
+        }
+        
+        // Additional links
+        linksToShow.forEach(link => {
+            y = checkPageBreak(doc, y, 15, pageHeight);
+            
+            // Link name
+            doc.setFont(undefined, 'bold');
+            doc.text(link.name, leftMargin, y);
+            y += 5;
+            
+            // Link description
+            if (link.description) {
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(9);
+                const descLines = doc.splitTextToSize(link.description, rightMargin - leftMargin);
+                descLines.forEach(line => {
+                    y = checkPageBreak(doc, y, 6, pageHeight);
+                    doc.text(line, leftMargin, y);
+                    y += 4;
+                });
+                doc.setFontSize(10);
+                y += 2;
+            }
+            
+            // Link URL
+            doc.setTextColor(0, 0, 255);
+            doc.textWithLink(link.url, leftMargin, y, { url: link.url });
+            doc.setTextColor(0, 0, 0);
+            y += 8;
+        });
+        y += 5;
+    }
+    
+    // Tags
+    if (item.tags && item.tags.length > 0) {
+        y = checkPageBreak(doc, y, 15, pageHeight);
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(100, 100, 100);
+        const tagLabels = item.tags.map(tag => {
+            const tagDef = window.tagDefinitions[tag];
+            return tagDef ? tagDef[currentLang] : tag;
+        }).join(', ');
+        doc.text(`${currentLang === 'fi' ? 'Tagit' : 'Tags'}: ${tagLabels}`, leftMargin, y);
+        y += 6;
+    }
+    
+    // Dates
+    if (item.added || item.updated || item.lastChecked) {
+        y = checkPageBreak(doc, y, 15, pageHeight);
+        doc.setFontSize(9);
+        doc.setTextColor(120, 120, 120);
+        
+        let dateText = '';
+        if (item.added) dateText += `${currentLang === 'fi' ? 'Lisätty' : 'Added'}: ${item.added}`;
+        if (item.updated) dateText += (dateText ? ' | ' : '') + `${currentLang === 'fi' ? 'Päivitetty' : 'Updated'}: ${item.updated}`;
+        if (item.lastChecked) dateText += (dateText ? ' | ' : '') + `${currentLang === 'fi' ? 'Tarkistettu' : 'Last Checked'}: ${item.lastChecked}`;
+        
+        doc.text(dateText, leftMargin, y);
+        doc.setTextColor(0, 0, 0);
+    }
+    
+    // Save the PDF
+    const fileName = title.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 50);
+    doc.save(`${fileName}.pdf`);
+}
+
 // Filter by tag from modal
+// Download PDF for a single item
+function downloadItemPDF(index) {
+    const item = currentRenderedItems[index];
+    if (!item || !item.downloadablePDF) return;
+    
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    const title = item.title[currentLang];
+    const mainTagDef = window.mainTagDefinitions[item.mainTag];
+    const categoryName = mainTagDef ? mainTagDef[currentLang] : '';
+    
+    let y = 20;
+    const pageHeight = 280;
+    const leftMargin = 20;
+    const rightMargin = 190;
+    
+    // Title
+    doc.setFontSize(20);
+    doc.setFont(undefined, 'bold');
+    const titleLines = doc.splitTextToSize(title, rightMargin - leftMargin);
+    titleLines.forEach(line => {
+        y = checkPageBreak(doc, y, 15, pageHeight);
+        doc.text(line, leftMargin, y);
+        y += 8;
+    });
+    y += 5;
+    
+    // Category
+    if (categoryName) {
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(100, 100, 100);
+        doc.text(`${currentLang === 'fi' ? 'Kategoria' : 'Category'}: ${categoryName}`, leftMargin, y);
+        doc.setTextColor(0, 0, 0);
+        y += 10;
+    }
+    
+    // Description
+    if (item.description && item.description[currentLang]) {
+        y = checkPageBreak(doc, y, 15, pageHeight);
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'italic');
+        const descLines = doc.splitTextToSize(item.description[currentLang], rightMargin - leftMargin);
+        descLines.forEach(line => {
+            y = checkPageBreak(doc, y, 8, pageHeight);
+            doc.text(line, leftMargin, y);
+            y += 6;
+        });
+        y += 8;
+    }
+    
+    // Separator
+    doc.setLineWidth(0.5);
+    doc.setDrawColor(150, 150, 150);
+    doc.line(leftMargin, y, rightMargin, y);
+    y += 10;
+    
+    // Body content
+    if (item.body && item.body[currentLang]) {
+        y = checkPageBreak(doc, y, 15, pageHeight);
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'normal');
+        
+        // Simple markdown processing for PDF
+        const bodyText = item.body[currentLang]
+            .replace(/\*\*([^*]+)\*\*/g, '$1') // Remove bold markers
+            .replace(/\*([^*]+)\*/g, '$1') // Remove italic markers
+            .replace(/`([^`]+)`/g, '$1'); // Remove code markers
+        
+        const bodyLines = doc.splitTextToSize(bodyText, rightMargin - leftMargin);
+        bodyLines.forEach(line => {
+            y = checkPageBreak(doc, y, 8, pageHeight);
+            doc.text(line, leftMargin, y);
+            y += 5;
+        });
+        y += 10;
+    }
+    
+    // Links
+    let linksToShow = [];
+    if (item.links) linksToShow = [...linksToShow, ...item.links];
+    if (currentLang === 'fi' && item.linksFI) linksToShow = [...linksToShow, ...item.linksFI];
+    if (currentLang === 'en' && item.linksEN) linksToShow = [...linksToShow, ...item.linksEN];
+    
+    if (linksToShow.length > 0 || item.url) {
+        y = checkPageBreak(doc, y, 20, pageHeight);
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text(currentLang === 'fi' ? 'Linkit:' : 'Links:', leftMargin, y);
+        y += 8;
+        
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        
+        // Primary URL if exists
+        if (item.url) {
+            y = checkPageBreak(doc, y, 12, pageHeight);
+            doc.setTextColor(0, 0, 255);
+            doc.textWithLink(item.url, leftMargin, y, { url: item.url });
+            doc.setTextColor(0, 0, 0);
+            y += 6;
+        }
+        
+        // Additional links
+        linksToShow.forEach(link => {
+            y = checkPageBreak(doc, y, 15, pageHeight);
+            
+            // Link name
+            doc.setFont(undefined, 'bold');
+            doc.text(link.name, leftMargin, y);
+            y += 5;
+            
+            // Link description
+            if (link.description) {
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(9);
+                const descLines = doc.splitTextToSize(link.description, rightMargin - leftMargin);
+                descLines.forEach(line => {
+                    y = checkPageBreak(doc, y, 6, pageHeight);
+                    doc.text(line, leftMargin, y);
+                    y += 4;
+                });
+                doc.setFontSize(10);
+                y += 2;
+            }
+            
+            // Link URL
+            doc.setTextColor(0, 0, 255);
+            doc.textWithLink(link.url, leftMargin, y, { url: link.url });
+            doc.setTextColor(0, 0, 0);
+            y += 8;
+        });
+        y += 5;
+    }
+    
+    // Tags
+    if (item.tags && item.tags.length > 0) {
+        y = checkPageBreak(doc, y, 15, pageHeight);
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(100, 100, 100);
+        const tagLabels = item.tags.map(tag => {
+            const tagDef = window.tagDefinitions[tag];
+            return tagDef ? tagDef[currentLang] : tag;
+        }).join(', ');
+        doc.text(`${currentLang === 'fi' ? 'Tagit' : 'Tags'}: ${tagLabels}`, leftMargin, y);
+        y += 6;
+    }
+    
+    // Dates
+    if (item.added || item.updated || item.lastChecked) {
+        y = checkPageBreak(doc, y, 15, pageHeight);
+        doc.setFontSize(9);
+        doc.setTextColor(120, 120, 120);
+        
+        let dateText = '';
+        if (item.added) dateText += `${currentLang === 'fi' ? 'Lisätty' : 'Added'}: ${item.added}`;
+        if (item.updated) dateText += (dateText ? ' | ' : '') + `${currentLang === 'fi' ? 'Päivitetty' : 'Updated'}: ${item.updated}`;
+        if (item.lastChecked) dateText += (dateText ? ' | ' : '') + `${currentLang === 'fi' ? 'Tarkistettu' : 'Last Checked'}: ${item.lastChecked}`;
+        
+        doc.text(dateText, leftMargin, y);
+        doc.setTextColor(0, 0, 0);
+    }
+    
+    // Save the PDF
+    const fileName = title.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 50);
+    doc.save(`${fileName}.pdf`);
+}
+
 function filterByTagFromModal(tag) {
     // Close the modal
     closeTipModal();
@@ -1126,8 +1788,9 @@ function confirmPdfDownload() {
         alert(currentLang === 'fi' ? 'Valitse vähintään yksi kategoria' : 'Please select at least one category');
         return;
     }
+    const includeAllLinks = document.getElementById('pdfIncludeAllLinks')?.checked ?? false;
     closeExportModal('pdf');
-    downloadCombinedPDF(selectedCategories);
+    downloadCombinedPDF(selectedCategories, includeAllLinks);
 }
 
 function confirmZipDownload() {
@@ -1138,8 +1801,9 @@ function confirmZipDownload() {
     }
     const includeCombined = document.getElementById('zipIncludeCombined')?.checked ?? true;
     const includeBookmarks = document.getElementById('zipIncludeBookmarks')?.checked ?? true;
+    const includeAllLinks = document.getElementById('zipIncludeAllLinks')?.checked ?? false;
     closeExportModal('zip');
-    downloadAllPDFsAsZip(selectedCategories, includeCombined, includeBookmarks);
+    downloadAllPDFsAsZip(selectedCategories, includeCombined, includeBookmarks, includeAllLinks);
 }
 
 function confirmBookmarkDownload() {
@@ -1153,7 +1817,7 @@ function confirmBookmarkDownload() {
 }
 
 // Download combined PDF with all main tags
-function downloadCombinedPDF(selectedCategories = null) {
+function downloadCombinedPDF(selectedCategories = null, includeAllLinks = false) {
     if (!window.contentData || !window.mainTagDefinitions) return;
     
     const { jsPDF } = window.jspdf;
@@ -1240,6 +1904,125 @@ function downloadCombinedPDF(selectedCategories = null) {
         });
     });
     
+    // Add All Links section if requested
+    if (includeAllLinks) {
+        doc.addPage();
+        y = 20;
+        
+        // Title
+        const allLinksTitle = currentLang === 'fi' ? 'Kaikki Linkit' : 'All Links';
+        doc.setFontSize(18);
+        doc.setFont(undefined, 'bold');
+        doc.text(allLinksTitle, leftMargin, y);
+        y += 8;
+        
+        // Thick separator line
+        doc.setLineWidth(0.8);
+        doc.setDrawColor(100, 100, 100);
+        doc.line(leftMargin, y, rightMargin, y);
+        doc.setLineWidth(0.2);
+        y += 12;
+        
+        // Collect all links
+        const allLinks = [];
+        window.contentData.forEach(item => {
+            const mainTagDef = window.mainTagDefinitions[item.mainTag];
+            const categoryName = mainTagDef ? mainTagDef[currentLang] : '';
+            
+            // Add primary URL if exists
+            if (item.url) {
+                allLinks.push({
+                    category: categoryName,
+                    itemTitle: item.title[currentLang],
+                    name: item.title[currentLang],
+                    description: item.description[currentLang] || '',
+                    url: item.url
+                });
+            }
+            
+            // Add additional links
+            let additionalLinks = [];
+            if (item.links) additionalLinks = [...additionalLinks, ...item.links];
+            if (currentLang === 'fi' && item.linksFI) additionalLinks = [...additionalLinks, ...item.linksFI];
+            if (currentLang === 'en' && item.linksEN) additionalLinks = [...additionalLinks, ...item.linksEN];
+            
+            additionalLinks.forEach(link => {
+                allLinks.push({
+                    category: categoryName,
+                    itemTitle: item.title[currentLang],
+                    name: link.name || item.title[currentLang],
+                    description: link.description || '',
+                    url: link.url
+                });
+            });
+        });
+        
+        // Headers
+        const categoryLabel = currentLang === 'fi' ? 'Kategoria' : 'Category';
+        const nameLabel = currentLang === 'fi' ? 'Nimi' : 'Name';
+        const urlLabel = currentLang === 'fi' ? 'Linkki' : 'Link';
+        
+        // Add each link
+        allLinks.forEach((link, index) => {
+            y = checkPageBreak(doc, y, 20, pageHeight);
+            
+            // Category
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'bold');
+            doc.text(`${categoryLabel}:`, leftMargin, y);
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(8);
+            const categoryLines = doc.splitTextToSize(link.category, rightMargin - leftMargin - 25);
+            doc.text(categoryLines, leftMargin + 25, y);
+            y += categoryLines.length * 4;
+            
+            // Name
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'bold');
+            doc.text(`${nameLabel}:`, leftMargin, y);
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(8);
+            const nameLines = doc.splitTextToSize(link.name, rightMargin - leftMargin - 25);
+            doc.text(nameLines, leftMargin + 25, y);
+            y += nameLines.length * 4;
+            
+            // URL
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'bold');
+            doc.text(`${urlLabel}:`, leftMargin, y);
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(8);
+            doc.setTextColor(0, 0, 255);
+            const urlLines = doc.splitTextToSize(link.url, rightMargin - leftMargin - 25);
+            doc.text(urlLines, leftMargin + 25, y);
+            doc.setTextColor(0, 0, 0);
+            y += urlLines.length * 4;
+            
+            // Description if exists
+            if (link.description) {
+                const descLabel = currentLang === 'fi' ? 'Kuvaus' : 'Description';
+                doc.setFontSize(9);
+                doc.setFont(undefined, 'bold');
+                doc.text(`${descLabel}:`, leftMargin, y);
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(8);
+                const descLines = doc.splitTextToSize(link.description, rightMargin - leftMargin - 25);
+                doc.text(descLines, leftMargin + 25, y);
+                y += descLines.length * 4;
+            }
+            
+            y += 5; // spacing between entries
+            
+            // Divider line
+            if (index < allLinks.length - 1) {
+                y = checkPageBreak(doc, y, 5, pageHeight);
+                doc.setDrawColor(200);
+                doc.line(leftMargin, y, rightMargin, y);
+                y += 5;
+            }
+        });
+    }
+    
     doc.save(`${title}.pdf`);
 }
 
@@ -1308,7 +2091,7 @@ function generateMainTagPDF(mainTagId) {
 }
 
 // Download all PDFs as a ZIP file
-async function downloadAllPDFsAsZip(selectedCategories = null, includeCombined = true, includeBookmarks = true) {
+async function downloadAllPDFsAsZip(selectedCategories = null, includeCombined = true, includeBookmarks = true, includeAllLinks = false) {
     if (!window.contentData || !window.mainTagDefinitions) return;
     
     const zip = new JSZip();
@@ -1316,7 +2099,9 @@ async function downloadAllPDFsAsZip(selectedCategories = null, includeCombined =
     // Generate a PDF for each main tag (filtered if selectedCategories provided)
     const mainTagsToProcess = selectedCategories || Object.keys(window.mainTagDefinitions);
     mainTagsToProcess.forEach(mainTagId => {
-        const items = window.contentData.filter(item => item.mainTag === mainTagId);
+        const items = window.contentData.filter(item => 
+            item.mainTag === mainTagId || (item.mainTags && item.mainTags.includes(mainTagId))
+        );
         if (items.length === 0) return;
         
         const result = generateMainTagPDF(mainTagId);
@@ -1352,7 +2137,9 @@ async function downloadAllPDFsAsZip(selectedCategories = null, includeCombined =
         // Process each main tag (use same filtered list)
         mainTagsToProcess.forEach((mainTagId, mainIndex) => {
         const mainTagDef = window.mainTagDefinitions[mainTagId];
-        const items = window.contentData.filter(item => item.mainTag === mainTagId);
+        const items = window.contentData.filter(item => 
+            item.mainTag === mainTagId || (item.mainTags && item.mainTags.includes(mainTagId))
+        );
         
         if (items.length === 0) return;
         
@@ -1432,7 +2219,9 @@ async function downloadAllPDFsAsZip(selectedCategories = null, includeCombined =
         
         mainTagsToProcess.forEach(mainTagId => {
             const mainTagDef = window.mainTagDefinitions[mainTagId];
-            const items = window.contentData.filter(item => item.mainTag === mainTagId);
+            const items = window.contentData.filter(item => 
+                item.mainTag === mainTagId || (item.mainTags && item.mainTags.includes(mainTagId))
+            );
             
             if (items.length === 0) return;
             
@@ -1502,6 +2291,136 @@ async function downloadAllPDFsAsZip(selectedCategories = null, includeCombined =
         zip.file(`${bookmarkTitle}.html`, bookmarkBlob);
     }
     
+    // Generate and add All Links PDF if includeAllLinks is true
+    if (includeAllLinks) {
+        const { jsPDF } = window.jspdf;
+        const allLinksDoc = new jsPDF();
+        const allLinksTitle = currentLang === 'fi' ? 'Kaikki Linkit' : 'All Links';
+        const pageHeight = 280;
+        const leftMargin = 14;
+        const rightMargin = 196;
+        let y = 20;
+        
+        // Title
+        allLinksDoc.setFontSize(16);
+        allLinksDoc.setFont(undefined, 'bold');
+        allLinksDoc.text(allLinksTitle, leftMargin, y);
+        y += 10;
+        
+        // Collect all links
+        const allLinks = [];
+        window.contentData.forEach(item => {
+            const mainTagDef = window.mainTagDefinitions[item.mainTag];
+            const categoryName = mainTagDef ? mainTagDef[currentLang] : '';
+            
+            // Add primary URL if exists
+            if (item.url) {
+                allLinks.push({
+                    category: categoryName,
+                    itemTitle: item.title[currentLang],
+                    name: item.title[currentLang],
+                    description: item.description[currentLang] || '',
+                    url: item.url
+                });
+            }
+            
+            // Add additional links
+            let additionalLinks = [];
+            if (item.links) additionalLinks = [...additionalLinks, ...item.links];
+            if (currentLang === 'fi' && item.linksFI) additionalLinks = [...additionalLinks, ...item.linksFI];
+            if (currentLang === 'en' && item.linksEN) additionalLinks = [...additionalLinks, ...item.linksEN];
+            
+            additionalLinks.forEach(link => {
+                allLinks.push({
+                    category: categoryName,
+                    itemTitle: item.title[currentLang],
+                    name: link.name || item.title[currentLang],
+                    description: link.description || '',
+                    url: link.url
+                });
+            });
+        });
+        
+        // Headers
+        const categoryLabel = currentLang === 'fi' ? 'Kategoria' : 'Category';
+        const nameLabel = currentLang === 'fi' ? 'Nimi' : 'Name';
+        const urlLabel = currentLang === 'fi' ? 'Linkki' : 'Link';
+        
+        // Helper function to check if we need a new page
+        function checkPageBreakAllLinks(requiredSpace) {
+            if (y + requiredSpace > pageHeight) {
+                allLinksDoc.addPage();
+                y = 20;
+                return true;
+            }
+            return false;
+        }
+        
+        // Add each link
+        allLinks.forEach((link, index) => {
+            checkPageBreakAllLinks(20);
+            
+            // Category
+            allLinksDoc.setFontSize(9);
+            allLinksDoc.setFont(undefined, 'bold');
+            allLinksDoc.text(`${categoryLabel}:`, leftMargin, y);
+            allLinksDoc.setFont(undefined, 'normal');
+            allLinksDoc.setFontSize(8);
+            const categoryLines = allLinksDoc.splitTextToSize(link.category, rightMargin - leftMargin - 20);
+            allLinksDoc.text(categoryLines, leftMargin + 22, y);
+            y += categoryLines.length * 4;
+            
+            // Name
+            allLinksDoc.setFontSize(9);
+            allLinksDoc.setFont(undefined, 'bold');
+            allLinksDoc.text(`${nameLabel}:`, leftMargin, y);
+            allLinksDoc.setFont(undefined, 'normal');
+            allLinksDoc.setFontSize(8);
+            const nameLines = allLinksDoc.splitTextToSize(link.name, rightMargin - leftMargin - 20);
+            allLinksDoc.text(nameLines, leftMargin + 22, y);
+            y += nameLines.length * 4;
+            
+            // URL
+            allLinksDoc.setFontSize(9);
+            allLinksDoc.setFont(undefined, 'bold');
+            allLinksDoc.text(`${urlLabel}:`, leftMargin, y);
+            allLinksDoc.setFont(undefined, 'normal');
+            allLinksDoc.setFontSize(8);
+            allLinksDoc.setTextColor(0, 0, 255);
+            const urlLines = allLinksDoc.splitTextToSize(link.url, rightMargin - leftMargin - 20);
+            allLinksDoc.text(urlLines, leftMargin + 22, y);
+            allLinksDoc.setTextColor(0, 0, 0);
+            y += urlLines.length * 4;
+            
+            // Description if exists
+            if (link.description) {
+                const descLabel = currentLang === 'fi' ? 'Kuvaus' : 'Description';
+                allLinksDoc.setFontSize(9);
+                allLinksDoc.setFont(undefined, 'bold');
+                allLinksDoc.text(`${descLabel}:`, leftMargin, y);
+                allLinksDoc.setFont(undefined, 'normal');
+                allLinksDoc.setFontSize(8);
+                const descLines = allLinksDoc.splitTextToSize(link.description, rightMargin - leftMargin - 20);
+                allLinksDoc.text(descLines, leftMargin + 22, y);
+                y += descLines.length * 4;
+            }
+            
+            y += 5; // spacing between entries
+            
+            // Divider line
+            if (index < allLinks.length - 1) {
+                checkPageBreakAllLinks(5);
+                allLinksDoc.setDrawColor(200);
+                allLinksDoc.line(leftMargin, y, rightMargin, y);
+                y += 5;
+            }
+        });
+        
+        const allLinksBlob = allLinksDoc.output('blob');
+        const allLinksPdfName = currentLang === 'fi' ? 'Kaikki_linkit.pdf' : 'All_Links.pdf';
+        zip.file(allLinksPdfName, allLinksBlob);
+    }
+    
     // Generate and download the ZIP file
     const zipBlob = await zip.generateAsync({ type: 'blob' });
     const url = URL.createObjectURL(zipBlob);
@@ -1543,7 +2462,9 @@ function downloadBookmarks(selectedCategories = null) {
     const mainTagsToProcess = selectedCategories || Object.keys(window.mainTagDefinitions);
     mainTagsToProcess.forEach(mainTagId => {
         const mainTagDef = window.mainTagDefinitions[mainTagId];
-        const items = window.contentData.filter(item => item.mainTag === mainTagId);
+        const items = window.contentData.filter(item => 
+            item.mainTag === mainTagId || (item.mainTags && item.mainTags.includes(mainTagId))
+        );
         
         if (items.length === 0) return;
         

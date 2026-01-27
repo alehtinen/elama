@@ -35,6 +35,7 @@ function parseMarkdownContent(markdown) {
         // Check if this is a new field (starts with a known field name)
         // Note: Use '### ' to match only level-3 headers, not level-4 (####)
         const isNewField = trimmedLine.startsWith('### ') || 
+                          trimmedLine.startsWith('#### Links:') || // Stop body reading when link section starts
                           trimmedLine.startsWith('URL:') ||
                           trimmedLine.startsWith('Type:') ||
                           trimmedLine.startsWith('Main Tag:') ||

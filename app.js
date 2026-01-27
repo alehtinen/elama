@@ -726,8 +726,11 @@ function showItemModalDirect(item) {
     
     // Show links in table format
     const modalLinks = document.getElementById('modalLinks');
+    let linkHTML = '';
+    
+    // Show old-style links if they exist
     if (linksToShow.length > 0) {
-        modalLinks.innerHTML = `
+        linkHTML += `
             <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                     ${currentLang === 'fi' ? 'Lisätietoa:' : 'More info:'}
@@ -737,8 +740,8 @@ function showItemModalDirect(item) {
                         <thead class="bg-gray-50 dark:bg-gray-900">
                             <tr>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                                    ${currentLang === 'fi' ? 'Nimi' : 'Name'}
-                                </th>
+                    ${currentLang === 'fi' ? 'Nimi' : 'Name'}
+                </th>
                                 <th class="hidden md:table-cell px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
                                     ${currentLang === 'fi' ? 'Kuvaus' : 'Description'}
                                 </th>
@@ -767,8 +770,99 @@ function showItemModalDirect(item) {
                 </div>
             </div>
         `;
+    }
+    
+    // Show new YAML-style link sections
+    if (item.linkSections && item.linkSections.length > 0) {
+        linkHTML += item.linkSections.map(section => `
+            <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                    ${section.title[currentLang]}
+                </h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-900">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                    ${currentLang === 'fi' ? 'Nimi' : 'Name'}
+                                </th>
+                                <th class="hidden md:table-cell px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                    ${currentLang === 'fi' ? 'Kuvaus' : 'Description'}
+                                </th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                    ${currentLang === 'fi' ? 'Linkki' : 'Link'}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            ${section.links.map(link => `
+                                <tr>
+                                    <td class="px-4 py-2 text-sm text-gray-900 dark:text-white">${link.name ? link.name[currentLang] : ''}</td>
+                                    <td class="hidden md:table-cell px-4 py-2 text-sm text-gray-600 dark:text-gray-400">${link.description ? link.description[currentLang] : ''}</td>
+                                    <td class="px-4 py-2 text-sm">
+                                        <a href="${link.url ? link.url[currentLang] : ''}" target="_blank" class="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                            </svg>
+                                            ${currentLang === 'fi' ? 'Avaa' : 'Open'}
+                                        </a>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Add main URL as a link in table if URL Name is provided
+    if (item.url && item.urlName) {
+        const urlLinkHTML = `
+            <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                    ${currentLang === 'fi' ? 'Verkkosivu:' : 'Website:'}
+                </h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-900">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                    ${currentLang === 'fi' ? 'Nimi' : 'Name'}
+                                </th>
+                                <th class="hidden md:table-cell px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                    ${currentLang === 'fi' ? 'Kuvaus' : 'Description'}
+                                </th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                    ${currentLang === 'fi' ? 'Linkki' : 'Link'}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            <tr>
+                                <td class="px-4 py-2 text-sm text-gray-900 dark:text-white">${item.urlName[currentLang]}</td>
+                                <td class="hidden md:table-cell px-4 py-2 text-sm text-gray-600 dark:text-gray-400">${item.urlDescription ? item.urlDescription[currentLang] : ''}</td>
+                                <td class="px-4 py-2 text-sm">
+                                    <a href="${item.url}" target="_blank" class="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                        </svg>
+                                        ${currentLang === 'fi' ? 'Avaa' : 'Open'}
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+        linkHTML = (linkHTML || '') + urlLinkHTML;
+    }
+    
+    if (linkHTML) {
+        modalLinks.innerHTML = linkHTML;
     } else if (item.url) {
-        // Legacy URL field support
+        // Legacy URL field support (no URL Name provided)
         modalLinks.innerHTML = `
             <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <a href="${item.url}" target="_blank" class="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline text-sm break-all">
@@ -918,6 +1012,17 @@ function renderAllLinks(filterCategory = null) {
         if (currentLang === 'fi' && item.linksFI) additionalLinks = [...additionalLinks, ...item.linksFI];
         if (currentLang === 'en' && item.linksEN) additionalLinks = [...additionalLinks, ...item.linksEN];
         
+        // Add new YAML-style link sections
+        if (item.linkSections) {
+            item.linkSections.forEach(section => {
+                additionalLinks = [...additionalLinks, ...section.links.map(link => ({
+                    url: link.url ? link.url[currentLang] : '',
+                    name: link.name ? link.name[currentLang] : '',
+                    description: link.description ? link.description[currentLang] : ''
+                }))];
+            });
+        }
+        
         additionalLinks.forEach(link => {
             if (!seenUrls.has(link.url)) {
                 seenUrls.add(link.url);
@@ -1053,6 +1158,17 @@ function downloadAllLinksPDF() {
         if (item.links) additionalLinks = [...additionalLinks, ...item.links];
         if (currentLang === 'fi' && item.linksFI) additionalLinks = [...additionalLinks, ...item.linksFI];
         if (currentLang === 'en' && item.linksEN) additionalLinks = [...additionalLinks, ...item.linksEN];
+        
+        // Add new YAML-style link sections
+        if (item.linkSections) {
+            item.linkSections.forEach(section => {
+                additionalLinks = [...additionalLinks, ...section.links.map(link => ({
+                    url: link.url ? link.url[currentLang] : '',
+                    name: link.name ? link.name[currentLang] : '',
+                    description: link.description ? link.description[currentLang] : ''
+                }))];
+            });
+        }
         
         additionalLinks.forEach(link => {
             if (!seenUrls.has(link.url)) {
@@ -1598,8 +1714,18 @@ function addItemToPDF(doc, item, index, y, pageHeight, leftMargin, rightMargin, 
     if (currentLang === 'fi' && item.linksFI) linksToShow = [...linksToShow, ...item.linksFI];
     if (currentLang === 'en' && item.linksEN) linksToShow = [...linksToShow, ...item.linksEN];
     
+    // Add new YAML-style link sections
+    if (item.linkSections) {
+        item.linkSections.forEach(section => {
+            linksToShow = [...linksToShow, ...section.links.map(link => ({
+                url: link.url ? link.url[currentLang] : '',
+                name: link.name ? link.name[currentLang] : '',
+                description: link.description ? link.description[currentLang] : ''
+            }))];
+        });
+    }
+    
     if (linksToShow.length > 0) {
-        y = checkPageBreak(doc, y, 10, pageHeight);
         doc.setFontSize(10);
         doc.setFont(undefined, 'bold');
         doc.text(`${currentLang === 'fi' ? 'Linkit:' : 'Links'}`, leftMargin, y);

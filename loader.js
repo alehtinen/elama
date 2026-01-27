@@ -24,13 +24,17 @@ function parseMarkdownContent(markdown) {
     let currentItem = null;
     let itemId = 0;
     let currentBodyField = null; // Track if we're reading a multi-line body
+    let isInLinkSection = false; // Track if we're in a #### Links: section
+    let currentLinkSection = null; // Current link section being built (with title and links)
+    let currentLinkItem = null; // Current link item being built
     
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         const trimmedLine = line.trim();
         
         // Check if this is a new field (starts with a known field name)
-        const isNewField = trimmedLine.startsWith('###') || 
+        // Note: Use '### ' to match only level-3 headers, not level-4 (####)
+        const isNewField = trimmedLine.startsWith('### ') || 
                           trimmedLine.startsWith('URL:') ||
                           trimmedLine.startsWith('Type:') ||
                           trimmedLine.startsWith('Main Tag:') ||
@@ -131,7 +135,20 @@ function parseMarkdownContent(markdown) {
         }
         
         // Parse Content items
-        if (currentSection === 'content' && trimmedLine.startsWith('###')) {
+        if (currentSection === 'content' && trimmedLine.startsWith('### ')) {
+            // Save the last link item if we were in a link section
+            if (currentLinkItem && currentLinkSection) {
+                currentLinkSection.links.push(currentLinkItem);
+                currentLinkItem = null;
+            }
+            // Save the last link section if exists
+            if (currentLinkSection) {
+                if (!currentItem.linkSections) currentItem.linkSections = [];
+                currentItem.linkSections.push(currentLinkSection);
+                currentLinkSection = null;
+            }
+            isInLinkSection = false;
+            
             // Save previous item if exists
             if (currentItem) {
                 content.push(currentItem);
@@ -158,8 +175,100 @@ function parseMarkdownContent(markdown) {
         
         // Parse item properties
         if (currentItem) {
-            if (trimmedLine.startsWith('URL: ')) {
+            // Check for new YAML-style link sections
+            if (trimmedLine.startsWith('#### Links:')) {
+                // Save previous link item to previous section
+                if (currentLinkItem && currentLinkSection) {
+                    currentLinkSection.links.push(currentLinkItem);
+                    currentLinkItem = null;
+                }
+                // Save previous link section if exists
+                if (currentLinkSection) {
+                    if (!currentItem.linkSections) currentItem.linkSections = [];
+                    currentItem.linkSections.push(currentLinkSection);
+                }
+                // New YAML format: #### Links: Title FI | Title EN
+                const titlePart = trimmedLine.substring(12).trim(); // After '#### Links:'
+                const titleParts = titlePart.split('|');
+                currentLinkSection = {
+                    title: {
+                        fi: titleParts[0] ? titleParts[0].trim() : 'Lisätietoa',
+                        en: titleParts[1] ? titleParts[1].trim() : 'More info'
+                    },
+                    links: []
+                };
+                isInLinkSection = true;
+                currentLinkItem = null;
+                continue;
+            } else if (isInLinkSection && (trimmedLine.startsWith('###') || trimmedLine.startsWith('##'))) {
+                // Exit link section when we hit another header
+                if (currentLinkItem && currentLinkSection) {
+                    currentLinkSection.links.push(currentLinkItem);
+                    currentLinkItem = null;
+                }
+                if (currentLinkSection) {
+                    if (!currentItem.linkSections) currentItem.linkSections = [];
+                    currentItem.linkSections.push(currentLinkSection);
+                    currentLinkSection = null;
+                }
+                isInLinkSection = false;
+                currentLinkItem = null;
+            } else if (isInLinkSection) {
+                // Parse YAML-style link items
+                if (trimmedLine.startsWith('- Name:')) {
+                    // Save previous link item if exists
+                    if (currentLinkItem && currentLinkSection) {
+                        currentLinkSection.links.push(currentLinkItem);
+                    }
+                    // Start new link item
+                    const namePart = trimmedLine.substring(7).trim();
+                    const nameParts = namePart.split('|');
+                    currentLinkItem = {
+                        name: {
+                            fi: nameParts[0] ? nameParts[0].trim() : '',
+                            en: nameParts[1] ? nameParts[1].trim() : nameParts[0] ? nameParts[0].trim() : ''
+                        }
+                    };
+                } else if (currentLinkItem) {
+                    // Parse link item properties
+                    if (trimmedLine.startsWith('URL FI:')) {
+                        if (!currentLinkItem.url) currentLinkItem.url = { fi: '', en: '' };
+                        currentLinkItem.url.fi = trimmedLine.substring(7).trim();
+                    } else if (trimmedLine.startsWith('URL EN:')) {
+                        if (!currentLinkItem.url) currentLinkItem.url = { fi: '', en: '' };
+                        currentLinkItem.url.en = trimmedLine.substring(7).trim();
+                    } else if (trimmedLine.startsWith('URL:')) {
+                        // Universal URL (same for both languages)
+                        const url = trimmedLine.substring(4).trim();
+                        currentLinkItem.url = { fi: url, en: url };
+                    } else if (trimmedLine.startsWith('Description FI:')) {
+                        if (!currentLinkItem.description) currentLinkItem.description = { fi: '', en: '' };
+                        currentLinkItem.description.fi = trimmedLine.substring(15).trim();
+                    } else if (trimmedLine.startsWith('Description EN:')) {
+                        if (!currentLinkItem.description) currentLinkItem.description = { fi: '', en: '' };
+                        currentLinkItem.description.en = trimmedLine.substring(15).trim();
+                    } else if (trimmedLine.startsWith('Description:')) {
+                        // Universal description (same for both languages)
+                        const desc = trimmedLine.substring(12).trim();
+                        currentLinkItem.description = { fi: desc, en: desc };
+                    }
+                }
+            } else if (trimmedLine.startsWith('URL: ')) {
                 currentItem.url = trimmedLine.substring(5).trim();
+            } else if (trimmedLine.startsWith('URL Name: ')) {
+                // URL Name with language support: URL Name: Suomeksi | English
+                const namePart = trimmedLine.substring(10).trim();
+                const nameParts = namePart.split('|');
+                if (!currentItem.urlName) currentItem.urlName = { fi: '', en: '' };
+                currentItem.urlName.fi = nameParts[0] ? nameParts[0].trim() : '';
+                currentItem.urlName.en = nameParts[1] ? nameParts[1].trim() : nameParts[0] ? nameParts[0].trim() : '';
+            } else if (trimmedLine.startsWith('URL Description: ')) {
+                // URL Description with language support: URL Description: Kuvaus | Description
+                const descPart = trimmedLine.substring(17).trim();
+                const descParts = descPart.split('|');
+                if (!currentItem.urlDescription) currentItem.urlDescription = { fi: '', en: '' };
+                currentItem.urlDescription.fi = descParts[0] ? descParts[0].trim() : '';
+                currentItem.urlDescription.en = descParts[1] ? descParts[1].trim() : descParts[0] ? descParts[0].trim() : '';
             } else if (trimmedLine.startsWith('Icon: ')) {
                 currentItem.icon = trimmedLine.substring(6).trim();
             } else if (trimmedLine.startsWith('Type: ')) {
@@ -177,14 +286,17 @@ function parseMarkdownContent(markdown) {
                 const tagList = trimmedLine.substring(6).trim();
                 currentItem.tags = tagList.split(',').map(t => t.trim());
             } else if (trimmedLine.startsWith('Links: ')) {
+                // Old pipe-delimited format (backward compatibility)
                 const linkList = trimmedLine.substring(7).trim();
                 if (!currentItem.links) currentItem.links = [];
                 currentItem.links = parseLinkList(linkList);
             } else if (trimmedLine.startsWith('Links FI: ')) {
+                // Old pipe-delimited format (backward compatibility)
                 const linkList = trimmedLine.substring(10).trim();
                 if (!currentItem.linksFI) currentItem.linksFI = [];
                 currentItem.linksFI = parseLinkList(linkList);
             } else if (trimmedLine.startsWith('Links EN: ')) {
+                // Old pipe-delimited format (backward compatibility)
                 const linkList = trimmedLine.substring(10).trim();
                 if (!currentItem.linksEN) currentItem.linksEN = [];
                 currentItem.linksEN = parseLinkList(linkList);
@@ -211,6 +323,16 @@ function parseMarkdownContent(markdown) {
                 currentBodyField = 'en'; // Start reading multi-line body
             }
         }
+    }
+    
+    // Add last link item to section if exists
+    if (currentLinkItem && currentLinkSection) {
+        currentLinkSection.links.push(currentLinkItem);
+    }
+    // Add last link section if exists
+    if (currentLinkSection && currentItem) {
+        if (!currentItem.linkSections) currentItem.linkSections = [];
+        currentItem.linkSections.push(currentLinkSection);
     }
     
     // Add last item
@@ -274,6 +396,11 @@ function markdownToHtml(text) {
         let currentListType = null; // 'numbered', 'bullet', or null
         
         for (const line of lines) {
+            // Check if line is a markdown header (####, #####, ######)
+            const h6Match = line.match(/^######\s+(.+)$/);
+            const h5Match = line.match(/^#####\s+(.+)$/);
+            const h4Match = line.match(/^####\s+(.+)$/);
+            
             // Check if line is bold-only (heading)
             const isBoldOnly = line.match(/^<strong>.+<\/strong>$/);
             
@@ -281,7 +408,43 @@ function markdownToHtml(text) {
             const isNumbered = line.match(/^\d+\.\s/);
             const isBullet = line.match(/^[-*]\s/);
             
-            if (isBoldOnly) {
+            if (h6Match) {
+                // Flush current list if any
+                if (currentList.length > 0) {
+                    if (currentListType === 'numbered') {
+                        result.push(`<ol class="list-decimal list-inside my-4">${currentList.join('')}</ol>`);
+                    } else if (currentListType === 'bullet') {
+                        result.push(`<ul class="list-disc list-inside my-4">${currentList.join('')}</ul>`);
+                    }
+                    currentList = [];
+                    currentListType = null;
+                }
+                result.push(`<h6 class="text-sm font-semibold mt-4 mb-2 text-gray-800 dark:text-gray-200">${h6Match[1]}</h6>`);
+            } else if (h5Match) {
+                // Flush current list if any
+                if (currentList.length > 0) {
+                    if (currentListType === 'numbered') {
+                        result.push(`<ol class="list-decimal list-inside my-4">${currentList.join('')}</ol>`);
+                    } else if (currentListType === 'bullet') {
+                        result.push(`<ul class="list-disc list-inside my-4">${currentList.join('')}</ul>`);
+                    }
+                    currentList = [];
+                    currentListType = null;
+                }
+                result.push(`<h5 class="text-base font-semibold mt-4 mb-2 text-gray-800 dark:text-gray-200">${h5Match[1]}</h5>`);
+            } else if (h4Match) {
+                // Flush current list if any
+                if (currentList.length > 0) {
+                    if (currentListType === 'numbered') {
+                        result.push(`<ol class="list-decimal list-inside my-4">${currentList.join('')}</ol>`);
+                    } else if (currentListType === 'bullet') {
+                        result.push(`<ul class="list-disc list-inside my-4">${currentList.join('')}</ul>`);
+                    }
+                    currentList = [];
+                    currentListType = null;
+                }
+                result.push(`<h4 class="text-lg font-semibold mt-4 mb-2 text-gray-900 dark:text-white">${h4Match[1]}</h4>`);
+            } else if (isBoldOnly) {
                 // Flush current list if any
                 if (currentList.length > 0) {
                     if (currentListType === 'numbered') {

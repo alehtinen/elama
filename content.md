@@ -201,6 +201,55 @@ Updated: 26.01.2026
 Last Checked: 26.01.2026
 Updated: 26.01.2026
 
+### Karttapalvelut | Map Services
+Type: link
+Main Tag: arki
+Tags: online, resources, tampere
+Description FI: Keskeiset kartta- ja navigointipalvelut liikkumisen suunnitteluun
+Description EN: Main map and navigation services for planning your travel
+Body FI: Karttapalvelut auttavat löytämään perille ja suunnittelemaan reittejä. Useimmat palvelut toimivat sekä tietokoneella että älypuhelimessa.
+
+#### Yleiskartat
+Yleiskäyttöisistä karttapalveluista löydät osoitteita, reittejä ja paikkoja. Apple Maps ja Google Maps toimivat hyvin navigointiin ja joukkoliikenteen reittien suunnitteluun.
+
+#### Tampereen kaupungin kartat
+Tampereen kaupungin karttapalvelusta löydät mm. kaupungin palvelut kartalla, rakennusrekisterin ja asemakaavat.
+
+Body EN: Map services help you find your way and plan routes. Most services work on both computers and smartphones.
+
+#### General Maps
+General map services help you find addresses, routes and places. Apple Maps and Google Maps work well for navigation and public transport route planning.
+
+#### City of Tampere Maps
+The City of Tampere map service includes city services on map, building register and zoning plans.
+
+Added: 27.01.2026
+Last Checked: 27.01.2026
+
+#### Links: Yleiskartat | General Maps
+
+- Name: Apple Maps (Kartat)
+  URL: https://maps.apple.com/
+  Description: Applen karttapalvelu - toimii parhaiten Apple-laitteilla
+
+- Name: Google Maps
+  URL: https://maps.google.com/
+  Description: Googlen karttapalvelu - kattava ja monipuolinen
+
+- Name: OpenStreetMap
+  URL: https://www.openstreetmap.org/
+  Description: Avoin ja yhteisöllinen karttapalvelu
+
+#### Links: Paikalliset kartat | Local Maps
+
+- Name: Tampereen kaupungin kartat
+  URL: https://kartat.tampere.fi/
+  Description: Tampereen kaupungin virallinen karttapalvelu
+
+- Name: Nyssen reittiopas
+  URL: https://reittiopas.tampere.fi/
+  Description: Tampereen joukkoliikenteen reittiopas
+
 ### Ulkoilumahdollisuuksia Tampereella| Outdoor activities in Tampere
 Type: link
 Main Tag: tampere
@@ -573,7 +622,7 @@ URL: https://www.tamk.fi
 
 ### Tampereen yliopisto | Tampere University
 Type: link
-Main Tag: opiskelu, tampere
+Main Tag: opiskelu, yliopisto, tampere
 Tags: education, tampere, university, research, resources
 Description FI: Tampereen yliopisto. Tutkimusyliopisto joka yhdistää teknilliset alat ja yhteiskuntatieteet.
 Description EN: Tampere University. Research university combining technology and social sciences.
@@ -878,6 +927,7 @@ Last Checked: 27.01.2026
 
 - Name: Milavida
   URL: https://www.museomilavida.fi/
+  URL Contact: https://www.museomilavida.fi/yhteystiedot
   Description: Museo
 
 - Name: Työväenmuseo Werstas
@@ -924,8 +974,59 @@ Last Checked: 27.01.2026
 
 - Name: Kaikukortti.fi
   URL: https://kaikukortti.fi/
+  Contact: true
   Description: Kaikukortin verkkopalvelu
 
 - Name: Kulttuuriakaikille.fi
   URL: https://www.kulttuuriakaikille.fi/
   Description: Kulttuuripalveluja kaikille
+
+### Säädökset ja lait | Regulations and Laws
+Type: link
+Main Tag: turva
+Tags: public-service, resources, support
+Description FI: Keskeiset sosiaali- ja työllisyyspalveluihin liittyvät lait sekä alueen päätöstietokannat
+Description EN: Key laws related to social and employment services and regional decision databases
+Body FI: Tältä sivulta löydät keskeisimmät nuorten sosiaali- ja työllisyyspalveluihin liittyvät lait. Lakitekstit ovat Finlex-palvelussa, joka on valtion ylläpitämä oikeus- ja viranomaistiedon palvelu.
+
+Lisäksi löydät linkit Tampereen kaupungin ja Pirkanmaan hyvinvointialueen päätöstietokantoihin, joista voit seurata alueellisia päätöksiä.
+
+Body EN: This page contains the most important laws related to youth social and employment services. The legal texts are in the Finlex service, which is a government-maintained service for legal and official information.
+
+You will also find links to the decision databases of the City of Tampere and the Pirkanmaa Wellbeing Services County, where you can follow regional decisions.
+
+Added: 27.01.2026
+Last Checked: 27.01.2026
+
+#### Links: Lait | Laws
+
+- Name: Sosiaalihuoltolaki
+  URL: https://www.finlex.fi/fi/laki/ajantasa/2014/20141301
+  Description: Sosiaalihuollon järjestämistä ja toteuttamista koskeva laki
+
+- Name: Työttömyysturvalaki
+  URL: https://www.finlex.fi/fi/laki/ajantasa/2002/20021290
+  Description: Työttömyysturvan ehtoja ja toteuttamista koskeva laki
+
+- Name: Nuorisolaki
+  URL: https://www.finlex.fi/fi/laki/ajantasa/2006/20060072
+  Description: Nuorten kasvu- ja elinolosuhteiden parantamista koskeva laki
+
+#### Links: Päätökset | Decisions
+
+- Name: Tampereen kaupungin päätökset
+  URL: https://tampere.cloudnc.fi/
+  Description: Tampereen kaupungin päätöstietokanta
+
+- Name: Pirkanmaan hyvinvointialueen päätökset
+  URL: https://pirha.cloudnc.fi/
+  Description: Pirkanmaan hyvinvointialueen päätöstietokanta
+
+  #### Links: Yhteystiedot | Contacts
+- Name: Tampereen kaupungin päätökset
+  URL: https://tampere.cloudnc.fi/
+  Description: Tampereen kaupungin päätöstietokanta
+
+- Name: Pirkanmaan hyvinvointialueen päätökset
+  URL: https://pirha.cloudnc.fi/
+  Description: Pirkanmaan hyvinvointialueen päätöstietokanta

@@ -87,12 +87,21 @@
                 </div>
                 <div class="flex items-center gap-1 flex-wrap">
                     <!-- Show All Links (site-wide) -->
-                    <button onclick="showAllLinksModal()" class="p-2 sm:px-3 sm:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm">
+                    <button onclick="showAllLinksModal()" class="p-2 sm:px-3 sm:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm" title="Näytä kaikki sivulla esiintyvät linkit | Show all links on the site">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
                         </svg>
                         <span class="hidden sm:inline lang-fi">Kaikki linkit</span>
                         <span class="hidden sm:inline lang-en">All Links</span>
+                    </button>
+                    
+                    <!-- Contact Information -->
+                    <button onclick="showContactsModal()" class="p-2 sm:px-3 sm:py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm" title="Näytä kaikki sivulla esiintyvät yhteystiedot | Show all contact information on the site">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="hidden sm:inline lang-fi">Yhteystiedot</span>
+                        <span class="hidden sm:inline lang-en">Contact Info</span>
                     </button>
                     
                     <!-- Bookmarks Download -->
@@ -570,6 +579,10 @@
                         </button>
                     </div>
                 </div>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    <span class="lang-fi">Tässä näkyvät kaikki sivulla esiintyvät linkit.</span>
+                    <span class="lang-en">This shows all links found on the site.</span>
+                </p>
                 <!-- Category Filter -->
                 <div class="mb-4 border-b border-gray-200 dark:border-gray-700 pb-4">
                     <button onclick="toggleAllLinksFilter()" class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
@@ -584,6 +597,53 @@
                     </div>
                 </div>
                 <div id="allLinksContent" class="overflow-x-auto">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contacts Modal -->
+    <div id="contactsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-8">
+                <div class="flex justify-between items-start mb-6 gap-2">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white flex-1">
+                        <span class="lang-fi">Yhteystiedot</span>
+                        <span class="lang-en">Contact Information</span>
+                    </h3>
+                    <div class="flex gap-2 items-start flex-shrink-0">
+                        <button onclick="downloadContactsPDF()" class="inline-flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors" title="Lataa yhteystiedot PDF:nä | Download contacts as PDF">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            PDF
+                        </button>
+                        <button onclick="closeContactsModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    <span class="lang-fi">Tässä näkyvät kaikki sivulla esiintyvät yhteystietolinkit.</span>
+                    <span class="lang-en">This shows all contact links found on the site.</span>
+                </p>
+                <!-- Category Filter -->
+                <div class="mb-4 border-b border-gray-200 dark:border-gray-700 pb-4">
+                    <button onclick="toggleContactsFilter()" class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                        </svg>
+                        <span class="lang-fi">Suodata kategorioita</span>
+                        <span class="lang-en">Filter categories</span>
+                    </button>
+                    <div id="contactsFilter" class="hidden mt-3 grid grid-cols-2 md:grid-cols-3 gap-2">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+                <div id="contactsContent" class="overflow-x-auto">
                     <!-- Content will be populated by JavaScript -->
                 </div>
             </div>

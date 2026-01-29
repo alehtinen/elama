@@ -238,10 +238,18 @@ function parseMarkdownContent(markdown) {
                     } else if (trimmedLine.startsWith('URL EN:')) {
                         if (!currentLinkItem.url) currentLinkItem.url = { fi: '', en: '' };
                         currentLinkItem.url.en = trimmedLine.substring(7).trim();
+                    } else if (trimmedLine.startsWith('URL Contact:')) {
+                        // Contact URL for this specific link item
+                        const url = trimmedLine.substring(12).trim();
+                        currentLinkItem.urlContact = url;
                     } else if (trimmedLine.startsWith('URL:')) {
                         // Universal URL (same for both languages)
                         const url = trimmedLine.substring(4).trim();
                         currentLinkItem.url = { fi: url, en: url };
+                    } else if (trimmedLine.startsWith('Contact:')) {
+                        // Contact flag for this specific link item
+                        const contactValue = trimmedLine.substring(8).trim().toLowerCase();
+                        currentLinkItem.isContact = contactValue === 'true' || contactValue === 'yes';
                     } else if (trimmedLine.startsWith('Description FI:')) {
                         if (!currentLinkItem.description) currentLinkItem.description = { fi: '', en: '' };
                         currentLinkItem.description.fi = trimmedLine.substring(15).trim();
@@ -270,6 +278,13 @@ function parseMarkdownContent(markdown) {
                 if (!currentItem.urlDescription) currentItem.urlDescription = { fi: '', en: '' };
                 currentItem.urlDescription.fi = descParts[0] ? descParts[0].trim() : '';
                 currentItem.urlDescription.en = descParts[1] ? descParts[1].trim() : descParts[0] ? descParts[0].trim() : '';
+            } else if (trimmedLine.startsWith('URL Contact: ')) {
+                // Contact URL - separate URL for contact information
+                currentItem.urlContact = trimmedLine.substring(13).trim();
+            } else if (trimmedLine.startsWith('Contact: ')) {
+                // Contact flag - indicates if main URL is a contact link
+                const contactValue = trimmedLine.substring(9).trim().toLowerCase();
+                currentItem.isContactUrl = contactValue === 'true' || contactValue === 'yes';
             } else if (trimmedLine.startsWith('Icon: ')) {
                 currentItem.icon = trimmedLine.substring(6).trim();
             } else if (trimmedLine.startsWith('Type: ')) {

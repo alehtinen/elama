@@ -774,10 +774,17 @@ function showItemModalDirect(item) {
     
     // Show new YAML-style link sections
     if (item.linkSections && item.linkSections.length > 0) {
-        linkHTML += item.linkSections.map(section => `
+        linkHTML += item.linkSections.map(section => {
+            const sectionTitleLower = section.title[currentLang].toLowerCase();
+            const isContactSection = sectionTitleLower.includes('yhteystie') || 
+                                    sectionTitleLower.includes('contact') ||
+                                    sectionTitleLower === 'yhteystiedot' ||
+                                    sectionTitleLower === 'contact information';
+            
+            return `
             <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                    ${section.title[currentLang]}
+                <h4 class="text-sm font-semibold ${isContactSection ? 'text-purple-700 dark:text-purple-300' : 'text-gray-700 dark:text-gray-300'} mb-3">
+                    ${isContactSection ? '📧 ' : ''}${section.title[currentLang]}
                 </h4>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -813,11 +820,54 @@ function showItemModalDirect(item) {
                     </table>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
     }
     
-    // Add main URL as a link in table if URL Name is provided
-    if (item.url && item.urlName) {
+    // Add URL Contact field if present
+    if (item.urlContact) {
+        linkHTML += `
+            <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <h4 class="text-sm font-semibold text-purple-700 dark:text-purple-300 mb-3">
+                    📧 ${currentLang === 'fi' ? 'Yhteystiedot' : 'Contact Information'}
+                </h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-900">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                    ${currentLang === 'fi' ? 'Nimi' : 'Name'}
+                                </th>
+                                <th class="hidden md:table-cell px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                    ${currentLang === 'fi' ? 'Kuvaus' : 'Description'}
+                                </th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                    ${currentLang === 'fi' ? 'Linkki' : 'Link'}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            <tr>
+                                <td class="px-4 py-2 text-sm text-gray-900 dark:text-white">${item.urlName ? item.urlName[currentLang] : item.title[currentLang]}</td>
+                                <td class="hidden md:table-cell px-4 py-2 text-sm text-gray-600 dark:text-gray-400">${item.urlDescription ? item.urlDescription[currentLang] : (currentLang === 'fi' ? 'Yhteystiedot' : 'Contact Information')}</td>
+                                <td class="px-4 py-2 text-sm">
+                                    <a href="${item.urlContact}" target="_blank" class="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                        </svg>
+                                        ${currentLang === 'fi' ? 'Avaa' : 'Open'}
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Add main URL as a link in table if URL Name is provided (and not marked as contact)
+    if (item.url && item.urlName && !item.isContactUrl) {
         const urlLinkHTML = `
             <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
@@ -859,10 +909,53 @@ function showItemModalDirect(item) {
         linkHTML = (linkHTML || '') + urlLinkHTML;
     }
     
+    // Check if main URL is contact link and add to contact section
+    if (item.url && item.isContactUrl) {
+        const contactLinkHTML = `
+            <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <h4 class="text-sm font-semibold text-purple-700 dark:text-purple-300 mb-3">
+                    📧 ${currentLang === 'fi' ? 'Yhteystiedot' : 'Contact Information'}
+                </h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-900">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                    ${currentLang === 'fi' ? 'Nimi' : 'Name'}
+                                </th>
+                                <th class="hidden md:table-cell px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                    ${currentLang === 'fi' ? 'Kuvaus' : 'Description'}
+                                </th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                    ${currentLang === 'fi' ? 'Linkki' : 'Link'}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            <tr>
+                                <td class="px-4 py-2 text-sm text-gray-900 dark:text-white">${item.urlName ? item.urlName[currentLang] : item.title[currentLang]}</td>
+                                <td class="hidden md:table-cell px-4 py-2 text-sm text-gray-600 dark:text-gray-400">${item.urlDescription ? item.urlDescription[currentLang] : ''}</td>
+                                <td class="px-4 py-2 text-sm">
+                                    <a href="${item.url}" target="_blank" class="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                        </svg>
+                                        ${currentLang === 'fi' ? 'Avaa' : 'Open'}
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+        linkHTML = (linkHTML || '') + contactLinkHTML;
+    }
+    
     if (linkHTML) {
         modalLinks.innerHTML = linkHTML;
-    } else if (item.url) {
-        // Legacy URL field support (no URL Name provided)
+    } else if (item.url && !item.isContactUrl) {
+        // Legacy URL field support (no URL Name provided and not a contact link)
         modalLinks.innerHTML = `
             <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <a href="${item.url}" target="_blank" class="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline text-sm break-all">
@@ -1012,14 +1105,19 @@ function renderAllLinks(filterCategory = null) {
         if (currentLang === 'fi' && item.linksFI) additionalLinks = [...additionalLinks, ...item.linksFI];
         if (currentLang === 'en' && item.linksEN) additionalLinks = [...additionalLinks, ...item.linksEN];
         
-        // Add new YAML-style link sections
+        // Add new YAML-style link sections (exclude contact links)
         if (item.linkSections) {
             item.linkSections.forEach(section => {
-                additionalLinks = [...additionalLinks, ...section.links.map(link => ({
-                    url: link.url ? link.url[currentLang] : '',
-                    name: link.name ? link.name[currentLang] : '',
-                    description: link.description ? link.description[currentLang] : ''
-                }))];
+                section.links.forEach(link => {
+                    // Skip contact links - they appear in the Contacts modal instead
+                    if (link.isContact || link.urlContact) return;
+                    
+                    additionalLinks.push({
+                        url: link.url ? link.url[currentLang] : '',
+                        name: link.name ? link.name[currentLang] : '',
+                        description: link.description ? link.description[currentLang] : ''
+                    });
+                });
             });
         }
         
@@ -1146,6 +1244,7 @@ function downloadAllLinksPDF() {
             seenUrls.add(item.url);
             allLinks.push({
                 category: categoryName,
+                categoryId: item.mainTag,
                 itemTitle: item.title[currentLang],
                 name: item.title[currentLang],
                 description: item.description[currentLang] || '',
@@ -1175,6 +1274,7 @@ function downloadAllLinksPDF() {
                 seenUrls.add(link.url);
                 allLinks.push({
                     category: categoryName,
+                    categoryId: item.mainTag,
                     itemTitle: item.title[currentLang],
                     name: link.name || item.title[currentLang],
                     description: link.description || '',
@@ -1184,69 +1284,120 @@ function downloadAllLinksPDF() {
         });
     });
     
-    // Headers
-    const categoryLabel = currentLang === 'fi' ? 'Kategoria' : 'Category';
+    // Group links by category
+    const linksByCategory = {};
+    allLinks.forEach(link => {
+        if (!linksByCategory[link.categoryId]) {
+            linksByCategory[link.categoryId] = {
+                name: link.category,
+                links: []
+            };
+        }
+        linksByCategory[link.categoryId].links.push(link);
+    });
+    
     const nameLabel = currentLang === 'fi' ? 'Nimi' : 'Name';
     const urlLabel = currentLang === 'fi' ? 'Linkki' : 'Link';
+    const descLabel = currentLang === 'fi' ? 'Kuvaus' : 'Description';
     
-    // Add each link
-    allLinks.forEach((link, index) => {
-        checkPageBreak(20);
-        
-        // Category
-        doc.setFontSize(9);
+    // Add links grouped by category
+    Object.values(linksByCategory).forEach((category, catIndex) => {
+        // Category header
+        checkPageBreak(15);
+        doc.setFontSize(12);
         doc.setFont(undefined, 'bold');
-        doc.text(`${categoryLabel}:`, leftMargin, y);
-        doc.setFont(undefined, 'normal');
-        doc.setFontSize(8);
-        const categoryLines = doc.splitTextToSize(link.category, rightMargin - leftMargin - 20);
-        doc.text(categoryLines, leftMargin + 22, y);
-        y += categoryLines.length * 4;
+        doc.text(category.name, leftMargin, y);
+        y += 8;
         
-        // Name
-        doc.setFontSize(9);
-        doc.setFont(undefined, 'bold');
-        doc.text(`${nameLabel}:`, leftMargin, y);
-        doc.setFont(undefined, 'normal');
-        doc.setFontSize(8);
-        const nameLines = doc.splitTextToSize(link.name, rightMargin - leftMargin - 20);
-        doc.text(nameLines, leftMargin + 22, y);
-        y += nameLines.length * 4;
+        // Group links by description within category
+        const linksByDesc = {};
+        category.links.forEach(link => {
+            const desc = link.description || '';
+            if (!linksByDesc[desc]) {
+                linksByDesc[desc] = [];
+            }
+            linksByDesc[desc].push(link);
+        });
         
-        // URL
-        doc.setFontSize(9);
-        doc.setFont(undefined, 'bold');
-        doc.text(`${urlLabel}:`, leftMargin, y);
-        doc.setFont(undefined, 'normal');
-        doc.setFontSize(8);
-        doc.setTextColor(0, 0, 255);
-        const urlLines = doc.splitTextToSize(link.url, rightMargin - leftMargin - 20);
-        doc.text(urlLines, leftMargin + 22, y);
-        doc.setTextColor(0, 0, 0);
-        y += urlLines.length * 4;
+        // Show each description group
+        Object.entries(linksByDesc).forEach(([description, links]) => {
+            checkPageBreak(15);
+            
+            // Show description if it exists and there are multiple links with same description
+            if (description && links.length > 1) {
+                doc.setFontSize(9);
+                doc.setFont(undefined, 'bold');
+                doc.text(`${descLabel}:`, leftMargin + 5, y);
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(8);
+                const descLines = doc.splitTextToSize(description, rightMargin - leftMargin - 25);
+                doc.text(descLines, leftMargin + 20, y);
+                y += descLines.length * 4 + 2;
+                
+                // List links under this description
+                links.forEach(link => {
+                    checkPageBreak(12);
+                    
+                    doc.setFontSize(8);
+                    doc.setFont(undefined, 'bold');
+                    const nameLines = doc.splitTextToSize(link.name, 80);
+                    doc.text(nameLines, leftMargin + 10, y);
+                    
+                    doc.setFont(undefined, 'normal');
+                    doc.setTextColor(0, 0, 255);
+                    const urlLines = doc.splitTextToSize(link.url, rightMargin - leftMargin - 95);
+                    doc.text(urlLines, leftMargin + 95, y);
+                    doc.setTextColor(0, 0, 0);
+                    
+                    y += Math.max(nameLines.length, urlLines.length) * 4;
+                });
+                
+                y += 4;
+            } else {
+                // Show links individually (no shared description or only one link)
+                links.forEach(link => {
+                    checkPageBreak(20);
+                    
+                    // Name
+                    doc.setFontSize(9);
+                    doc.setFont(undefined, 'bold');
+                    doc.text(`${nameLabel}:`, leftMargin + 5, y);
+                    doc.setFont(undefined, 'normal');
+                    doc.setFontSize(8);
+                    const nameLines = doc.splitTextToSize(link.name, rightMargin - leftMargin - 25);
+                    doc.text(nameLines, leftMargin + 20, y);
+                    y += nameLines.length * 4;
+                    
+                    // URL
+                    doc.setFontSize(9);
+                    doc.setFont(undefined, 'bold');
+                    doc.text(`${urlLabel}:`, leftMargin + 5, y);
+                    doc.setFont(undefined, 'normal');
+                    doc.setFontSize(8);
+                    doc.setTextColor(0, 0, 255);
+                    const urlLines = doc.splitTextToSize(link.url, rightMargin - leftMargin - 25);
+                    doc.text(urlLines, leftMargin + 20, y);
+                    doc.setTextColor(0, 0, 0);
+                    y += urlLines.length * 4;
+                    
+                    // Description if exists
+                    if (description) {
+                        doc.setFontSize(9);
+                        doc.setFont(undefined, 'bold');
+                        doc.text(`${descLabel}:`, leftMargin + 5, y);
+                        doc.setFont(undefined, 'normal');
+                        doc.setFontSize(8);
+                        const descLines = doc.splitTextToSize(description, rightMargin - leftMargin - 25);
+                        doc.text(descLines, leftMargin + 20, y);
+                        y += descLines.length * 4;
+                    }
+                    
+                    y += 4;
+                });
+            }
+        });
         
-        // Description if exists
-        if (link.description) {
-            const descLabel = currentLang === 'fi' ? 'Kuvaus' : 'Description';
-            doc.setFontSize(9);
-            doc.setFont(undefined, 'bold');
-            doc.text(`${descLabel}:`, leftMargin, y);
-            doc.setFont(undefined, 'normal');
-            doc.setFontSize(8);
-            const descLines = doc.splitTextToSize(link.description, rightMargin - leftMargin - 20);
-            doc.text(descLines, leftMargin + 22, y);
-            y += descLines.length * 4;
-        }
-        
-        y += 5; // spacing between entries
-        
-        // Divider line
-        if (index < allLinks.length - 1) {
-            checkPageBreak(5);
-            doc.setDrawColor(200);
-            doc.line(leftMargin, y, rightMargin, y);
-            y += 5;
-        }
+        y += 4; // Extra space after category
     });
     
     // Save the PDF
@@ -1916,8 +2067,9 @@ function confirmPdfDownload() {
         return;
     }
     const includeAllLinks = document.getElementById('pdfIncludeAllLinks')?.checked ?? false;
+    const includeContacts = document.getElementById('pdfIncludeContacts')?.checked ?? false;
     closeExportModal('pdf');
-    downloadCombinedPDF(selectedCategories, includeAllLinks);
+    downloadCombinedPDF(selectedCategories, includeAllLinks, includeContacts);
 }
 
 function confirmZipDownload() {
@@ -1929,8 +2081,9 @@ function confirmZipDownload() {
     const includeCombined = document.getElementById('zipIncludeCombined')?.checked ?? true;
     const includeBookmarks = document.getElementById('zipIncludeBookmarks')?.checked ?? true;
     const includeAllLinks = document.getElementById('zipIncludeAllLinks')?.checked ?? false;
+    const includeContacts = document.getElementById('zipIncludeContacts')?.checked ?? false;
     closeExportModal('zip');
-    downloadAllPDFsAsZip(selectedCategories, includeCombined, includeBookmarks, includeAllLinks);
+    downloadAllPDFsAsZip(selectedCategories, includeCombined, includeBookmarks, includeAllLinks, includeContacts);
 }
 
 function confirmBookmarkDownload() {
@@ -1944,7 +2097,7 @@ function confirmBookmarkDownload() {
 }
 
 // Download combined PDF with all main tags
-function downloadCombinedPDF(selectedCategories = null, includeAllLinks = false) {
+function downloadCombinedPDF(selectedCategories = null, includeAllLinks = false, includeContacts = false) {
     if (!window.contentData || !window.mainTagDefinitions) return;
     
     const { jsPDF } = window.jspdf;
@@ -2150,6 +2303,86 @@ function downloadCombinedPDF(selectedCategories = null, includeAllLinks = false)
         });
     }
     
+    // Add Contacts section if requested
+    if (includeContacts && window._currentContacts && window._currentContacts.length > 0) {
+        doc.addPage();
+        y = 20;
+        
+        // Title
+        const contactsTitle = currentLang === 'fi' ? 'Yhteystiedot' : 'Contact Information';
+        doc.setFontSize(18);
+        doc.setFont(undefined, 'bold');
+        doc.text(contactsTitle, leftMargin, y);
+        y += 8;
+        
+        // Thick separator line
+        doc.setLineWidth(0.8);
+        doc.setDrawColor(100, 100, 100);
+        doc.line(leftMargin, y, rightMargin, y);
+        doc.setLineWidth(0.2);
+        y += 12;
+        
+        // Group by category
+        const linksByCategory = {};
+        window._currentContacts.forEach(link => {
+            if (!linksByCategory[link.categoryId]) {
+                linksByCategory[link.categoryId] = {
+                    name: link.category,
+                    links: []
+                };
+            }
+            linksByCategory[link.categoryId].links.push(link);
+        });
+        
+        Object.values(linksByCategory).forEach(category => {
+            y = checkPageBreak(doc, y, 15, pageHeight);
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.text(category.name, leftMargin, y);
+            y += 8;
+            
+            category.links.forEach(link => {
+                y = checkPageBreak(doc, y, 25, pageHeight);
+                
+                const cardLabel = currentLang === 'fi' ? 'Kortti' : 'Card';
+                const nameLabel = currentLang === 'fi' ? 'Nimi' : 'Name';
+                const urlLabel = currentLang === 'fi' ? 'Linkki' : 'Link';
+                
+                // Card name (itemTitle)
+                doc.setFontSize(9);
+                doc.setFont(undefined, 'bold');
+                doc.text(`${cardLabel}:`, leftMargin + 5, y);
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(8);
+                const cardLines = doc.splitTextToSize(link.itemTitle, rightMargin - leftMargin - 25);
+                doc.text(cardLines, leftMargin + 20, y);
+                y += cardLines.length * 4;
+                
+                doc.setFontSize(9);
+                doc.setFont(undefined, 'bold');
+                doc.text(`${nameLabel}:`, leftMargin + 5, y);
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(8);
+                const nameLines = doc.splitTextToSize(link.name, rightMargin - leftMargin - 25);
+                doc.text(nameLines, leftMargin + 20, y);
+                y += nameLines.length * 4;
+                
+                doc.setFontSize(9);
+                doc.setFont(undefined, 'bold');
+                doc.text(`${urlLabel}:`, leftMargin + 5, y);
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(8);
+                doc.setTextColor(0, 0, 255);
+                const urlLines = doc.splitTextToSize(link.url, rightMargin - leftMargin - 25);
+                doc.text(urlLines, leftMargin + 20, y);
+                doc.setTextColor(0, 0, 0);
+                y += urlLines.length * 4 + 4;
+            });
+            
+            y += 4;
+        });
+    }
+    
     doc.save(`${title}.pdf`);
 }
 
@@ -2218,7 +2451,7 @@ function generateMainTagPDF(mainTagId) {
 }
 
 // Download all PDFs as a ZIP file
-async function downloadAllPDFsAsZip(selectedCategories = null, includeCombined = true, includeBookmarks = true, includeAllLinks = false) {
+async function downloadAllPDFsAsZip(selectedCategories = null, includeCombined = true, includeBookmarks = true, includeAllLinks = false, includeContacts = false) {
     if (!window.contentData || !window.mainTagDefinitions) return;
     
     const zip = new JSZip();
@@ -2548,6 +2781,91 @@ async function downloadAllPDFsAsZip(selectedCategories = null, includeCombined =
         zip.file(allLinksPdfName, allLinksBlob);
     }
     
+    // Generate and add Contacts PDF if includeContacts is true
+    if (includeContacts && window._currentContacts && window._currentContacts.length > 0) {
+        const { jsPDF } = window.jspdf;
+        const contactsDoc = new jsPDF();
+        const contactsTitle = currentLang === 'fi' ? 'Yhteystiedot' : 'Contact Information';
+        const nameLabel = currentLang === 'fi' ? 'Nimi' : 'Name';
+        const urlLabel = currentLang === 'fi' ? 'Linkki' : 'Link';
+        const pageHeight = 280;
+        const leftMargin = 15;
+        const rightMargin = 195;
+        let y = 15;
+        
+        contactsDoc.setFontSize(16);
+        contactsDoc.text(contactsTitle, leftMargin, y);
+        y += 10;
+        
+        const checkPageBreak = (neededSpace) => {
+            if (y + neededSpace > pageHeight) {
+                contactsDoc.addPage();
+                y = 15;
+            }
+        };
+        
+        // Group by category
+        const linksByCategory = {};
+        window._currentContacts.forEach(link => {
+            if (!linksByCategory[link.categoryId]) {
+                linksByCategory[link.categoryId] = {
+                    name: link.category,
+                    links: []
+                };
+            }
+            linksByCategory[link.categoryId].links.push(link);
+        });
+        
+        Object.values(linksByCategory).forEach(category => {
+            checkPageBreak(15);
+            contactsDoc.setFontSize(12);
+            contactsDoc.setFont(undefined, 'bold');
+            contactsDoc.text(category.name, leftMargin, y);
+            y += 8;
+            
+            category.links.forEach(link => {
+                checkPageBreak(25);
+                
+                const cardLabel = currentLang === 'fi' ? 'Kortti' : 'Card';
+                
+                // Card name (itemTitle)
+                contactsDoc.setFontSize(9);
+                contactsDoc.setFont(undefined, 'bold');
+                contactsDoc.text(`${cardLabel}:`, leftMargin + 5, y);
+                contactsDoc.setFont(undefined, 'normal');
+                contactsDoc.setFontSize(8);
+                const cardLines = contactsDoc.splitTextToSize(link.itemTitle, rightMargin - leftMargin - 25);
+                contactsDoc.text(cardLines, leftMargin + 20, y);
+                y += cardLines.length * 4;
+                
+                contactsDoc.setFontSize(9);
+                contactsDoc.setFont(undefined, 'bold');
+                contactsDoc.text(`${nameLabel}:`, leftMargin + 5, y);
+                contactsDoc.setFont(undefined, 'normal');
+                contactsDoc.setFontSize(8);
+                const nameLines = contactsDoc.splitTextToSize(link.name, rightMargin - leftMargin - 25);
+                contactsDoc.text(nameLines, leftMargin + 20, y);
+                y += nameLines.length * 4;
+                
+                contactsDoc.setFontSize(9);
+                contactsDoc.setFont(undefined, 'bold');
+                contactsDoc.text(`${urlLabel}:`, leftMargin + 5, y);
+                contactsDoc.setFont(undefined, 'normal');
+                contactsDoc.setFontSize(8);
+                contactsDoc.setTextColor(0, 0, 255);
+                const urlLines = contactsDoc.splitTextToSize(link.url, rightMargin - leftMargin - 25);
+                contactsDoc.text(urlLines, leftMargin + 20, y);
+                contactsDoc.setTextColor(0, 0, 0);
+                y += urlLines.length * 4 + 4;
+            });
+            
+            y += 4;
+        });
+        
+        const contactsBlob = contactsDoc.output('blob');
+        zip.file('Yhteystiedot.pdf', contactsBlob);
+    }
+    
     // Generate and download the ZIP file
     const zipBlob = await zip.generateAsync({ type: 'blob' });
     const url = URL.createObjectURL(zipBlob);
@@ -2785,6 +3103,314 @@ window.openAllLinksItem = function(index) {
     }
 };
 
+// ========== CONTACTS MODAL ==========
+function showContactsModal() {
+    if (!window.contentData) return;
+    
+    const modal = document.getElementById('contactsModal');
+    const content = document.getElementById('contactsContent');
+    const filterContainer = document.getElementById('contactsFilter');
+    
+    // Build category filter checkboxes
+    if (filterContainer) {
+        filterContainer.innerHTML = '';
+        Object.keys(window.mainTagDefinitions).forEach(mainTagId => {
+            const mainTagDef = window.mainTagDefinitions[mainTagId];
+            const label = document.createElement('label');
+            label.className = 'flex items-center gap-2 cursor-pointer text-sm';
+            label.innerHTML = `
+                <input type="checkbox" value="${mainTagId}" checked class="w-4 h-4 text-blue-600 rounded" onchange="renderContacts()">
+                <span class="text-gray-900 dark:text-white">${mainTagDef[currentLang]}</span>
+            `;
+            filterContainer.appendChild(label);
+        });
+    }
+    
+    // Render contacts
+    renderContacts();
+    
+    modal.classList.remove('hidden');
+}
+
+function closeContactsModal() {
+    const modal = document.getElementById('contactsModal');
+    modal.classList.add('hidden');
+}
+
+function toggleContactsFilter() {
+    const filter = document.getElementById('contactsFilter');
+    filter.classList.toggle('hidden');
+}
+
+// Render contacts based on current filter
+function renderContacts() {
+    const content = document.getElementById('contactsContent');
+    const filterContainer = document.getElementById('contactsFilter');
+    
+    // Get selected categories from checkboxes
+    const checkboxes = filterContainer.querySelectorAll('input[type="checkbox"]:checked');
+    const selectedCategories = Array.from(checkboxes).map(cb => cb.value);
+    
+    // Collect all contact links
+    const contactLinks = [];
+    const seenUrls = new Set();
+    
+    window.contentData.forEach(item => {
+        // Filter by category
+        const itemMainTags = item.mainTags || [item.mainTag];
+        if (!itemMainTags.some(tag => selectedCategories.includes(tag))) return;
+        
+        const mainTagDef = window.mainTagDefinitions[item.mainTag];
+        const categoryName = mainTagDef ? mainTagDef[currentLang] : '';
+        const itemTitle = item.title[currentLang];
+        
+        // 1. Check if main URL is a contact link (Contact: true)
+        if (item.isContactUrl && item.url && !seenUrls.has(item.url)) {
+            seenUrls.add(item.url);
+            contactLinks.push({
+                category: categoryName,
+                categoryId: item.mainTag,
+                itemTitle: itemTitle,
+                name: item.urlName ? item.urlName[currentLang] : itemTitle,
+                url: item.url,
+                description: item.urlDescription ? item.urlDescription[currentLang] : item.description[currentLang],
+                item: item
+            });
+        }
+        
+        // 2. Check for URL Contact field
+        if (item.urlContact && !seenUrls.has(item.urlContact)) {
+            seenUrls.add(item.urlContact);
+            contactLinks.push({
+                category: categoryName,
+                categoryId: item.mainTag,
+                itemTitle: itemTitle,
+                name: item.urlName ? item.urlName[currentLang] : itemTitle,
+                url: item.urlContact,
+                description: item.urlDescription ? item.urlDescription[currentLang] : (currentLang === 'fi' ? 'Yhteystiedot' : 'Contact Information'),
+                item: item
+            });
+        }
+        
+        // 3. Look for links in any link section
+        if (item.linkSections) {
+            item.linkSections.forEach(section => {
+                section.links.forEach(link => {
+                    // Debug logging
+                    if (link.urlContact || link.isContact) {
+                        console.log('Found contact link:', {
+                            name: link.name,
+                            urlContact: link.urlContact,
+                            isContact: link.isContact,
+                            url: link.url
+                        });
+                    }
+                    
+                    // Check if link has URL Contact field
+                    if (link.urlContact && !seenUrls.has(link.urlContact)) {
+                        seenUrls.add(link.urlContact);
+                        contactLinks.push({
+                            category: categoryName,
+                            categoryId: item.mainTag,
+                            itemTitle: itemTitle,
+                            name: link.name ? link.name[currentLang] : '',
+                            url: link.urlContact,
+                            description: currentLang === 'fi' ? 'Yhteystiedot' : 'Contact Information',
+                            item: item
+                        });
+                    }
+                    
+                    // Check if link is marked as contact (Contact: true)
+                    const url = link.url ? link.url[currentLang] : '';
+                    if (link.isContact && url && !seenUrls.has(url)) {
+                        seenUrls.add(url);
+                        contactLinks.push({
+                            category: categoryName,
+                            categoryId: item.mainTag,
+                            itemTitle: itemTitle,
+                            name: link.name ? link.name[currentLang] : '',
+                            url: url,
+                            description: currentLang === 'fi' ? 'Yhteystiedot' : 'Contact Information',
+                            item: item
+                        });
+                    }
+                });
+                
+                // Also check if this is a dedicated contact section
+                const sectionTitle = section.title ? section.title[currentLang] : '';
+                const sectionTitleLower = sectionTitle.toLowerCase();
+                
+                if (sectionTitleLower.includes('yhteystie') || 
+                    sectionTitleLower.includes('contact') ||
+                    sectionTitleLower === 'yhteystiedot' ||
+                    sectionTitleLower === 'contact information') {
+                    
+                    section.links.forEach(link => {
+                        const url = link.url ? link.url[currentLang] : '';
+                        // Add regular links from Yhteystiedot section if not already added
+                        if (!link.isContact && !link.urlContact && url && !seenUrls.has(url)) {
+                            seenUrls.add(url);
+                            contactLinks.push({
+                                category: categoryName,
+                                categoryId: item.mainTag,
+                                itemTitle: itemTitle,
+                                name: link.name ? link.name[currentLang] : '',
+                                url: url,
+                                description: currentLang === 'fi' ? 'Yhteystiedot' : 'Contact Information',
+                                item: item
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+    
+    // Store globally for onclick handlers
+    window._currentContacts = contactLinks;
+    
+    // Generate table
+    if (contactLinks.length > 0) {
+        const showCategory = !filterCategory; // Hide category column if filtering by single category
+        content.innerHTML = `
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-900">
+                    <tr>
+                        ${showCategory ? `<th class="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                            <span class="lang-fi">Kategoria</span>
+                            <span class="lang-en">Category</span>
+                        </th>` : ''}
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                            <span class="lang-fi">Kortti</span>
+                            <span class="lang-en">Card</span>
+                        </th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                            <span class="lang-fi">Nimi</span>
+                            <span class="lang-en">Name</span>
+                        </th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                            <span class="lang-fi">Linkki</span>
+                            <span class="lang-en">Link</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    ${contactLinks.map(link => `
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                            ${showCategory ? `<td class="hidden md:table-cell px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                ${link.category}
+                            </td>` : ''}
+                            <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
+                                ${link.itemTitle}
+                            </td>
+                            <td class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                ${link.name}
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                <a href="${link.url}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline break-all">
+                                    ${link.url}
+                                </a>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    } else {
+        const noResultsText = currentLang === 'fi' ? 'Ei yhteystietoja valituissa kategorioissa' : 'No contact information in selected categories';
+        content.innerHTML = `<p class="text-gray-500 dark:text-gray-400 text-center py-8">${noResultsText}</p>`;
+    }
+}
+
+// Download contacts as PDF
+function downloadContactsPDF() {
+    if (!window._currentContacts || window._currentContacts.length === 0) return;
+    
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    const title = currentLang === 'fi' ? 'Yhteystiedot' : 'Contact Information';
+    const nameLabel = currentLang === 'fi' ? 'Nimi' : 'Name';
+    const urlLabel = currentLang === 'fi' ? 'Linkki' : 'Link';
+    const descLabel = currentLang === 'fi' ? 'Kuvaus' : 'Description';
+    
+    doc.setFontSize(16);
+    doc.text(title, 15, 15);
+    
+    let y = 30;
+    const leftMargin = 15;
+    const rightMargin = 195;
+    const pageHeight = 280;
+    
+    const checkPageBreak = (neededSpace) => {
+        if (y + neededSpace > pageHeight) {
+            doc.addPage();
+            y = 15;
+        }
+    };
+    
+    // Group by category
+    const linksByCategory = {};
+    window._currentContacts.forEach(link => {
+        if (!linksByCategory[link.categoryId]) {
+            linksByCategory[link.categoryId] = {
+                name: link.category,
+                links: []
+            };
+        }
+        linksByCategory[link.categoryId].links.push(link);
+    });
+    
+    Object.values(linksByCategory).forEach(category => {
+        checkPageBreak(15);
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        doc.text(category.name, leftMargin, y);
+        y += 8;
+        
+        category.links.forEach(link => {
+            checkPageBreak(20);
+            
+            // Card name (itemTitle)
+            const cardLabel = currentLang === 'fi' ? 'Kortti' : 'Card';
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'bold');
+            doc.text(`${cardLabel}:`, leftMargin + 5, y);
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(8);
+            const cardLines = doc.splitTextToSize(link.itemTitle, rightMargin - leftMargin - 25);
+            doc.text(cardLines, leftMargin + 20, y);
+            y += cardLines.length * 4;
+            
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'bold');
+            doc.text(`${nameLabel}:`, leftMargin + 5, y);
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(8);
+            const nameLines = doc.splitTextToSize(link.name, rightMargin - leftMargin - 25);
+            doc.text(nameLines, leftMargin + 20, y);
+            y += nameLines.length * 4;
+            
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'bold');
+            doc.text(`${urlLabel}:`, leftMargin + 5, y);
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(8);
+            doc.setTextColor(0, 0, 255);
+            const urlLines = doc.splitTextToSize(link.url, rightMargin - leftMargin - 25);
+            doc.text(urlLines, leftMargin + 20, y);
+            doc.setTextColor(0, 0, 0);
+            y += urlLines.length * 4;
+            
+            y += 4;
+        });
+        
+        y += 4;
+    });
+    
+    doc.save('yhteystiedot.pdf');
+}
+
 // Expose functions globally for inline onclick handlers
 window.showAllLinksModal = showAllLinksModal;
 window.showExportModal = showExportModal;
@@ -2802,3 +3428,8 @@ window.toggleAllLinksFilter = toggleAllLinksFilter;
 window.renderAllLinks = renderAllLinks;
 window.showTipModal = showTipModal;
 window.downloadCurrentItemPDF = downloadCurrentItemPDF;
+window.showContactsModal = showContactsModal;
+window.closeContactsModal = closeContactsModal;
+window.toggleContactsFilter = toggleContactsFilter;
+window.renderContacts = renderContacts;
+window.downloadContactsPDF = downloadContactsPDF;

@@ -3196,16 +3196,6 @@ function renderContacts() {
         if (item.linkSections) {
             item.linkSections.forEach(section => {
                 section.links.forEach(link => {
-                    // Debug logging
-                    if (link.urlContact || link.isContact) {
-                        console.log('Found contact link:', {
-                            name: link.name,
-                            urlContact: link.urlContact,
-                            isContact: link.isContact,
-                            url: link.url
-                        });
-                    }
-                    
                     // Check if link has URL Contact field
                     if (link.urlContact && !seenUrls.has(link.urlContact)) {
                         seenUrls.add(link.urlContact);
@@ -3271,35 +3261,28 @@ function renderContacts() {
     
     // Generate table
     if (contactLinks.length > 0) {
-        const showCategory = !filterCategory; // Hide category column if filtering by single category
+        const cardLabel = currentLang === 'fi' ? 'Kortti' : 'Card';
+        const nameLabel = currentLang === 'fi' ? 'Nimi' : 'Name';
+        const linkLabel = currentLang === 'fi' ? 'Linkki' : 'Link';
+        
         content.innerHTML = `
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-900">
                     <tr>
-                        ${showCategory ? `<th class="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                            <span class="lang-fi">Kategoria</span>
-                            <span class="lang-en">Category</span>
-                        </th>` : ''}
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                            <span class="lang-fi">Kortti</span>
-                            <span class="lang-en">Card</span>
+                            ${cardLabel}
                         </th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                            <span class="lang-fi">Nimi</span>
-                            <span class="lang-en">Name</span>
+                            ${nameLabel}
                         </th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                            <span class="lang-fi">Linkki</span>
-                            <span class="lang-en">Link</span>
+                            ${linkLabel}
                         </th>
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     ${contactLinks.map(link => `
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            ${showCategory ? `<td class="hidden md:table-cell px-4 py-3 text-sm text-gray-900 dark:text-white">
-                                ${link.category}
-                            </td>` : ''}
                             <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
                                 ${link.itemTitle}
                             </td>
@@ -3307,8 +3290,11 @@ function renderContacts() {
                                 ${link.name}
                             </td>
                             <td class="px-4 py-3 text-sm">
-                                <a href="${link.url}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline break-all">
-                                    ${link.url}
+                                <a href="${link.url}" target="_blank" class="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                    ${currentLang === 'fi' ? 'Avaa' : 'Open'}
                                 </a>
                             </td>
                         </tr>

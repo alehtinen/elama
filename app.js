@@ -239,12 +239,32 @@ function renderTagFilters() {
         if (!tagDef) return;
         
         const button = document.createElement('button');
-        button.className = `tag-filter-btn px-4 py-2 rounded-full text-sm font-medium transition-all ${
+        button.className = `tag-filter-btn px-4 py-2 rounded-full text-sm font-medium transition-all inline-flex items-center gap-1.5 ${
             activeFilters.has(tag) 
                 ? `bg-${tagDef.color}-500 text-white ring-2 ring-${tagDef.color}-500` 
                 : `bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-${tagDef.color}-100 dark:hover:bg-${tagDef.color}-900`
         }`;
-        button.textContent = tagDef[currentLang];
+        
+        // Add icon if present
+        if (tagDef.icon) {
+            const iconSpan = document.createElement('span');
+            if (tagDef.icon.startsWith('http')) {
+                const img = document.createElement('img');
+                img.src = tagDef.icon;
+                img.alt = '';
+                img.className = 'w-4 h-4 object-contain';
+                iconSpan.appendChild(img);
+            } else {
+                iconSpan.textContent = tagDef.icon;
+                iconSpan.className = 'text-base';
+            }
+            button.appendChild(iconSpan);
+        }
+        
+        const textSpan = document.createElement('span');
+        textSpan.textContent = tagDef[currentLang];
+        button.appendChild(textSpan);
+        
         button.onclick = () => toggleFilter(tag);
         container.appendChild(button);
     });
@@ -518,7 +538,12 @@ function renderContent(searchTerm = '') {
                                                 <div class="flex flex-wrap gap-1">
                                                     ${item.tags.map(tag => {
                                                         const tagDef = window.tagDefinitions[tag];
-                                                        return tagDef ? `<span class="px-2 py-1 text-xs rounded-full bg-${tagDef.color}-100 dark:bg-${tagDef.color}-900 text-${tagDef.color}-800 dark:text-${tagDef.color}-200">${tagDef[currentLang]}</span>` : '';
+                                                        if (!tagDef) return '';
+                                                        const iconHtml = tagDef.icon ? 
+                                                            (tagDef.icon.startsWith('http') ? 
+                                                                `<img src="${tagDef.icon}" alt="" class="w-3 h-3 object-contain" />` : 
+                                                                `<span class="text-xs">${tagDef.icon}</span>`) : '';
+                                                        return `<span class="px-2 py-1 text-xs rounded-full bg-${tagDef.color}-100 dark:bg-${tagDef.color}-900 text-${tagDef.color}-800 dark:text-${tagDef.color}-200 inline-flex items-center gap-1">${iconHtml}${tagDef[currentLang]}</span>`;
                                                     }).join('')}
                                                 </div>
                                             </td>
@@ -606,7 +631,12 @@ function renderContent(searchTerm = '') {
                                         <div class="flex flex-wrap gap-2">
                                             ${item.tags.map(tag => {
                                                 const tagDef = window.tagDefinitions[tag];
-                                                return tagDef ? `<span class="px-2 py-1 text-xs rounded-full bg-${tagDef.color}-100 dark:bg-${tagDef.color}-900 text-${tagDef.color}-800 dark:text-${tagDef.color}-200">${tagDef[currentLang]}</span>` : '';
+                                                if (!tagDef) return '';
+                                                const iconHtml = tagDef.icon ? 
+                                                    (tagDef.icon.startsWith('http') ? 
+                                                        `<img src="${tagDef.icon}" alt="" class="w-3 h-3 object-contain" />` : 
+                                                        `<span class="text-xs">${tagDef.icon}</span>`) : '';
+                                                return `<span class="px-2 py-1 text-xs rounded-full bg-${tagDef.color}-100 dark:bg-${tagDef.color}-900 text-${tagDef.color}-800 dark:text-${tagDef.color}-200 inline-flex items-center gap-1">${iconHtml}${tagDef[currentLang]}</span>`;
                                             }).join('')}
                                         </div>
                                     </div>
@@ -780,10 +810,22 @@ function showItemModalDirect(item) {
                                     sectionTitleLower.includes('contact') ||
                                     sectionTitleLower === 'yhteystiedot' ||
                                     sectionTitleLower === 'contact information';
+            const isSourcesSection = section.isSources || 
+                                    sectionTitleLower.includes('lähteet') || 
+                                    sectionTitleLower.includes('sources');
+            
+            // Determine styling based on section type
+            const sectionTitleClass = isSourcesSection ? 
+                'text-amber-700 dark:text-amber-300' : 
+                (isContactSection ? 'text-purple-700 dark:text-purple-300' : 'text-gray-700 dark:text-gray-300');
+            const borderClass = isSourcesSection ? 
+                'border-amber-200 dark:border-amber-800' : 
+                'border-gray-200 dark:border-gray-700';
             
             return `
-            <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <h4 class="text-sm font-semibold ${isContactSection ? 'text-purple-700 dark:text-purple-300' : 'text-gray-700 dark:text-gray-300'} mb-3">
+            <div class="mt-6 pt-4 border-t ${borderClass}">
+                <h4 class="text-sm font-semibold ${sectionTitleClass} mb-3 flex items-center gap-2">
+                    ${isSourcesSection ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>' : ''}
                     ${section.title[currentLang]}
                 </h4>
                 <div class="overflow-x-auto">
@@ -810,7 +852,7 @@ function showItemModalDirect(item) {
                                     if (link.date) parts.push(`<strong>${currentLang === 'fi' ? 'Vuosi' : 'Date'}:</strong> ${link.date}`);
                                     if (link.retrieved) parts.push(`<strong>${currentLang === 'fi' ? 'Haettu' : 'Retrieved'}:</strong> ${link.retrieved}`);
                                     if (link.pages) parts.push(`<strong>${currentLang === 'fi' ? 'Sivut' : 'Pages'}:</strong> ${link.pages}`);
-                                    sourceCitation = `<div class="text-xs text-gray-500 dark:text-gray-400 mt-2 space-y-0.5">${parts.map(p => `<div>${p}</div>`).join('')}</div>`;
+                                    sourceCitation = `<div class="text-xs ${isSourcesSection ? 'text-amber-600 dark:text-amber-400' : 'text-gray-500 dark:text-gray-400'} mt-2 space-y-0.5">${parts.map(p => `<div>${p}</div>`).join('')}</div>`;
                                 }
                                 const description = link.description ? link.description[currentLang] : '';
                                 return `
@@ -818,7 +860,7 @@ function showItemModalDirect(item) {
                                     <td class="px-4 py-2 text-sm text-gray-900 dark:text-white">${link.name ? link.name[currentLang] : ''}</td>
                                     <td class="hidden md:table-cell px-4 py-2 text-sm text-gray-600 dark:text-gray-400">${description}${sourceCitation}</td>
                                     <td class="px-4 py-2 text-sm">
-                                        <a href="${link.url ? link.url[currentLang] : ''}" target="_blank" class="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline">
+                                        <a href="${link.url ? link.url[currentLang] : ''}" target="_blank" class="inline-flex items-center gap-1 ${isSourcesSection ? 'text-amber-600 dark:text-amber-400' : 'text-blue-600 dark:text-blue-400'} hover:underline">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                                             </svg>

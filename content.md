@@ -1063,3 +1063,16 @@ Last Checked: 27.01.2026
 - Name: Pirkanmaan hyvinvointialueen päätökset
   URL: https://pirha.cloudnc.fi/
   Description: Pirkanmaan hyvinvointialueen päätöstietokanta
+
+#### Lähteet: Lähteet | Sources
+- Name: TE-palveluiden käsikirja | TE-Services Handbook
+  URL: https://www.te-palvelut.fi/handbook
+  Author: TE-palvelut
+  Date: 2025
+  Retrieved: 27.01.2026
+  Pages: pp. 12-15
+
+- Name: Työllisyyslaki
+  Author: Eduskunta
+  Date: 2024
+  Pages: Luku 3, §12

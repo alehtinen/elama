@@ -19,50 +19,71 @@ tip: Vinkki | Tip
 
 ## Tags
 
-work: Työ | Work | blue
-education: Koulutus | Education | green
-volunteer: Vapaaehtoistoiminta | Volunteer | purple
-sports: Liikunta | Sports | orange
-culture: Kulttuuri | Culture | pink
-leisure: Vapaa-aika | Leisure | indigo
-tampere: Tampere | Tampere | red
-public-service: Julkiset palvelut | Public Services | gray
-job-search: Työnhaku | Job Search | cyan
-international: Kansainvälinen | International | teal
-university: Yliopisto | University | violet
-vocational: Ammatillinen | Vocational | lime
-community: Yhteisö | Community | amber
-support: Tuki | Support | emerald
-subsidy: Avustus | Subsidy | sky
-training: Harjoittelu | Training | fuchsia
-trial: Kokeilu | Trial | rose
-rehabilitation: Kuntoutus | Rehabilitation | slate
-coaching: Valmennus | Coaching | yellow
-motivation: Motivaatio | Motivation | orange
-short-term: Lyhytaikainen | Short-term | blue
-skills: Taidot | Skills | green
-resources: Resurssit | Resources | purple
-free: Ilmainen | Free | emerald
-learning: Oppiminen | Learning | indigo
-networking: Verkostoituminen | Networking | pink
-experience: Kokemus | Experience | amber
-online-presence: Verkkonäkyvyys | Online Presence | cyan
-online: Verkko | Online | teal
-outdoors: Ulkoilu | Outdoors | red
-housing: Asuminen | Housing | green
+työ: Työ | Work | blue
+koulutus: Koulutus | Education | green
+vapaaehtoistoiminta: Vapaaehtoistoiminta | Volunteer | purple
+liikunta: Liikunta | Sports | orange
+kulttuuri: Kulttuuri | Culture | pink
+vapaa-aikatoiminta: Vapaa-aika | Leisure | indigo
+tampere-alue: Tampere | Tampere | red
+julkiset-palvelut: Julkiset palvelut | Public Services | gray
+työnhaku: Työnhaku | Job Search | cyan
+kansainvälinen: Kansainvälinen | International | teal
+yliopisto: Yliopisto | University | violet
+ammatillinen: Ammatillinen | Vocational | lime
+yhteisö: Yhteisö | Community | amber
+tuki: Tuki | Support | emerald
+avustus: Avustus | Subsidy | sky
+harjoittelu: Harjoittelu | Training | fuchsia
+kokeilu: Kokeilu | Trial | rose
+kuntoutus: Kuntoutus | Rehabilitation | slate
+valmennus: Valmennus | Coaching | yellow
+motivaatio: Motivaatio | Motivation | orange
+lyhytaikainen: Lyhytaikainen | Short-term | blue
+taidot: Taidot | Skills | green
+resurssit: Resurssit | Resources | purple
+ilmainen: Ilmainen | Free | emerald
+oppiminen: Oppiminen | Learning | indigo
+verkostoituminen: Verkostoituminen | Networking | pink
+kokemus: Kokemus | Experience | amber
+verkkonäkyvyys: Verkkonäkyvyys | Online Presence | cyan
+verkko: Verkko | Online | teal
+ulkoilu: Ulkoilu | Outdoors | red
+asuminen: Asuminen | Housing | green
 
-## Content
+# Content
+
+## Työttömyys
 
 ### TE-palvelut - Työnhakijan palvelut | TE-Services - Job Seeker Services
 Type: link
 Main Tag: työttömyys
-Tags: work, job-search, public-service
+Tags: työ, työnhaku, julkiset-palvelut
 URL: https://www.te-palvelut.fi/
 Description FI: TE-palveluiden verkkosivuilla voit hakea töitä, ilmoittautua työttömäksi työnhakijaksi ja hakea koulutusta.
 Description EN: On TE-services website you can search for jobs, register as an unemployed job seeker and apply for training.
 Added: 15.01.2024
 Last Checked: 24.01.2026
 Updated: 24.01.2024
+Body FI: vuvuzela
+
+>[!info] blabla cordon blö
+
+dasda
+
+>[!note] anteeks mikä vittu
+
+tai ei sitten mitään
+
+>[!tip] teeppä näin
+
+tai älä tee
+
+>[!quote] ollako vai eikös ollakahan?
+
+voipi olla
+
+Body EN: fuck your shit up
 
 #### Links: Palvelut | Services
 - Name: Työnhakijalle | For jobseekers
@@ -77,10 +98,12 @@ Updated: 24.01.2024
   Description FI: Avoimet työpaikat
   Description EN: Open positions
 
+## Arki
+
 ### Budjetin tekeminen | Creating a Budget
 Type: tip
 Main Tag: arki
-Tags: support, resources
+Tags: tuki, resurssit
 Description FI: Tee itsellesi kuukausibudjetti, jossa listat kaikki tulot ja menot. Näin näet mihin rahasi menevät ja missä voit säästää.
 Description EN: Create a monthly budget where you list all income and expenses. This way you can see where your money goes and where you can save.
 Body FI: Budjetti on tärkeä työkalu rahan hallintaan. Tee näin:
@@ -147,7 +170,7 @@ Updated: 23.01.2024
 Type: tip
 Main Tag: arki
 PDF: true
-Tags: housing, support
+Tags: asuminen, tuki
 Description FI: Ohjeita ja linkkejä vuokra-asunnon hakuun. Tärkeimmät asuntoilmoitussivustot ja vinkkejä asunnon löytämiseen.
 Description EN: Guide and links for finding a rental apartment. Most important rental websites and tips for finding a home.
 Body FI: Vuokra-asuntoa etsiessä kannattaa käyttää useita kanavia löytääksesi sopivan asunnon.
@@ -204,7 +227,7 @@ Updated: 26.01.2026
 ### Karttapalvelut | Map Services
 Type: link
 Main Tag: arki
-Tags: online, resources, tampere
+Tags: verkko, resurssit, tampere-alue
 Description FI: Keskeiset kartta- ja navigointipalvelut liikkumisen suunnitteluun
 Description EN: Main map and navigation services for planning your travel
 Body FI: Karttapalvelut auttavat löytämään perille ja suunnittelemaan reittejä. Useimmat palvelut toimivat sekä tietokoneella että älypuhelimessa.
@@ -250,10 +273,12 @@ Last Checked: 27.01.2026
   URL: https://reittiopas.tampere.fi/
   Description: Tampereen joukkoliikenteen reittiopas
 
+## Tampere
+
 ### Ulkoilumahdollisuuksia Tampereella| Outdoor activities in Tampere
 Type: link
 Main Tag: tampere
-Tags: outdoors, tampere, leisure
+Tags: ulkoilu, tampere-alue, vapaa-aika
 PDF: true
 URL: https://ulkoilutampereenseutu.fi/
 Description FI: Karttapalvelu ja linkkejä joista näkee ulkoilumahdollisuudet Tampereen alueella. Osa linkeistä näyttää myös muiden alueiden mahdollisuuksia.
@@ -285,10 +310,12 @@ Updated: 26.01.2026
 Last Checked: 26.01.2026
 Updated: 26.01.2026
 
+## Ilmaiset
+
 ### Tapahtumat Tampereella | Events in Tampere
 Type: link
 Main Tag: ilmaiset, tampere
-Tags: free, tampere, culture, leisure
+Tags: ilmainen, tampere-alue, kulttuuri, vapaa-aika
 URL: https://tapahtumat.tampere.fi/fi-FI/search?categories=6170601b7a45476ff366cb18&contentTab=time-sensetive&sort=startDate
 Description FI: Tampereen kaupungin tapahtumakalenterista löydät kaikki ilmaiset tapahtumat. Kulttuuritapahtumat, konsertit, näyttelyt ja paljon muuta.
 Description EN: Find all free events in Tampere from the city's event calendar. Cultural events, concerts, exhibitions and much more.
@@ -299,7 +326,7 @@ Updated: 26.01.2026
 ### Harrastusmahdollisuuksia Tampereella | Hobbies in Tampere
 Type: link
 Main Tag: ilmaiset, tampere
-Tags: free, tampere, sports, leisure
+Tags: ilmainen, tampere-alue, liikunta, vapaa-aika
 URL: https://harrastukset.tampere.fi/fi-FI/search?categories=63f605eba51e6a8f66f52696&sort=startDate&listType=standard&contentTab=time-sensetive
 URL Name: harrastukset.tampere.fi
 URL Description: Harrastusmahdollisuuksia tampereella
@@ -312,7 +339,7 @@ Updated: 26.01.2026
 ### Ruoka-apu Tampereella | Food Aid in Tampere
 Type: link
 Main Tag: ilmaiset, tampere
-Tags: free, tampere, support, resources
+Tags: ilmainen, tampere-alue, tuki, resurssit
 URL: https://ruoka-apu.fi/?viewType=list&page=1&startDate=2026-01-26&city=7283
 Description FI: Ruoka-apu.fi palvelusta löydät kaikki Tampereen alueen ruoka-avun jakelupisteet ja -ajat. Ilmaista tai edullista ruokaa tarvitseville.
 Description EN: Find all food aid distribution points and times in the Tampere area from Ruoka-apu.fi. Free or affordable food for those in need.
@@ -323,7 +350,7 @@ Updated: 26.01.2026
 ### Uutissivut | News Sites
 Type: link
 Main Tag: arki
-Tags: resources, online
+Tags: resurssit, verkko
 Description FI: Suomen tärkeimmät uutissivustot yhdessä listassa. Pysy ajan tasalla päivän tapahtumista.
 Description EN: Finland's most important news sites in one list. Stay up to date with daily events.
 Added: 27.01.2026
@@ -366,7 +393,7 @@ Last Checked: 27.01.2026
 ### TV-opas | TV Guide
 Type: link
 Main Tag: arki
-Tags: resources, online
+Tags: resurssit, verkko
 Description FI: Televisio-ohjelmien aikataulut ja sisältökuvaukset. Katso mitä TV:stä tulee tänään.
 Description EN: Television program schedules and content descriptions. See what's on TV today.
 Added: 27.01.2026
@@ -384,7 +411,7 @@ Last Checked: 27.01.2026
 ### Sähkönmyyjät | Electricity Providers
 Type: link
 Main Tag: arki
-Tags: housing
+Tags: asuminen
 Description FI: Tärkeimmät sähkönmyyjät Suomessa. Muista että sähkönsiirtolasku tulee aina erikseen sähkölaskusta. Jokaisen siirtoyhtiön alueella on toimitusvelvollinen sähkönmyyjä, jonka on myytävä sähkösopimus myös niille, joilla ei ole luottotietoja. Valitse sopimus tarpeesi mukaan: määräaikainen sopimus sopii, jos haluat hintatakuun, pörssisähkö taas seuraa markkinahintoja.
 Description EN: Main electricity providers in Finland. Remember that the electricity transmission bill always comes separately from the electricity bill. Each transmission company area has a supplier of last resort who must sell an electricity contract even to those without credit information. Choose a contract according to your needs: a fixed-term contract is suitable if you want a price guarantee, while exchange electricity follows market prices.
 Added: 27.01.2026
@@ -406,7 +433,7 @@ Last Checked: 27.01.2026
 ### Sähkösopimuksen kilpailuttaminen | Electricity Contract Comparison
 Type: link
 Main Tag: arki
-Tags: housing
+Tags: asuminen
 Description FI: Vertaile sähkösopimuksia ja löydä edullisin vaihtoehto. Kilpailuttamalla voit säästää merkittävästi sähkölaskussa.
 Description EN: Compare electricity contracts and find the cheapest option. By comparing you can save significantly on your electricity bill.
 Added: 27.01.2026
@@ -428,7 +455,7 @@ Last Checked: 27.01.2026
 ### Sähköön liittyviä apusivuja | Electricity Information Resources
 Type: link
 Main Tag: arki
-Tags: housing
+Tags: asuminen
 Description FI: Kuluttajaliiton sivuilta löydät hyödyllistä tietoa sähkösopimuksista ja sähkön kilpailuttamisesta. Opi tekemään viisaita valintoja energian suhteen.
 Description EN: From the Consumer Union pages you will find useful information about electricity contracts and electricity competition. Learn to make wise choices regarding energy.
 Added: 27.01.2026
@@ -446,7 +473,7 @@ Last Checked: 27.01.2026
 ### Päivittäistavarakaupat | Grocery Stores
 Type: link
 Main Tag: arki
-Tags: resources
+Tags: resurssit
 Description FI: Suomen suurimmat päivittäistavarakauppaketjut. Vertaile hintoja ja löydä lähimmät kaupat.
 Description EN: Finland's largest grocery store chains. Compare prices and find the nearest stores.
 Added: 27.01.2026
@@ -476,7 +503,7 @@ Last Checked: 27.01.2026
 ### Elektroniikkaliikkeet | Electronics Stores
 Type: link
 Main Tag: arki
-Tags: resources
+Tags: resurssit
 Description FI: Suurimmat elektroniikka- ja kodinkoneliikkeet. Vertaile hintoja ennen ostamista.
 Description EN: Largest electronics and home appliance stores. Compare prices before buying.
 Added: 27.01.2026
@@ -510,7 +537,7 @@ Last Checked: 27.01.2026
 ### Vaatekaupat | Clothing Stores
 Type: link
 Main Tag: arki
-Tags: resources
+Tags: resurssit
 Description FI: Suosittuja vaate- ja urheiluliikkeitä verkossa. Löydä tyylisi ja tarjoukset.
 Description EN: Popular clothing and sports stores online. Find your style and deals.
 Added: 27.01.2026
@@ -540,7 +567,7 @@ Last Checked: 27.01.2026
 ### Käytetyt tavarat | Second-hand Marketplaces
 Type: link
 Main Tag: arki
-Tags: resources, online
+Tags: resurssit, verkko
 Description FI: Käytettyjen tavaroiden osto- ja myyntipaikat. Säästä rahaa ja kierrätä.
 Description EN: Second-hand buying and selling platforms. Save money and recycle.
 Added: 27.01.2026
@@ -559,10 +586,12 @@ Last Checked: 27.01.2026
   URL: https://www.huuto.net
   Description: Huutokauppasivusto
 
+## Opiskelu
+
 ### Tredu - Tampereen seudun ammattiopisto | Tredu Vocational School
 Type: link
 Main Tag: opiskelu, tampere
-Tags: education, tampere, vocational, resources
+Tags: ammatillinen, koulutus, tampere-alue, resurssit
 Description FI: Tampereen seudun ammattiopisto. Monipuolista ammatillista koulutusta eri aloilta.
 Description EN: Tampere region vocational school. Diverse vocational education in various fields.
 Added: 27.01.2026
@@ -585,7 +614,7 @@ URL: https://www.tredu.fi
 ### TAKK - Tampereen aikuiskoulutuskeskus | TAKK Adult Education Centre
 Type: link
 Main Tag: opiskelu, tampere
-Tags: education, tampere, adult-education, resources
+Tags: adult-koulutus,koulutus, tampere-alue, resurssit
 Description FI: Tampereen aikuiskoulutuskeskus. Aikuiskoulutusta ja jatkuvan oppimisen mahdollisuuksia.
 Description EN: Tampere adult education centre. Adult education and lifelong learning opportunities.
 Added: 27.01.2026
@@ -604,7 +633,7 @@ URL: https://www.takk.fi
 ### TAMK - Tampereen ammattikorkeakoulu | TAMK University of Applied Sciences
 Type: link
 Main Tag: opiskelu, tampere
-Tags: education, tampere, university, resources
+Tags: yliopisto, koulutus, tampere-alue, resurssit
 Description FI: Tampereen ammattikorkeakoulu. Käytännönläheistä korkeakouluopetusta ja soveltavaa tutkimusta.
 Description EN: Tampere University of Applied Sciences. Practical higher education and applied research.
 Added: 27.01.2026
@@ -623,9 +652,9 @@ URL: https://www.tamk.fi
 ### Tampereen yliopisto | Tampere University
 Type: link
 Main Tag: opiskelu, yliopisto, tampere
-Tags: education, tampere, university, research, resources
+Tags: yliopisto,koulutus, tampere-alue, tutkimus, resurssit
 Description FI: Tampereen yliopisto. Tutkimusyliopisto joka yhdistää teknilliset alat ja yhteiskuntatieteet.
-Description EN: Tampere University. Research university combining technology and social sciences.
+Description EN: Tampere University. Research yliopisto combining technology and social sciences.
 Added: 27.01.2026
 Last Checked: 27.01.2026
 URL: https://www.tuni.fi
@@ -642,7 +671,7 @@ URL: https://www.tuni.fi
 ### Voionmaan opisto | Voionmaa Folk High School
 Type: link
 Main Tag: opiskelu, tampere
-Tags: education, tampere, folk-school, resources
+Tags: koulutus, tampere-alue, kansanopisto, resurssit
 Description FI: Voionmaan opisto. Kansanopisto jossa voi opiskella ja löytää uusia mahdollisuuksia.
 Description EN: Voionmaa Folk High School. Folk high school for studies and discovering new opportunities.
 Added: 27.01.2026
@@ -652,9 +681,9 @@ URL: https://www.voionmaanopisto.fi
 ### Työkokeilupaikat | Work Trial Places
 Type: link
 Main Tag: työttömyys, tampere
-Tags: work, trial, training, tampere, support
+Tags: työ, kokeilu, harjoittelu, tampere-alue, tuki
 Description FI: Työkokeilupaikkoja Tampereella työttömille. Hanki työkokemusta ja uusia taitoja.
-Description EN: Work trial places in Tampere for the unemployed. Gain work experience and new skills.
+Description EN: Work kokeilu places in Tampere for the unemployed. Gain work experience and new skills.
 Added: 27.01.2026
 Last Checked: 27.01.2026
 
@@ -670,7 +699,7 @@ Last Checked: 27.01.2026
 ### Kuntouttava työtoiminta | Rehabilitative Work
 Type: link
 Main Tag: työttömyys, tampere
-Tags: rehabilitation, work, support, tampere, training
+Tags: kuntoutus, työ, tuki, tampere-alue, harjoittelu
 Description FI: Kuntouttavaa työtoimintaa Tampereella. Tukea kohti työelämää omaan tahtiin. Palveluntarjoajia: Sawu-säätiö (toimipisteet: placeholder1, placeholder2, placeholder3), Siltavalmennus (toimipisteet: placeholder1, placeholder2), Nauha, Valovalmennus, Tampereen Syke, Tampereen Setlementti.
 Description EN: Rehabilitative work activities in Tampere. Support towards working life at your own pace. Service providers: Sawu Foundation (locations: placeholder1, placeholder2, placeholder3), Siltavalmennus (locations: placeholder1, placeholder2), Nauha, Valovalmennus, Tampereen Syke, Tampere Settlement.
 Added: 27.01.2026
@@ -701,10 +730,12 @@ Last Checked: 27.01.2026
   URL: https://setlementtitampere.fi/palvelut/kuntouttava-tyotoiminta/
   Description: Kuntouttavaa työtoimintaa
 
+## Vapaa-aika
+
 ### Setlementti vapaa-aika | Setlementti Leisure Activities
 Type: link
 Main Tag: vapaa-aika, tampere
-Tags: community, free, tampere, culture, support, networking
+Tags: yhteisö, ilmainen, tampere-alue, kulttuuri, tuki, nettyöing
 Description FI: Tampereen Setlementin monipuolista toimintaa kaikille. Kohtaamispaikkoja, ryhmiä ja tukea.
 Description EN: Tampere Settlement's diverse activities for everyone. Meeting places, groups and support.
 Added: 27.01.2026
@@ -758,7 +789,7 @@ Last Checked: 27.01.2026
 ### Ulkoilureitit ja -paikat | Outdoor Routes and Places
 Type: link
 Main Tag: vapaa-aika, tampere
-Tags: sports, tampere, resources, free
+Tags: liikunta, tampere-alue, resurssit, ilmainen
 Description FI: Ulkoilupaikkojen ja retkireittien tiedot. Löydä parhaat paikat luonnossa liikkumiseen.
 Description EN: Information on outdoor areas and hiking routes. Find the best places for outdoor activities.
 Added: 27.01.2026
@@ -773,10 +804,12 @@ Last Checked: 27.01.2026
   URL: https://www.retkikartta.fi
   Description: Retkeilykartat ja reitit
 
+## Turva
+
 ### Turvatalot ja turvapaikat | Safety Houses and Shelters
 Type: link
 Main Tag: turva
-Tags: support, resources
+Tags: tuki, resurssit
 Description FI: Turvatalot hädän hetkellä. Apua ja turvaa akuutissa tilanteessa.
 Description EN: Safety houses in times of need. Help and safety in acute situations.
 Added: 27.01.2026
@@ -790,7 +823,7 @@ Last Checked: 27.01.2026
 ### Hätätilanteet ja kriisiapu | Emergencies and Crisis Help
 Type: link
 Main Tag: turva
-Tags: support, resources
+Tags: tuki, resurssit
 Description FI: Apua kriisitilanteissa ja ohjeita vaikeissa elämäntilanteissa. Saat tukea kun sitä tarvitset.
 Description EN: Help in crisis situations and guidance in difficult life situations. Get support when you need it.
 Added: 27.01.2026
@@ -808,7 +841,7 @@ Last Checked: 27.01.2026
 ### Tampere uudelle asukkaalle | Tampere for New Residents
 Type: link
 Main Tag: tampere
-Tags: tampere, resources, public-service
+Tags: tampere, resurssit, julkiset-palvelut
 Description FI: Tervetuloa Tampereelle! Tärkeää tietoa uusille tamperelaisille.
 Description EN: Welcome to Tampere! Important information for new Tampere residents.
 Added: 27.01.2026
@@ -825,13 +858,13 @@ URL: https://www.tampere.fi/uudet-tamperelaiset
   Description: Bussikortin latauspalvelu (myös puhelinsovellus!)
 
 - Name: Nuotiopaikat
-  URL: https://outdoorstampere.fi/nuotiopaikat/
+  URL: https://ulkoilutampere.fi/nuotiopaikat/
   Description: Nuotiopaikat Tampereella
 
 ### Työtilat Tampereella | Workspaces in Tampere
 Type: link
 Main Tag: tampere, arki
-Tags: tampere, resources, work
+Tags: tampere, resurssit, työ
 Description FI: Varattavia työtiloja Tampereella. Ilmaisia ja maksullisia vaihtoehtoja.
 Description EN: Bookable workspaces in Tampere. Free and paid options.
 Added: 27.01.2026
@@ -849,7 +882,7 @@ Last Checked: 27.01.2026
 ### Erikoistyöskentelytilat | Specialized Workspaces
 Type: link
 Main Tag: tampere
-Tags: tampere, resources, learning, skills
+Tags: tampere, resurssit, oppiminen, taidot
 Description FI: Erikoistyöskentelytiloja luovaan tekemiseen. Kamera-, ääni- ja tekniikkatiloja.
 Description EN: Specialized workspaces for creative work. Camera, audio and technical facilities.
 Added: 27.01.2026
@@ -867,7 +900,7 @@ Last Checked: 27.01.2026
 ### Kirjastot Tampereella | Libraries in Tampere
 Type: link
 Main Tag: tampere
-Tags: tampere, culture, resources, free, learning
+Tags: tampere, kulttuuri, resurssit, ilmainen, oppiminen
 Description FI: Tampereen kirjastot. Ilmaista kulttuuria, oppimista ja kohtaamista.
 Description EN: Tampere libraries. Free culture, learning and meeting places.
 Added: 27.01.2026
@@ -902,7 +935,7 @@ URL: https://piki.finna.fi
 ### Museot ja näyttelyt Tampereella | Museums and Exhibitions in Tampere
 Type: link
 Main Tag: tampere
-Tags: tampere, culture, resources
+Tags: tampere, kulttuuri, resurssit
 Description FI: Tampereen museot ja näyttelytilat. Taidetta, historiaa ja kulttuuria.
 Description EN: Tampere museums and exhibition spaces. Art, history and culture.
 Added: 27.01.2026
@@ -957,7 +990,7 @@ Last Checked: 27.01.2026
 ### Ilmaiset kulttuurikortit | Free Culture Cards
 Type: link
 Main Tag: ilmaiset, tampere
-Tags: free, tampere, culture, support
+Tags: ilmainen, tampere-alue, kulttuuri, tuki
 Description FI: Ilmaiseen tai edulliseen kulttuuriin ja liikuntaan oikeuttavat kortit. Kaikille avointa toimintaa.
 Description EN: Cards entitling you to free or affordable culture and sports. Activities open to all.
 Added: 27.01.2026
@@ -984,7 +1017,7 @@ Last Checked: 27.01.2026
 ### Säädökset ja lait | Regulations and Laws
 Type: link
 Main Tag: turva
-Tags: public-service, resources, support
+Tags: julkiset-palvelut, resurssit, tuki
 Description FI: Keskeiset sosiaali- ja työllisyyspalveluihin liittyvät lait sekä alueen päätöstietokannat
 Description EN: Key laws related to social and employment services and regional decision databases
 Body FI: Tältä sivulta löydät keskeisimmät nuorten sosiaali- ja työllisyyspalveluihin liittyvät lait. Lakitekstit ovat Finlex-palvelussa, joka on valtion ylläpitämä oikeus- ja viranomaistiedon palvelu.

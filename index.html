@@ -111,31 +111,13 @@
                         <span class="hidden sm:inline lang-en">Contact Info</span>
                     </button>
                     
-                    <!-- Bookmarks Download -->
-                    <button onclick="showExportModal('bookmark')" class="p-2 sm:px-3 sm:py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm">
+                    <!-- Download Contents -->
+                    <button onclick="showDownloadsModal()" class="p-2 sm:px-3 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm" title="Lataa sisältöä | Download contents">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                         </svg>
-                        <span class="hidden sm:inline lang-fi">Kirjanmerkit</span>
-                        <span class="hidden sm:inline lang-en">Bookmarks</span>
-                    </button>
-                    
-                    <!-- Combined PDF Download -->
-                    <button onclick="showExportModal('pdf')" class="p-2 sm:px-3 sm:py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <span class="hidden sm:inline lang-fi">PDF</span>
-                        <span class="hidden sm:inline lang-en">PDF</span>
-                    </button>
-                    
-                    <!-- ZIP Download -->
-                    <button onclick="showExportModal('zip')" class="p-2 sm:px-3 sm:py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <span class="hidden sm:inline lang-fi">ZIP</span>
-                        <span class="hidden sm:inline lang-en">ZIP</span>
+                        <span class="hidden sm:inline lang-fi">Lataa sisältöä</span>
+                        <span class="hidden sm:inline lang-en">Download Contents</span>
                     </button>
                     
                     <!-- Language Toggle -->
@@ -159,6 +141,75 @@
             </p>
         </div>
     </header>
+
+    <!-- Downloads Modal -->
+    <div id="downloadsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+                    <span class="lang-fi">Lataa sisältöä</span>
+                    <span class="lang-en">Download Contents</span>
+                </h2>
+                <button onclick="closeDownloadsModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="space-y-3">
+                <!-- Bookmarks Button -->
+                <button onclick="closeDownloadsModal(); showExportModal('bookmark')" class="w-full p-4 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium flex items-center gap-3 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                    </svg>
+                    <div class="text-left">
+                        <div class="font-semibold">
+                            <span class="lang-fi">Kirjanmerkit</span>
+                            <span class="lang-en">Bookmarks</span>
+                        </div>
+                        <div class="text-sm opacity-90">
+                            <span class="lang-fi">Lataa linkit HTML-kirjanmerkkeinä</span>
+                            <span class="lang-en">Download links as HTML bookmarks</span>
+                        </div>
+                    </div>
+                </button>
+                
+                <!-- PDF Button -->
+                <button onclick="closeDownloadsModal(); showExportModal('pdf')" class="w-full p-4 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium flex items-center gap-3 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <div class="text-left">
+                        <div class="font-semibold">
+                            <span class="lang-fi">PDF</span>
+                            <span class="lang-en">PDF</span>
+                        </div>
+                        <div class="text-sm opacity-90">
+                            <span class="lang-fi">Lataa sisältö PDF-tiedostona</span>
+                            <span class="lang-en">Download content as PDF file</span>
+                        </div>
+                    </div>
+                </button>
+                
+                <!-- ZIP Button -->
+                <button onclick="closeDownloadsModal(); showExportModal('zip')" class="w-full p-4 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium flex items-center gap-3 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <div class="text-left">
+                        <div class="font-semibold">
+                            <span class="lang-fi">ZIP-arkisto</span>
+                            <span class="lang-en">ZIP Archive</span>
+                        </div>
+                        <div class="text-sm opacity-90">
+                            <span class="lang-fi">Lataa kaikki PDF:t arkistona</span>
+                            <span class="lang-en">Download all PDFs as archive</span>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Export Selection Modals -->
     <div id="pdfModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">

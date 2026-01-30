@@ -79,8 +79,13 @@ function parseMarkdownContent(markdown) {
         } else if (trimmedLine === '## Tags') {
             currentSection = 'tags';
             continue;
-        } else if (trimmedLine === '## Content') {
+        } else if (trimmedLine === '# Content') {
             currentSection = 'content';
+            continue;
+        }
+        
+        // Skip organizational ## headers within Content section (for .md organization only)
+        if (currentSection === 'content' && trimmedLine.startsWith('## ')) {
             continue;
         }
         
@@ -191,10 +196,12 @@ function parseMarkdownContent(markdown) {
                 // New YAML format: #### Links: Title FI | Title EN
                 const titlePart = trimmedLine.substring(12).trim(); // After '#### Links:'
                 const titleParts = titlePart.split('|');
+                // Remove emojis from titles
+                const removeEmojis = (str) => str.replace(/[\u{1F000}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{E0020}-\u{E007F}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{2300}-\u{23FF}\u{2B50}\u{2B55}\u{231A}\u{231B}\u{2328}\u{23CF}\u{23E9}-\u{23F3}\u{23F8}-\u{23FA}\u{24C2}\u{25AA}\u{25AB}\u{25B6}\u{25C0}\u{25FB}-\u{25FE}\u{2600}-\u{2604}\u{260E}\u{2611}\u{2614}\u{2615}\u{2618}\u{261D}\u{2620}\u{2622}\u{2623}\u{2626}\u{262A}\u{262E}\u{262F}\u{2638}-\u{263A}\u{2640}\u{2642}\u{2648}-\u{2653}\u{2660}\u{2663}\u{2665}\u{2666}\u{2668}\u{267B}\u{267E}\u{267F}\u{2692}-\u{2697}\u{2699}\u{269B}\u{269C}\u{26A0}\u{26A1}\u{26AA}\u{26AB}\u{26B0}\u{26B1}\u{26BD}\u{26BE}\u{26C4}\u{26C5}\u{26C8}\u{26CE}\u{26CF}\u{26D1}\u{26D3}\u{26D4}\u{26E9}\u{26EA}\u{26F0}-\u{26F5}\u{26F7}-\u{26FA}\u{26FD}\u{2702}\u{2705}\u{2708}-\u{270D}\u{270F}\u{2712}\u{2714}\u{2716}\u{271D}\u{2721}\u{2728}\u{2733}\u{2734}\u{2744}\u{2747}\u{274C}\u{274E}\u{2753}-\u{2755}\u{2757}\u{2763}\u{2764}\u{2795}-\u{2797}\u{27A1}\u{27B0}\u{27BF}\u{2934}\u{2935}\u{2B05}-\u{2B07}\u{2B1B}\u{2B1C}\u{2B50}\u{2B55}\u{3030}\u{303D}\u{3297}\u{3299}\u{1F004}\u{1F0CF}\u{1F170}\u{1F171}\u{1F17E}\u{1F17F}\u{1F18E}\u{1F191}-\u{1F19A}\u{1F1E6}-\u{1F1FF}\u{1F201}\u{1F202}\u{1F21A}\u{1F22F}\u{1F232}-\u{1F23A}\u{1F250}\u{1F251}\u{1F300}-\u{1F321}\u{1F324}-\u{1F393}\u{1F396}\u{1F397}\u{1F399}-\u{1F39B}\u{1F39E}-\u{1F3F0}\u{1F3F3}-\u{1F3F5}\u{1F3F7}-\u{1F4FD}\u{1F4FF}-\u{1F53D}\u{1F549}-\u{1F54E}\u{1F550}-\u{1F567}\u{1F56F}\u{1F570}\u{1F573}-\u{1F57A}\u{1F587}\u{1F58A}-\u{1F58D}\u{1F590}\u{1F595}\u{1F596}\u{1F5A4}\u{1F5A5}\u{1F5A8}\u{1F5B1}\u{1F5B2}\u{1F5BC}\u{1F5C2}-\u{1F5C4}\u{1F5D1}-\u{1F5D3}\u{1F5DC}-\u{1F5DE}\u{1F5E1}\u{1F5E3}\u{1F5E8}\u{1F5EF}\u{1F5F3}\u{1F5FA}-\u{1F64F}\u{1F680}-\u{1F6C5}\u{1F6CB}-\u{1F6D2}\u{1F6E0}-\u{1F6E5}\u{1F6E9}\u{1F6EB}\u{1F6EC}\u{1F6F0}\u{1F6F3}-\u{1F6F9}\u{1F910}-\u{1F93A}\u{1F93C}-\u{1F93E}\u{1F940}-\u{1F945}\u{1F947}-\u{1F94C}\u{1F950}-\u{1F96B}\u{1F980}-\u{1F997}\u{1F9C0}\u{1F9D0}-\u{1F9E6}]/gu, '').trim();
                 currentLinkSection = {
                     title: {
-                        fi: titleParts[0] ? titleParts[0].trim() : 'Lisätietoa',
-                        en: titleParts[1] ? titleParts[1].trim() : 'More info'
+                        fi: titleParts[0] ? removeEmojis(titleParts[0].trim()) : 'Lisätietoa',
+                        en: titleParts[1] ? removeEmojis(titleParts[1].trim()) : 'More info'
                     },
                     links: []
                 };
@@ -260,6 +267,14 @@ function parseMarkdownContent(markdown) {
                         // Universal description (same for both languages)
                         const desc = trimmedLine.substring(12).trim();
                         currentLinkItem.description = { fi: desc, en: desc };
+                    } else if (trimmedLine.startsWith('Author:')) {
+                        currentLinkItem.author = trimmedLine.substring(7).trim();
+                    } else if (trimmedLine.startsWith('Date:')) {
+                        currentLinkItem.date = trimmedLine.substring(5).trim();
+                    } else if (trimmedLine.startsWith('Retrieved:')) {
+                        currentLinkItem.retrieved = trimmedLine.substring(10).trim();
+                    } else if (trimmedLine.startsWith('Pages:')) {
+                        currentLinkItem.pages = trimmedLine.substring(6).trim();
                     }
                 }
             } else if (trimmedLine.startsWith('URL: ')) {
@@ -399,9 +414,57 @@ function markdownToHtml(text) {
     const blocks = html.split('\n\n');
     const processedBlocks = [];
     
-    for (let block of blocks) {
-        block = block.trim();
+    for (let i = 0; i < blocks.length; i++) {
+        let block = blocks[i].trim();
         if (!block) continue;
+        
+        // Check if this is an Obsidian-style callout
+        const calloutMatch = block.match(/^>\[!(info|question|note|quote|warning|tip|success|danger|error|bug|example|important)\](.*)$/im);
+        if (calloutMatch) {
+            const calloutType = calloutMatch[1].toLowerCase();
+            const title = calloutMatch[2].trim() || (calloutType.charAt(0).toUpperCase() + calloutType.slice(1));
+            
+            // Check if next block exists and is the content (not another callout or special formatting)
+            let content = '';
+            if (i + 1 < blocks.length) {
+                const nextBlock = blocks[i + 1].trim();
+                if (nextBlock && !nextBlock.match(/^>\[!/) && !nextBlock.match(/^#{1,6}\s/)) {
+                    content = nextBlock;
+                    i++; // Skip next block
+                }
+            }
+            
+            // Define colors and icons for different callout types
+            const calloutStyles = {
+                info: { bg: 'bg-blue-50 dark:bg-blue-900/20', border: 'border-blue-500', text: 'text-blue-900 dark:text-blue-100', icon: 'ⓘ' },
+                question: { bg: 'bg-purple-50 dark:bg-purple-900/20', border: 'border-purple-500', text: 'text-purple-900 dark:text-purple-100', icon: '?' },
+                note: { bg: 'bg-cyan-50 dark:bg-cyan-900/20', border: 'border-cyan-500', text: 'text-cyan-900 dark:text-cyan-100', icon: '✎' },
+                quote: { bg: 'bg-gray-50 dark:bg-gray-800', border: 'border-gray-500', text: 'text-gray-900 dark:text-gray-100', icon: '‟' },
+                warning: { bg: 'bg-yellow-50 dark:bg-yellow-900/20', border: 'border-yellow-500', text: 'text-yellow-900 dark:text-yellow-100', icon: '⚠' },
+                tip: { bg: 'bg-green-50 dark:bg-green-900/20', border: 'border-green-500', text: 'text-green-900 dark:text-green-100', icon: '★' },
+                success: { bg: 'bg-green-50 dark:bg-green-900/20', border: 'border-green-500', text: 'text-green-900 dark:text-green-100', icon: '✓' },
+                danger: { bg: 'bg-red-50 dark:bg-red-900/20', border: 'border-red-500', text: 'text-red-900 dark:text-red-100', icon: '⊗' },
+                error: { bg: 'bg-red-50 dark:bg-red-900/20', border: 'border-red-500', text: 'text-red-900 dark:text-red-100', icon: '✗' },
+                bug: { bg: 'bg-red-50 dark:bg-red-900/20', border: 'border-red-500', text: 'text-red-900 dark:text-red-100', icon: '⚙' },
+                example: { bg: 'bg-purple-50 dark:bg-purple-900/20', border: 'border-purple-500', text: 'text-purple-900 dark:text-purple-100', icon: '◉' },
+                important: { bg: 'bg-orange-50 dark:bg-orange-900/20', border: 'border-orange-500', text: 'text-orange-900 dark:text-orange-100', icon: '!' }
+            };
+            
+            const style = calloutStyles[calloutType] || calloutStyles.info;
+            
+            processedBlocks.push(`
+                <div class="my-4 p-4 rounded-lg border-l-4 ${style.border} ${style.bg}">
+                    <div class="flex items-start gap-2">
+                        <span class="text-lg flex-shrink-0">${style.icon}</span>
+                        <div class="flex-1">
+                            <div class="font-semibold ${style.text} mb-1">${title}</div>
+                            ${content ? `<div class="${style.text} opacity-90">${content}</div>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `);
+            continue;
+        }
         
         // Split block into lines
         const lines = block.split('\n').map(l => l.trim()).filter(l => l);

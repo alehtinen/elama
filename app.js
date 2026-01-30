@@ -784,7 +784,7 @@ function showItemModalDirect(item) {
             return `
             <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <h4 class="text-sm font-semibold ${isContactSection ? 'text-purple-700 dark:text-purple-300' : 'text-gray-700 dark:text-gray-300'} mb-3">
-                    ${isContactSection ? '📧 ' : ''}${section.title[currentLang]}
+                    ${section.title[currentLang]}
                 </h4>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -802,10 +802,21 @@ function showItemModalDirect(item) {
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            ${section.links.map(link => `
+                            ${section.links.map(link => {
+                                let sourceCitation = '';
+                                if (link.author || link.date || link.retrieved || link.pages) {
+                                    const parts = [];
+                                    if (link.author) parts.push(`<strong>${currentLang === 'fi' ? 'Tekijä' : 'Author'}:</strong> ${link.author}`);
+                                    if (link.date) parts.push(`<strong>${currentLang === 'fi' ? 'Vuosi' : 'Date'}:</strong> ${link.date}`);
+                                    if (link.retrieved) parts.push(`<strong>${currentLang === 'fi' ? 'Haettu' : 'Retrieved'}:</strong> ${link.retrieved}`);
+                                    if (link.pages) parts.push(`<strong>${currentLang === 'fi' ? 'Sivut' : 'Pages'}:</strong> ${link.pages}`);
+                                    sourceCitation = `<div class="text-xs text-gray-500 dark:text-gray-400 mt-2 space-y-0.5">${parts.map(p => `<div>${p}</div>`).join('')}</div>`;
+                                }
+                                const description = link.description ? link.description[currentLang] : '';
+                                return `
                                 <tr>
                                     <td class="px-4 py-2 text-sm text-gray-900 dark:text-white">${link.name ? link.name[currentLang] : ''}</td>
-                                    <td class="hidden md:table-cell px-4 py-2 text-sm text-gray-600 dark:text-gray-400">${link.description ? link.description[currentLang] : ''}</td>
+                                    <td class="hidden md:table-cell px-4 py-2 text-sm text-gray-600 dark:text-gray-400">${description}${sourceCitation}</td>
                                     <td class="px-4 py-2 text-sm">
                                         <a href="${link.url ? link.url[currentLang] : ''}" target="_blank" class="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -815,7 +826,8 @@ function showItemModalDirect(item) {
                                         </a>
                                     </td>
                                 </tr>
-                            `).join('')}
+                            `;
+                            }).join('')}
                         </tbody>
                     </table>
                 </div>
@@ -829,7 +841,7 @@ function showItemModalDirect(item) {
         linkHTML += `
             <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <h4 class="text-sm font-semibold text-purple-700 dark:text-purple-300 mb-3">
-                    📧 ${currentLang === 'fi' ? 'Yhteystiedot' : 'Contact Information'}
+                    ${currentLang === 'fi' ? 'Yhteystiedot' : 'Contact Information'}
                 </h4>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -914,7 +926,7 @@ function showItemModalDirect(item) {
         const contactLinkHTML = `
             <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <h4 class="text-sm font-semibold text-purple-700 dark:text-purple-300 mb-3">
-                    📧 ${currentLang === 'fi' ? 'Yhteystiedot' : 'Contact Information'}
+                    ${currentLang === 'fi' ? 'Yhteystiedot' : 'Contact Information'}
                 </h4>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -3137,6 +3149,21 @@ function closeContactsModal() {
     modal.classList.add('hidden');
 }
 
+function showDownloadsModal() {
+    const modal = document.getElementById('downloadsModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        applyLanguage(); // Ensure language is applied to modal content
+    }
+}
+
+function closeDownloadsModal() {
+    const modal = document.getElementById('downloadsModal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+}
+
 function toggleContactsFilter() {
     const filter = document.getElementById('contactsFilter');
     filter.classList.toggle('hidden');
@@ -3419,3 +3446,5 @@ window.closeContactsModal = closeContactsModal;
 window.toggleContactsFilter = toggleContactsFilter;
 window.renderContacts = renderContacts;
 window.downloadContactsPDF = downloadContactsPDF;
+window.showDownloadsModal = showDownloadsModal;
+window.closeDownloadsModal = closeDownloadsModal;

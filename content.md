@@ -1100,6 +1100,7 @@ Tags: harrastus
 URL: https://www.kokemusasiantuntijat.fi/
 Description FI: Terveysasioiden käsittely ja ajanvaraus viestitse.
 Description EN: Contact Public Health Services through messages.
+PDF:: true
 Added: 02.02.2026
 Last Checked: 02.02.2026
 Updated: 02.02.2026

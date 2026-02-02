@@ -67,25 +67,6 @@ Description EN: On TE-services website you can search for jobs, register as an u
 Added: 15.01.2024
 Last Checked: 24.01.2026
 Updated: 24.01.2024
-Body FI: vuvuzela
-
->[!info] blabla cordon blö
-
-dasda
-
->[!note] anteeks mikä vittu
-
-tai ei sitten mitään
-
->[!tip] teeppä näin
-
-tai älä tee
-
->[!quote] ollako vai eikös ollakahan?
-
-voipi olla
-
-Body EN: fuck your shit up
 
 #### Links: Palvelut | Services
 - Name: Työnhakijalle | For jobseekers

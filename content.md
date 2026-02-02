@@ -1092,3 +1092,53 @@ You will also find links to the decision databases of the City of Tampere and th
   Author: Eduskunta
   Date: 2024
   Pages: Luku 3, §12
+
+### Kokemustoiminta
+
+Type: tip
+Main Tag: vapaa-aika, tampere
+Tags: harrastus
+URL: https://www.kokemusasiantuntijat.fi/
+Description FI: Terveysasioiden käsittely ja ajanvaraus viestitse.
+Description EN: Contact Public Health Services through messages.
+Added: 02.02.2026
+Last Checked: 02.02.2026
+Updated: 02.02.2026
+
+#### Links: Lisätietoa
+
+- Name: Kokemustoimintaverkosto
+  URL: https://kokemustoimintaverkosto.fi/kokemustieto_kayttoon/kasitteet/  Description: Kokemustoimijan ja -asiantuntijan erot
+
+- Name: TAKK
+  URL: https://www.takk.fi/fi/koulutukset/ammattialat/sosiaali-ja-terveysala/mielenterveyskuntoutujasta-kokemusasiantuntijaksi
+  Description: Artikkeli
+
+#### Links: Kokemustoimintaa järjestöissä
+- Name: ADHD-liiton kokemustoiminta
+  URL: https://adhd-liitto.fi/tukea/kokemustoiminta/
+  Description: Interaktiivinen budjetointityökalu
+
+- Name: Mielen ry
+  URL: https://mielen.fi/kokemusasiantuntijatoiminta/
+  Description: Kokemusasiantuntijatoiminta
+
+- Name: Pirha
+  URL: https://www.pirha.fi/asiakkaalle/osallistu-ja-vaikuta/kokemusasiantuntijat-ja-kehittajaasiakkaat
+  Description:  Pirhan infotietoa kokemusasiantuntijatyöstä
+
+- Name: Tampereen A-Kilta
+  URL: https://www.tampereena-kilta.fi/kokemusasiantuntijat/
+  Description:  A-Killan kokemusasiantuntija
+
+- Name: Silta-Valmennusyhdistys ry
+  URL: https://www.siltavalmennus.fi/toiminta/keijo-koulutus
+  Description:  Siltavalmennuksen Keijo-koulutus
+
+- Name: TAKK
+  URL: https://www.takk.fi/fi/koulutus/kokemustoimijakoulutus
+  Description:  Kokemustoimijakoulutus
+
+- Name: Finfami Pirkanmaa
+  URL: https://www.finfamipirkanmaa.fi/kokemusasiantuntijatoiminta/
+  Description: Kokemusasiantuntijatoiminta

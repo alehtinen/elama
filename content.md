@@ -466,9 +466,9 @@ Description FI: Suomen suurimmat päivittäistavarakauppaketjut. Vertaile hintoj
 Description EN: Finland's largest grocery store chains. Compare prices and find the nearest stores.
 Added: 27.01.2026
 Last Checked: 27.01.2026
+Keywords: 
 
 #### Links: Kaupat | Stores
-Collapsed: true
 - Name: Tokmanni
   URL: https://www.tokmanni.fi
   Description: Halpakauppaketju

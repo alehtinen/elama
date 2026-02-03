@@ -122,6 +122,7 @@ Same formatting options as Finnish body.
       Format: Collapsed: true or Collapsed: yes
       Links are collapsed in all link list views EXCEPT when viewing that specific category's popup
       This helps reduce clutter for cards with many links
+  Keywords: word, word1, word2. Meant for helping the search, doesn't show up on the page.
 
 - Name: Another Link
   URL: https://another.com

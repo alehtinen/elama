@@ -502,6 +502,15 @@ function parseMarkdownContent(markdown) {
             } else if (trimmedLine.startsWith('PDF: ')) {
                 const pdfValue = trimmedLine.substring(5).trim().toLowerCase();
                 currentItem.downloadablePDF = pdfValue === 'true' || pdfValue === 'yes';
+            } else if (trimmedLine.startsWith('Keywords: ')) {
+                // Keywords for search (bilingual) - Format: Keywords: FinnishKeywords | EnglishKeywords
+                // Each side can have comma-separated keywords
+                const keywordsPart = trimmedLine.substring(10).trim();
+                const keywordParts = keywordsPart.split('|');
+                currentItem.keywords = {
+                    fi: keywordParts[0] ? keywordParts[0].trim() : '',
+                    en: keywordParts[1] ? keywordParts[1].trim() : (keywordParts[0] ? keywordParts[0].trim() : '')
+                };
             } else if (trimmedLine.startsWith('Description FI: ') || trimmedLine.startsWith('Description (fi): ')) {
                 currentItem.description.fi = trimmedLine.includes('(fi)') ? trimmedLine.substring(18).trim() : trimmedLine.substring(16).trim();
             } else if (trimmedLine.startsWith('Description EN: ') || trimmedLine.startsWith('Description (en): ')) {

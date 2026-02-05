@@ -1213,10 +1213,6 @@ Last Checked: 05.02.2026
   URL: https://snellman.fi/fi/reseptit/
   Description: Snellmanin reseptikokoelma
 
-- Name: Alkon reseptit
-  URL: https://www.alko.fi/juoma-ruoka/resepti
-  Description: Alkon ruoka- ja juomareseptit
-
 #### Links: Kauppojen reseptisivustot | Recipes by Grocery stores
 - Name: K-Ruoka reseptit
   URL: https://www.k-ruoka.fi/reseptit
@@ -1226,6 +1222,10 @@ Last Checked: 05.02.2026
   URL: https://yhteishyva.fi/ruoka
   Description: Yhteishyvän ruokareseptit
 
+- Name: Alkon reseptit
+  URL: https://www.alko.fi/juoma-ruoka/resepti
+  Description: Alkon ruoka- ja juomareseptit
+  
 #### Links: Uutisten ja lehtien reseptisivustot | Recipes by News and papers
 
 - Name: IS Ruokala

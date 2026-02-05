@@ -93,40 +93,6 @@
                     </h1>
                 </div>
                 <div class="flex items-center gap-1 flex-wrap flex-shrink-0">
-                    <!-- Show All Links -->
-                    <button onclick="showAllLinksModal()" class="p-2 sm:px-3 sm:py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm" title="Näytä kaikki sivulla esiintyvät linkit | Show all links on the site">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
-                        </svg>
-                        <span class="hidden sm:inline lang-fi">Kaikki linkit</span>
-                        <span class="hidden sm:inline lang-en">All Links</span>
-                    </button>
-                    
-                    <!-- Contact Information -->
-                    <button onclick="showContactsModal()" class="p-2 sm:px-3 sm:py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm" title="Näytä kaikki sivulla esiintyvät yhteystiedot | Show all contact information on the site">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                        </svg>
-                        <span class="hidden sm:inline lang-fi">Yhteystiedot</span>
-                        <span class="hidden sm:inline lang-en">Contact Info</span>
-                    </button>                    
-                    <!-- Sources -->
-                    <button onclick="showSourcesModal()" class="p-2 sm:px-3 sm:py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm" title="Näytä kaikki sivulla esiintyvät lähteet | Show all sources on the site">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                        </svg>
-                        <span class="hidden sm:inline lang-fi">Lähteet</span>
-                        <span class="hidden sm:inline lang-en">Sources</span>
-                    </button>                    
-                    <!-- Download Contents -->
-                    <button onclick="showDownloadsModal()" class="p-2 sm:px-3 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium flex items-center gap-1 transition-colors text-xs sm:text-sm" title="Lataa sisältöä | Download contents">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                        </svg>
-                        <span class="hidden sm:inline lang-fi">Lataa sisältöä</span>
-                        <span class="hidden sm:inline lang-en">Download Contents</span>
-                    </button>
-                    
                     <!-- Language Toggle -->
                     <button id="langToggle" class="p-2 sm:px-3 sm:py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium text-xs sm:text-sm">
                         EN
@@ -140,6 +106,87 @@
                             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
                         </svg>
                     </button>
+                    <!-- Menu Button with Dropdown -->
+                    <div class="relative">
+                        <button onclick="toggleMenu()" class="p-2 sm:px-3 sm:py-2 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 hover:from-purple-700 hover:via-pink-700 hover:to-orange-700 text-white rounded-lg font-medium flex items-center gap-2 transition-all shadow-lg hover:shadow-xl text-xs sm:text-sm">
+                            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                            <span class="hidden sm:inline lang-fi">Valikko</span>
+                            <span class="hidden sm:inline lang-en">Menu</span>
+                        </button>
+                        <div id="menuDropdown" class="hidden absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-[60]">
+                            <div class="py-2">
+                                <button onclick="showAllLinksModal(); toggleMenu();" class="w-full px-4 py-3 text-left hover:bg-orange-50 dark:hover:bg-orange-900/30 flex items-center gap-3 transition-colors">
+                                    <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                                    </svg>
+                                    <span class="text-gray-700 dark:text-gray-300 font-medium">
+                                        <span class="lang-fi">Kaikki linkit</span>
+                                        <span class="lang-en">All Links</span>
+                                    </span>
+                                </button>
+                                <button onclick="showContactsModal(); toggleMenu();" class="w-full px-4 py-3 text-left hover:bg-purple-50 dark:hover:bg-purple-900/30 flex items-center gap-3 transition-colors">
+                                    <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span class="text-gray-700 dark:text-gray-300 font-medium">
+                                        <span class="lang-fi">Kaikki yhteystiedot</span>
+                                        <span class="lang-en">All Contacts</span>
+                                    </span>
+                                </button>
+                                <button onclick="showSourcesModal(); toggleMenu();" class="w-full px-4 py-3 text-left hover:bg-teal-50 dark:hover:bg-teal-900/30 flex items-center gap-3 transition-colors">
+                                    <svg class="w-5 h-5 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                    </svg>
+                                    <span class="text-gray-700 dark:text-gray-300 font-medium">
+                                        <span class="lang-fi">Kaikki lähteet</span>
+                                        <span class="lang-en">All Sources</span>
+                                    </span>
+                                </button>
+                                <button onclick="showDownloadsModal(); toggleMenu();" class="w-full px-4 py-3 text-left hover:bg-blue-50 dark:hover:bg-blue-900/30 flex items-center gap-3 transition-colors">
+                                    <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                    <span class="text-gray-700 dark:text-gray-300 font-medium">
+                                        <span class="lang-fi">Lataa sisältöä</span>
+                                        <span class="lang-en">Download Contents</span>
+                                    </span>
+                                </button>
+                                
+                                <!-- Separator -->
+                                <div class="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+                                
+                                <button onclick="showRoadmapModal(); toggleMenu();" class="w-full px-4 py-3 text-left hover:bg-indigo-50 dark:hover:bg-indigo-900/30 flex items-center gap-3 transition-colors">
+                                    <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="text-gray-700 dark:text-gray-300 font-medium">
+                                        <span class="lang-fi">Tuleva sisältö</span>
+                                        <span class="lang-en">Upcoming Content</span>
+                                    </span>
+                                </button>
+                                <button onclick="showAboutModal(); toggleMenu();" class="w-full px-4 py-3 text-left hover:bg-green-50 dark:hover:bg-green-900/30 flex items-center gap-3 transition-colors">
+                                    <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="text-gray-700 dark:text-gray-300 font-medium">
+                                        <span class="lang-fi">Tietoja sivusta</span>
+                                        <span class="lang-en">About This Page</span>
+                                    </span>
+                                </button>
+                                <button onclick="showFeedbackModal(); toggleMenu();" class="w-full px-4 py-3 text-left hover:bg-yellow-50 dark:hover:bg-yellow-900/30 flex items-center gap-3 transition-colors">
+                                    <svg class="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                                    </svg>
+                                    <span class="text-gray-700 dark:text-gray-300 font-medium">
+                                        <span class="lang-fi">Palaute</span>
+                                        <span class="lang-en">Feedback</span>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-4">
@@ -503,7 +550,7 @@
                     <div class="flex gap-2 items-start flex-shrink-0">
                         <div id="modalPdfButton"></div>
                         <button onclick="closeTipModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
@@ -527,7 +574,7 @@
                         <span class="lang-fi">Kaikki linkit</span>
                         <span class="lang-en">All Links</span>
                     </h3>
-                    <div class="flex gap-2 items-start flex-shrink-0">
+                    <div class="flex gap-2 items-center flex-shrink-0">
                         <button onclick="openAllLinksFullPage()" class="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors" title="Open in full page">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
@@ -535,14 +582,14 @@
                             <span class="hidden sm:inline lang-fi">Koko sivu</span>
                             <span class="hidden sm:inline lang-en">Full Page</span>
                         </button>
-                        <button onclick="downloadAllLinksPDF()" class="inline-flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
+                        <button onclick="downloadAllLinksPDF()" class="inline-flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors" title="Download as PDF">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            PDF
+                            <span class="hidden sm:inline">PDF</span>
                         </button>
                         <button onclick="closeAllLinksModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
@@ -581,7 +628,7 @@
                         <span class="lang-fi">Yhteystiedot</span>
                         <span class="lang-en">Contact Information</span>
                     </h3>
-                    <div class="flex gap-2 items-start flex-shrink-0">
+                    <div class="flex gap-2 items-center flex-shrink-0">
                         <button onclick="openContactsFullPage()" class="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors" title="Open in full page">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
@@ -593,10 +640,10 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            PDF
+                            <span class="hidden sm:inline">PDF</span>
                         </button>
                         <button onclick="closeContactsModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
@@ -631,7 +678,7 @@
                         <span class="lang-fi">Lähteet</span>
                         <span class="lang-en">Sources</span>
                     </h3>
-                    <div class="flex gap-2 items-start flex-shrink-0">
+                    <div class="flex gap-2 items-center flex-shrink-0">
                         <button onclick="openSourcesFullPage()" class="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors" title="Open in full page">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
@@ -643,10 +690,10 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            PDF
+                            <span class="hidden sm:inline">PDF</span>
                         </button>
                         <button onclick="closeSourcesModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
@@ -685,6 +732,220 @@
             </p>
         </div>
     </footer>
+
+    <!-- Roadmap Modal -->
+    <div id="roadmapModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onclick="if(event.target === this) closeRoadmapModal()">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col" onclick="event.stopPropagation();">
+            <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                    <span class="lang-fi">Tuleva sisältö</span>
+                    <span class="lang-en">Upcoming Content</span>
+                </h2>
+                <button onclick="closeRoadmapModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="overflow-y-auto p-6" id="roadmapContent">
+                <!-- Content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div id="aboutModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onclick="if(event.target === this) closeAboutModal()">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col" onclick="event.stopPropagation();">
+            <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                    <span class="lang-fi">Tietoja sivusta</span>
+                    <span class="lang-en">About This Page</span>
+                </h2>
+                <button onclick="closeAboutModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="overflow-y-auto p-6">
+                <div class="prose dark:prose-invert max-w-none">
+                    <p class="text-gray-700 dark:text-gray-300 lang-fi">
+                        Tämä sivusto on kokoelma hyödyllisiä linkkejä, yhteystietoja ja resursseja erityisesti tamperelaisille, mutta myös muille. Sivusto on rakennettu helpottamaan arkea ja löytämään tarvittavat tiedot nopeasti.
+                    </p>
+                    <p class="text-gray-700 dark:text-gray-300 lang-en">
+                        This website is a collection of useful links, contact information, and resources especially for Tampere residents, but also for others. The site is built to make everyday life easier and find needed information quickly.
+                    </p>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mt-4 mb-2 lang-fi">Ominaisuudet</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mt-4 mb-2 lang-en">Features</h3>
+                    <ul class="text-gray-700 dark:text-gray-300 space-y-2">
+                        <li class="lang-fi">• Kategorioitu sisältö helpompaan navigointiin</li>
+                        <li class="lang-en">• Categorized content for easier navigation</li>
+                        <li class="lang-fi">• Tumma tila silmien säästämiseksi</li>
+                        <li class="lang-en">• Dark mode to save your eyes</li>
+                        <li class="lang-fi">• PDF-lataukset offline-käyttöä varten</li>
+                        <li class="lang-en">• PDF downloads for offline use</li>
+                        <li class="lang-fi">• Kaksikielinen (suomi/englanti)</li>
+                        <li class="lang-en">• Bilingual (Finnish/English)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onclick="if(event.target === this) closeFeedbackModal()">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col" onclick="event.stopPropagation();">
+            <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                    <span class="lang-fi">Palaute</span>
+                    <span class="lang-en">Feedback</span>
+                </h2>
+                <button onclick="closeFeedbackModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="overflow-y-auto p-6">
+                <div class="space-y-4">
+                    <p class="text-gray-700 dark:text-gray-300 lang-fi">
+                        Haluamme kuulla mielipiteesi! Jos sinulla on ehdotuksia, kysymyksiä tai haluat ilmoittaa virheestä, ota yhteyttä.
+                    </p>
+                    <p class="text-gray-700 dark:text-gray-300 lang-en">
+                        We want to hear from you! If you have suggestions, questions, or want to report an error, please get in touch.
+                    </p>
+                    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                        <h3 class="font-semibold text-gray-900 dark:text-white mb-2 lang-fi">Lähetä palaute</h3>
+                        <h3 class="font-semibold text-gray-900 dark:text-white mb-2 lang-en">Send Feedback</h3>
+                        <p class="text-gray-700 dark:text-gray-300 text-sm">
+                            <span class="lang-fi">Lisää tähän haluamasi palautelomake tai yhteystiedot</span>
+                            <span class="lang-en">Add your preferred feedback form or contact information here</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle menu dropdown
+        function toggleMenu() {
+            const dropdown = document.getElementById('menuDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('menuDropdown');
+            const menuButton = event.target.closest('button[onclick="toggleMenu()"]');
+            
+            if (!menuButton && !dropdown.contains(event.target)) {
+                dropdown?.classList.add('hidden');
+            }
+        });
+
+        // Show/close About modal
+        function showAboutModal() {
+            const modal = document.getElementById('aboutModal');
+            if (modal) {
+                // Update content from markdown if available
+                if (window.roadmapData && window.roadmapData.about) {
+                    const currentLang = window.currentLang || 'fi';
+                    const aboutContent = currentLang === 'fi' ? window.roadmapData.about.fi : window.roadmapData.about.en;
+                    const contentDiv = modal.querySelector('.overflow-y-auto .prose');
+                    if (contentDiv && aboutContent) {
+                        // Convert markdown to simple HTML
+                        const htmlContent = convertMarkdownToHTML(aboutContent);
+                        contentDiv.innerHTML = htmlContent;
+                    }
+                }
+                modal.classList.remove('hidden');
+                if (typeof applyLanguage === 'function') applyLanguage();
+            }
+        }
+
+        function closeAboutModal() {
+            const modal = document.getElementById('aboutModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        window.showAboutModal = showAboutModal;
+        window.closeAboutModal = closeAboutModal;
+
+        // Show/close Feedback modal
+        function showFeedbackModal() {
+            const modal = document.getElementById('feedbackModal');
+            if (modal) {
+                // Update content from markdown if available
+                if (window.roadmapData && window.roadmapData.feedback) {
+                    const currentLang = window.currentLang || 'fi';
+                    const feedbackContent = currentLang === 'fi' ? window.roadmapData.feedback.fi : window.roadmapData.feedback.en;
+                    const contentDiv = modal.querySelector('.overflow-y-auto .space-y-4');
+                    if (contentDiv && feedbackContent) {
+                        // Convert markdown to simple HTML
+                        const htmlContent = convertMarkdownToHTML(feedbackContent);
+                        contentDiv.innerHTML = htmlContent;
+                    }
+                }
+                modal.classList.remove('hidden');
+                if (typeof applyLanguage === 'function') applyLanguage();
+            }
+        }
+
+        function closeFeedbackModal() {
+            const modal = document.getElementById('feedbackModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        window.showFeedbackModal = showFeedbackModal;
+        window.closeFeedbackModal = closeFeedbackModal;
+
+        // ESC key to close modals
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const roadmapModal = document.getElementById('roadmapModal');
+                const aboutModal = document.getElementById('aboutModal');
+                const feedbackModal = document.getElementById('feedbackModal');
+                
+                if (roadmapModal && !roadmapModal.classList.contains('hidden')) {
+                    closeRoadmapModal();
+                } else if (aboutModal && !aboutModal.classList.contains('hidden')) {
+                    closeAboutModal();
+                } else if (feedbackModal && !feedbackModal.classList.contains('hidden')) {
+                    closeFeedbackModal();
+                }
+            }
+        });
+
+        // Simple markdown to HTML converter
+        function convertMarkdownToHTML(markdown) {
+            let html = markdown;
+            
+            // Headers
+            html = html.replace(/^### (.*?)$/gm, '<h3 class="text-lg font-semibold text-gray-900 dark:text-white mt-4 mb-2">$1</h3>');
+            html = html.replace(/^## (.*?)$/gm, '<h2 class="text-xl font-bold text-gray-900 dark:text-white mt-6 mb-3">$1</h2>');
+            
+            // Bold and italic
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            // Lists
+            html = html.replace(/^- (.*?)$/gm, '<li class="text-gray-700 dark:text-gray-300">$1</li>');
+            
+            // Wrap consecutive list items in ul
+            html = html.replace(/(<li.*?<\/li>\n?)+/g, '<ul class="list-disc list-inside space-y-1 mb-4">$&</ul>');
+            
+            // Paragraphs (lines that don't start with HTML tags)
+            html = html.split('\n\n').map(para => {
+                if (para.trim() && !para.trim().startsWith('<')) {
+                    return `<p class="text-gray-700 dark:text-gray-300 mb-4">${para.trim()}</p>`;
+                }
+                return para;
+            }).join('\n');
+            
+            return html;
+        }
+    </script>
 
     <script src="loader.js"></script>
     <script src="app.js"></script>

@@ -853,6 +853,10 @@ window.markdownToHtml = markdownToHtml;
     typeDefinitions = data.typeDefinitions;
     tagDefinitions = data.tagDefinitions;
     
+    // Load roadmap
+    const roadmapData = await loadRoadmapFromMarkdown();
+    window.roadmapData = roadmapData;
+    
     // Update global references
     window.contentData = contentData;
     window.mainTagDefinitions = mainTagDefinitions;
@@ -862,3 +866,111 @@ window.markdownToHtml = markdownToHtml;
     // Dispatch event when content is loaded
     window.dispatchEvent(new CustomEvent('contentLoaded', { detail: data }));
 })();
+
+async function loadRoadmapFromMarkdown() {
+    try {
+        const response = await fetch('content-info.md');
+        const markdown = await response.text();
+        return parseRoadmapContent(markdown);
+    } catch (error) {
+        if (typeof window !== 'undefined' && window.DEBUG_LOG) window.DEBUG_LOG('Error loading content info', error);
+        return { sections: [], about: '', feedback: '' };
+    }
+}
+
+function parseRoadmapContent(markdown) {
+    const lines = markdown.split('\n');
+    const sections = [];
+    let currentSection = null;
+    let currentMainSection = null; // Track ## level sections (Roadmap, About, Feedback)
+    let aboutFi = '';
+    let aboutEn = '';
+    let feedbackFi = '';
+    let feedbackEn = '';
+    let isReadingAboutFi = false;
+    let isReadingAboutEn = false;
+    let isReadingFeedbackFi = false;
+    let isReadingFeedbackEn = false;
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const trimmedLine = line.trim();
+        
+        // Main section header (## Roadmap, ## About FI, ## About EN, ## Feedback FI, ## Feedback EN)
+        if (trimmedLine.startsWith('## ')) {
+            const mainSectionName = trimmedLine.substring(3).trim();
+            
+            // Save previous section if in roadmap
+            if (currentSection && currentMainSection === 'Roadmap') {
+                sections.push(currentSection);
+            }
+            currentSection = null;
+            
+            // Set flags for content collection
+            isReadingAboutFi = mainSectionName === 'About FI';
+            isReadingAboutEn = mainSectionName === 'About EN';
+            isReadingFeedbackFi = mainSectionName === 'Feedback FI';
+            isReadingFeedbackEn = mainSectionName === 'Feedback EN';
+            currentMainSection = mainSectionName;
+            continue;
+        }
+        
+        // Collect About FI content
+        if (isReadingAboutFi && !trimmedLine.startsWith('Status:')) {
+            if (trimmedLine.startsWith('### ') || trimmedLine.startsWith('- ') || trimmedLine.startsWith('*') || trimmedLine.startsWith('**') || trimmedLine) {
+                aboutFi += line + '\n';
+            }
+            continue;
+        }
+        
+        // Collect About EN content
+        if (isReadingAboutEn && !trimmedLine.startsWith('Status:')) {
+            if (trimmedLine.startsWith('### ') || trimmedLine.startsWith('- ') || trimmedLine.startsWith('*') || trimmedLine.startsWith('**') || trimmedLine) {
+                aboutEn += line + '\n';
+            }
+            continue;
+        }
+        
+        // Collect Feedback FI content
+        if (isReadingFeedbackFi && !trimmedLine.startsWith('Status:')) {
+            if (trimmedLine.startsWith('### ') || trimmedLine.startsWith('- ') || trimmedLine.startsWith('*') || trimmedLine.startsWith('**') || trimmedLine) {
+                feedbackFi += line + '\n';
+            }
+            continue;
+        }
+        
+        // Collect Feedback EN content
+        if (isReadingFeedbackEn && !trimmedLine.startsWith('Status:')) {
+            if (trimmedLine.startsWith('### ') || trimmedLine.startsWith('- ') || trimmedLine.startsWith('*') || trimmedLine.startsWith('**') || trimmedLine) {
+                feedbackEn += line + '\n';
+            }
+            continue;
+        }
+        
+        // Roadmap subsection header (### Title)
+        if (trimmedLine.startsWith('### ') && currentMainSection === 'Roadmap') {
+            if (currentSection) {
+                sections.push(currentSection);
+            }
+            currentSection = {
+                title: trimmedLine.substring(4).trim(),
+                status: 'planned',
+                items: []
+            };
+        }
+        // Status line
+        else if (trimmedLine.startsWith('Status:') && currentSection) {
+            currentSection.status = trimmedLine.substring(7).trim();
+        }
+        // List item (format: "Finnish text | English text")
+        else if (trimmedLine.startsWith('- ') && currentSection) {
+            currentSection.items.push(trimmedLine.substring(2).trim());
+        }
+    }
+    
+    return { 
+        sections, 
+        about: { fi: aboutFi.trim(), en: aboutEn.trim() }, 
+        feedback: { fi: feedbackFi.trim(), en: feedbackEn.trim() } 
+    };
+}

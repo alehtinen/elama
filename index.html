@@ -875,9 +875,8 @@
                     const currentLang = window.currentLang || 'fi';
                     const aboutContent = currentLang === 'fi' ? window.roadmapData.about.fi : window.roadmapData.about.en;
                     const contentDiv = modal.querySelector('.overflow-y-auto .prose');
-                    if (contentDiv && aboutContent) {
-                        // Convert markdown to simple HTML
-                        const htmlContent = convertMarkdownToHTML(aboutContent);
+                    if (contentDiv && aboutContent && window.markdownToHtml) {
+                        const htmlContent = window.markdownToHtml(aboutContent);
                         contentDiv.innerHTML = htmlContent;
                     }
                 }
@@ -904,8 +903,8 @@
                     const feedbackContent = currentLang === 'fi' ? window.roadmapData.feedback.fi : window.roadmapData.feedback.en;
                     const contentDiv = modal.querySelector('.overflow-y-auto .space-y-4');
                     if (contentDiv && feedbackContent) {
-                        // Convert markdown to simple HTML
-                        const htmlContent = convertMarkdownToHTML(feedbackContent);
+                        // Convert markdown to HTML using full markdown parser
+                        const htmlContent = window.markdownToHtml ? window.markdownToHtml(feedbackContent) : feedbackContent;
                         contentDiv.innerHTML = htmlContent;
                     }
                 }
@@ -939,7 +938,7 @@
             }
         });
 
-        // Simple markdown to HTML converter
+        // Simple markdown to HTML converter with dark mode support
         function convertMarkdownToHTML(markdown) {
             let html = markdown;
             
@@ -948,14 +947,17 @@
             html = html.replace(/^## (.*?)$/gm, '<h2 class="text-xl font-bold text-gray-900 dark:text-white mt-6 mb-3">$1</h2>');
             
             // Bold and italic
-            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 dark:text-white">$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em class="text-gray-700 dark:text-gray-300">$1</em>');
+            
+            // Links
+            html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-600 dark:text-blue-400 hover:underline" target="_blank">$1</a>');
             
             // Lists
             html = html.replace(/^- (.*?)$/gm, '<li class="text-gray-700 dark:text-gray-300">$1</li>');
             
             // Wrap consecutive list items in ul
-            html = html.replace(/(<li.*?<\/li>\n?)+/g, '<ul class="list-disc list-inside space-y-1 mb-4">$&</ul>');
+            html = html.replace(/(<li.*?<\/li>\n?)+/g, '<ul class="list-disc list-inside space-y-1 mb-4 text-gray-700 dark:text-gray-300">$&</ul>');
             
             // Paragraphs (lines that don't start with HTML tags)
             html = html.split('\n\n').map(para => {
@@ -967,7 +969,37 @@
             
             return html;
         }
-    </script>
+        // Simple markdown to HTML converter with dark mode support
+        function convertMarkdownToHTML(markdown) {
+            let html = markdown;
+            
+            // Headers
+            html = html.replace(/^### (.*?)$/gm, '<h3 class="text-lg font-semibold text-gray-900 dark:text-white mt-4 mb-2">$1</h3>');
+            html = html.replace(/^## (.*?)$/gm, '<h2 class="text-xl font-bold text-gray-900 dark:text-white mt-6 mb-3">$1</h2>');
+            
+            // Bold and italic
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900 dark:text-white">$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em class="text-gray-700 dark:text-gray-300">$1</em>');
+            
+            // Links
+            html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-600 dark:text-blue-400 hover:underline" target="_blank">$1</a>');
+            
+            // Lists
+            html = html.replace(/^- (.*?)$/gm, '<li class="text-gray-700 dark:text-gray-300">$1</li>');
+            
+            // Wrap consecutive list items in ul
+            html = html.replace(/(<li.*?<\/li>\n?)+/g, '<ul class="list-disc list-inside space-y-1 mb-4 text-gray-700 dark:text-gray-300">$&</ul>');
+            
+            // Paragraphs (lines that don't start with HTML tags)
+            html = html.split('\n\n').map(para => {
+                if (para.trim() && !para.trim().startsWith('<')) {
+                    return `<p class="text-gray-700 dark:text-gray-300 mb-4">${para.trim()}</p>`;
+                }
+                return para;
+            }).join('\n');
+            
+            return html;
+        }    </script>
 
     <script src="loader.js"></script>
     <script src="app.js"></script>

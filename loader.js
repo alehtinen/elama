@@ -649,8 +649,8 @@ function markdownToHtml(text) {
     
     let html = text;
     
-    // Handle bold **text** FIRST (before splitting into paragraphs to avoid conflicts)
-    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    // Handle bold **text** FIRST
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong class="text-gray-900 dark:text-white">$1</strong>');
     
     // Split by double newlines for paragraphs
     const blocks = html.split('\n\n');
@@ -659,6 +659,12 @@ function markdownToHtml(text) {
     for (let i = 0; i < blocks.length; i++) {
         let block = blocks[i].trim();
         if (!block) continue;
+        
+        // Check if this is a horizontal rule (---)
+        if (block === '---') {
+            processedBlocks.push('<hr class="my-6 border-gray-300 dark:border-gray-600">');
+            continue;
+        }
         
         // Check if this is an Obsidian-style callout
         const calloutMatch = block.match(/^>\[!(info|question|note|quote|warning|tip|success|danger|error|bug|example|important)\](.*)$/im);
@@ -717,107 +723,110 @@ function markdownToHtml(text) {
         let currentListType = null; // 'numbered', 'bullet', or null
         
         for (const line of lines) {
-            // Check if line is a markdown header (####, #####, ######)
+            // Check if line is a markdown header (###, ####, #####, ######)
             const h6Match = line.match(/^######\s+(.+)$/);
             const h5Match = line.match(/^#####\s+(.+)$/);
             const h4Match = line.match(/^####\s+(.+)$/);
+            const h3Match = line.match(/^###\s+(.+)$/);
             
             // Check if line is bold-only (heading)
-            const isBoldOnly = line.match(/^<strong>.+<\/strong>$/);
+            const isBoldOnly = line.match(/^<strong.+<\/strong>$/);
             
             // Check if line is a list item
             const isNumbered = line.match(/^\d+\.\s/);
             const isBullet = line.match(/^[-*]\s/);
             
             if (h6Match) {
-                // Flush current list if any
                 if (currentList.length > 0) {
                     if (currentListType === 'numbered') {
-                        result.push(`<ol class="list-decimal list-inside my-4">${currentList.join('')}</ol>`);
+                        result.push(`<ol class="list-decimal list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ol>`);
                     } else if (currentListType === 'bullet') {
-                        result.push(`<ul class="list-disc list-inside my-4">${currentList.join('')}</ul>`);
+                        result.push(`<ul class="list-disc list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ul>`);
                     }
                     currentList = [];
                     currentListType = null;
                 }
                 result.push(`<h6 class="text-sm font-semibold mt-4 mb-2 text-gray-800 dark:text-gray-200">${h6Match[1]}</h6>`);
             } else if (h5Match) {
-                // Flush current list if any
                 if (currentList.length > 0) {
                     if (currentListType === 'numbered') {
-                        result.push(`<ol class="list-decimal list-inside my-4">${currentList.join('')}</ol>`);
+                        result.push(`<ol class="list-decimal list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ol>`);
                     } else if (currentListType === 'bullet') {
-                        result.push(`<ul class="list-disc list-inside my-4">${currentList.join('')}</ul>`);
+                        result.push(`<ul class="list-disc list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ol>`);
                     }
                     currentList = [];
                     currentListType = null;
                 }
                 result.push(`<h5 class="text-base font-semibold mt-4 mb-2 text-gray-800 dark:text-gray-200">${h5Match[1]}</h5>`);
             } else if (h4Match) {
-                // Flush current list if any
                 if (currentList.length > 0) {
                     if (currentListType === 'numbered') {
-                        result.push(`<ol class="list-decimal list-inside my-4">${currentList.join('')}</ol>`);
+                        result.push(`<ol class="list-decimal list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ol>`);
                     } else if (currentListType === 'bullet') {
-                        result.push(`<ul class="list-disc list-inside my-4">${currentList.join('')}</ul>`);
+                        result.push(`<ul class="list-disc list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ul>`);
                     }
                     currentList = [];
                     currentListType = null;
                 }
                 result.push(`<h4 class="text-lg font-semibold mt-4 mb-2 text-gray-900 dark:text-white">${h4Match[1]}</h4>`);
-            } else if (isBoldOnly) {
-                // Flush current list if any
+            } else if (h3Match) {
                 if (currentList.length > 0) {
                     if (currentListType === 'numbered') {
-                        result.push(`<ol class="list-decimal list-inside my-4">${currentList.join('')}</ol>`);
+                        result.push(`<ol class="list-decimal list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ol>`);
                     } else if (currentListType === 'bullet') {
-                        result.push(`<ul class="list-disc list-inside my-4">${currentList.join('')}</ul>`);
+                        result.push(`<ul class="list-disc list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ul>`);
                     }
                     currentList = [];
                     currentListType = null;
                 }
-                // Add bold text as paragraph
-                result.push(`<p>${line}</p>`);
+                result.push(`<h3 class="text-xl font-semibold mt-6 mb-3 text-gray-900 dark:text-white">${h3Match[1]}</h3>`);
+            } else if (isBoldOnly) {
+                if (currentList.length > 0) {
+                    if (currentListType === 'numbered') {
+                        result.push(`<ol class="list-decimal list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ol>`);
+                    } else if (currentListType === 'bullet') {
+                        result.push(`<ul class="list-disc list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ul>`);
+                    }
+                    currentList = [];
+                    currentListType = null;
+                }
+                result.push(`<p class="text-gray-700 dark:text-gray-300">${line}</p>`);
             } else if (isNumbered) {
-                // Flush if switching list types
                 if (currentListType === 'bullet' && currentList.length > 0) {
-                    result.push(`<ul class="list-disc list-inside my-4">${currentList.join('')}</ul>`);
+                    result.push(`<ul class="list-disc list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ul>`);
                     currentList = [];
                 }
                 currentListType = 'numbered';
                 const text = line.replace(/^\d+\.\s/, '').trim();
-                currentList.push(`<li>${text}</li>`);
+                currentList.push(`<li class="text-gray-700 dark:text-gray-300">${text}</li>`);
             } else if (isBullet) {
-                // Flush if switching list types
                 if (currentListType === 'numbered' && currentList.length > 0) {
-                    result.push(`<ol class="list-decimal list-inside my-4">${currentList.join('')}</ol>`);
+                    result.push(`<ol class="list-decimal list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ol>`);
                     currentList = [];
                 }
                 currentListType = 'bullet';
                 const text = line.replace(/^[-*]\s/, '').trim();
-                currentList.push(`<li>${text}</li>`);
+                currentList.push(`<li class="text-gray-700 dark:text-gray-300">${text}</li>`);
             } else {
-                // Flush current list if any
                 if (currentList.length > 0) {
                     if (currentListType === 'numbered') {
-                        result.push(`<ol class="list-decimal list-inside my-4">${currentList.join('')}</ol>`);
+                        result.push(`<ol class="list-decimal list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ol>`);
                     } else if (currentListType === 'bullet') {
-                        result.push(`<ul class="list-disc list-inside my-4">${currentList.join('')}</ul>`);
+                        result.push(`<ul class="list-disc list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ul>`);
                     }
                     currentList = [];
                     currentListType = null;
                 }
-                // Regular text
-                result.push(`<p>${line}</p>`);
+                result.push(`<p class="text-gray-700 dark:text-gray-300">${line}</p>`);
             }
         }
         
         // Flush any remaining list
         if (currentList.length > 0) {
             if (currentListType === 'numbered') {
-                result.push(`<ol class="list-decimal list-inside my-4">${currentList.join('')}</ol>`);
+                result.push(`<ol class="list-decimal list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ol>`);
             } else if (currentListType === 'bullet') {
-                result.push(`<ul class="list-disc list-inside my-4">${currentList.join('')}</ul>`);
+                result.push(`<ul class="list-disc list-inside my-4 text-gray-700 dark:text-gray-300">${currentList.join('')}</ul>`);
             }
         }
         
@@ -827,7 +836,7 @@ function markdownToHtml(text) {
     html = processedBlocks.join('\n');
     
     // Handle italic *text* (AFTER bold and lists to avoid conflicts)
-    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    html = html.replace(/\*(.+?)\*/g, '<em class="text-gray-700 dark:text-gray-300">$1</em>');
     
     return html;
 }
@@ -883,89 +892,102 @@ function parseRoadmapContent(markdown) {
     const sections = [];
     let currentSection = null;
     let currentMainSection = null; // Track ## level sections (Roadmap, About, Feedback)
+    let currentSubSection = null; // Track ### level sections (About FI, About EN, etc.)
     let aboutFi = '';
     let aboutEn = '';
     let feedbackFi = '';
     let feedbackEn = '';
-    let isReadingAboutFi = false;
-    let isReadingAboutEn = false;
-    let isReadingFeedbackFi = false;
-    let isReadingFeedbackEn = false;
+    let isCollectingContent = false;
+    let targetContent = null; // Which content are we collecting: 'aboutFi', 'aboutEn', 'feedbackFi', 'feedbackEn'
     
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         const trimmedLine = line.trim();
         
-        // Main section header (## Roadmap, ## About FI, ## About EN, ## Feedback FI, ## Feedback EN)
+        // Main section header (## Roadmap, ## About, ## Feedback)
         if (trimmedLine.startsWith('## ')) {
             const mainSectionName = trimmedLine.substring(3).trim();
             
-            // Save previous section if in roadmap
+            // Save previous roadmap section if exists
             if (currentSection && currentMainSection === 'Roadmap') {
                 sections.push(currentSection);
             }
             currentSection = null;
             
-            // Set flags for content collection
-            isReadingAboutFi = mainSectionName === 'About FI';
-            isReadingAboutEn = mainSectionName === 'About EN';
-            isReadingFeedbackFi = mainSectionName === 'Feedback FI';
-            isReadingFeedbackEn = mainSectionName === 'Feedback EN';
             currentMainSection = mainSectionName;
+            currentSubSection = null;
+            isCollectingContent = false;
             continue;
         }
         
-        // Collect About FI content
-        if (isReadingAboutFi && !trimmedLine.startsWith('Status:')) {
-            if (trimmedLine.startsWith('### ') || trimmedLine.startsWith('- ') || trimmedLine.startsWith('*') || trimmedLine.startsWith('**') || trimmedLine) {
+        // Subsection header (### for both Roadmap items and About/Feedback subsections)
+        if (trimmedLine.startsWith('### ')) {
+            const subSectionName = trimmedLine.substring(4).trim();
+            
+            // If we're in Roadmap section, this is a roadmap item
+            if (currentMainSection === 'Roadmap') {
+                if (currentSection) {
+                    sections.push(currentSection);
+                }
+                currentSection = {
+                    title: subSectionName,
+                    status: 'planned',
+                    items: []
+                };
+            } else {
+                // Otherwise it's About FI/EN or Feedback FI/EN
+                currentSubSection = subSectionName;
+                isCollectingContent = false; // Wait for "Body FI" or "Body EN"
+            }
+            continue;
+        }
+        
+        // Status line (for Roadmap items)
+        if (trimmedLine.startsWith('Status:') && currentSection && currentMainSection === 'Roadmap') {
+            currentSection.status = trimmedLine.substring(7).trim();
+            continue;
+        }
+        
+        // List item (for Roadmap items)
+        if (trimmedLine.startsWith('- ') && currentSection && currentMainSection === 'Roadmap') {
+            currentSection.items.push(trimmedLine.substring(2).trim());
+            continue;
+        }
+        
+        // Body FI or Body EN marker
+        if (trimmedLine === 'Body FI' || trimmedLine === 'Body EN') {
+            isCollectingContent = true;
+            // Determine which content to collect based on current section
+            if (currentMainSection === 'About' && trimmedLine === 'Body FI') {
+                targetContent = 'aboutFi';
+            } else if (currentMainSection === 'About' && trimmedLine === 'Body EN') {
+                targetContent = 'aboutEn';
+            } else if (currentMainSection === 'Feedback' && trimmedLine === 'Body FI') {
+                targetContent = 'feedbackFi';
+            } else if (currentMainSection === 'Feedback' && trimmedLine === 'Body EN') {
+                targetContent = 'feedbackEn';
+            }
+            continue; // Don't add the "Body FI/EN" line itself
+        }
+        
+        // Collect content after Body FI/EN marker
+        if (isCollectingContent && targetContent) {
+            // Add line to appropriate content variable
+            if (targetContent === 'aboutFi') {
                 aboutFi += line + '\n';
-            }
-            continue;
-        }
-        
-        // Collect About EN content
-        if (isReadingAboutEn && !trimmedLine.startsWith('Status:')) {
-            if (trimmedLine.startsWith('### ') || trimmedLine.startsWith('- ') || trimmedLine.startsWith('*') || trimmedLine.startsWith('**') || trimmedLine) {
+            } else if (targetContent === 'aboutEn') {
                 aboutEn += line + '\n';
-            }
-            continue;
-        }
-        
-        // Collect Feedback FI content
-        if (isReadingFeedbackFi && !trimmedLine.startsWith('Status:')) {
-            if (trimmedLine.startsWith('### ') || trimmedLine.startsWith('- ') || trimmedLine.startsWith('*') || trimmedLine.startsWith('**') || trimmedLine) {
+            } else if (targetContent === 'feedbackFi') {
                 feedbackFi += line + '\n';
-            }
-            continue;
-        }
-        
-        // Collect Feedback EN content
-        if (isReadingFeedbackEn && !trimmedLine.startsWith('Status:')) {
-            if (trimmedLine.startsWith('### ') || trimmedLine.startsWith('- ') || trimmedLine.startsWith('*') || trimmedLine.startsWith('**') || trimmedLine) {
+            } else if (targetContent === 'feedbackEn') {
                 feedbackEn += line + '\n';
             }
-            continue;
         }
-        
-        // Roadmap subsection header (### Title)
-        if (trimmedLine.startsWith('### ') && currentMainSection === 'Roadmap') {
-            if (currentSection) {
-                sections.push(currentSection);
-            }
-            currentSection = {
-                title: trimmedLine.substring(4).trim(),
-                status: 'planned',
-                items: []
-            };
-        }
-        // Status line
-        else if (trimmedLine.startsWith('Status:') && currentSection) {
-            currentSection.status = trimmedLine.substring(7).trim();
-        }
-        // List item (format: "Finnish text | English text")
-        else if (trimmedLine.startsWith('- ') && currentSection) {
-            currentSection.items.push(trimmedLine.substring(2).trim());
-        }
+    }
+    
+    // Don't forget to push the last section if it's a roadmap item
+    if (currentSection && currentMainSection === 'Roadmap') {
+        sections.push(currentSection);
     }
     
     return { 

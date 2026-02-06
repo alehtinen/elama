@@ -1177,6 +1177,32 @@ Body FI: Reseptisivustoilta löydät ruokaohjeita erilaisiin tilanteisiin ja tar
 
 Monilla sivustoilla voit rajata hakua myös ainesosan, ruokalajin tai valmistusajan mukaan.
 
+>[!info] - Blue information box
+
+>[!note] - Cyan note box
+
+>[!tip] - Green tip box
+
+>[!quote] - Gray quote box
+
+>[!warning] - Yellow warning box
+
+>[!success] - Green success box
+
+>[!danger] - Red danger box
+
+>[!error] - Red error box
+
+>[!question] - Purple question box
+
+>[!bug] - Red bug box
+
+>[!example] - Purple example box
+
+>[!important] - Orange important box
+
+
+
 Body EN: Recipe websites offer cooking instructions for different situations and needs.
 
 #### Useful search terms:

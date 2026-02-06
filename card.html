@@ -60,6 +60,26 @@
       </div>
     </div>
 
+    <!-- Tag Cards Modal (shows items with a specific tag) -->
+    <div id="tagCardsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[100]">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 id="tagCardsModalTitle" class="text-xl font-bold text-gray-900 dark:text-white flex-1"></h3>
+                    <button onclick="closeTagCardsModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <p id="tagCardsModalCount" class="text-sm text-gray-600 dark:text-gray-400 mb-4"></p>
+                <div id="tagCardsModalContent" class="space-y-2">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="loader.js"></script>
     <script src="app.js"></script>
     <script>

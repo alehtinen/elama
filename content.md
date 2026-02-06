@@ -974,7 +974,7 @@ Last Checked: 27.01.2026
 
 - Name: Milavida
   URL: https://www.museomilavida.fi/
-  URL Contact: https://www.museomilavida.fi/yhteystiedot
+  URL Contact: https://www.museomilavida.fi/etusivu/yhteystiedot/
   Description: Museo
 
 - Name: Työväenmuseo Werstas
@@ -1225,7 +1225,7 @@ Last Checked: 05.02.2026
 - Name: Alkon reseptit
   URL: https://www.alko.fi/juoma-ruoka/resepti
   Description: Alkon ruoka- ja juomareseptit
-  
+
 #### Links: Uutisten ja lehtien reseptisivustot | Recipes by News and papers
 
 - Name: IS Ruokala

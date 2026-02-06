@@ -296,11 +296,12 @@ Set up email alerts to get notified about new job openings.
 - `Updated:` - date in DD.MM.YYYY format
 - `Last Checked:` - date in DD.MM.YYYY format
 - `PDF:` - true (enables PDF download)
-- `Body FI:` - markdown content in Finnish
-- `Body EN:` - markdown content in English
+- `Body FI:` - markdown content in Finnish. One content card can have more than one of these. (Look for BBREAK)
+- `Body EN:` - markdown content in English. One content card can have more than one of these.
 - `#### Links:` sections with links
 - `#### Lähteet:` sources/citations section
 - `ID:` - optional short slug/id for this content card (alphanumeric, used for shared links). If omitted, the site generates one from the title.
+- `#### BBREAK:` add this between a link list and a secondary Body FI/EN part. Works as a content change indicator so that both secondary body's would show up correctly. This has to be added even on third and fourth Body EN.
 
 Examples:
 - `ID: uutissivut` (then link to this card with `index.html?card=uutissivut`)

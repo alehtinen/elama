@@ -739,6 +739,29 @@ window.addEventListener && window.addEventListener('unhandledrejection', functio
         window.DEBUG_LOG && window.DEBUG_LOG('info', `[DEBUG] Downloaded ${urls.length} URLs to all-links.txt`);
         console.log('[DEBUG] Download complete: all-links.txt');
         
+        // Strip debug=links from URL after download (convert to non-persistent debug mode if debug was used)
+        setTimeout(() => {
+          const params = new URLSearchParams(window.location.search);
+          const hadDebugLinks = params.get('debug') === 'links';
+          
+          if (hadDebugLinks) {
+            // Remove debug=links parameter
+            params.delete('debug');
+            
+            // If there were other params, keep them; if localStorage has debug enabled, add debug=1&persist=0
+            if (localStorage.getItem('debug') === '1') {
+              params.set('debug', '1');
+              params.set('persist', '0');
+            }
+            
+            const newSearch = params.toString();
+            const newUrl = window.location.pathname + (newSearch ? '?' + newSearch : '') + window.location.hash;
+            window.history.replaceState({}, '', newUrl);
+            
+            window.DEBUG_LOG && window.DEBUG_LOG('info', '[DEBUG] Stripped debug=links from URL');
+          }
+        }, 100);
+        
       } catch (e) {
         window.DEBUG_LOG && window.DEBUG_LOG('error', '[DEBUG] Error extracting URLs:', e);
         console.error('[DEBUG] Error details:', e);

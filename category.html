@@ -589,9 +589,11 @@
                 <!-- Tag filters container (hidden by default on all screens) -->
                 <div id="tagFiltersContainer" class="hidden">
                     <div class="flex justify-end items-center mb-3">
-                        <button id="multiSelectToggle" class="px-3 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-sm font-medium">
-                            <span class="lang-fi">Valitse useita</span>
-                            <span class="lang-en hidden">Multi-select</span>
+                        <button id="multiSelectToggle" class="px-3 py-1 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 text-sm font-medium">
+                            <span class="lang-fi multi-select-off">Valitse useita</span>
+                            <span class="lang-en multi-select-off">Multi-select</span>
+                            <span class="lang-fi multi-select-on hidden">Yksivalinta</span>
+                            <span class="lang-en multi-select-on hidden">Single-select</span>
                         </button>
                     </div>
                     <div id="tagFilters" class="flex flex-wrap gap-2">
@@ -639,6 +641,26 @@
                         <div class="flex flex-wrap gap-2 mb-4 mt-6" id="modalTags"></div>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-4" id="modalDate"></p>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tag Cards Modal (shows items with a specific tag) -->
+    <div id="tagCardsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[100]">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 id="tagCardsModalTitle" class="text-xl font-bold text-gray-900 dark:text-white flex-1"></h3>
+                    <button onclick="closeTagCardsModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <p id="tagCardsModalCount" class="text-sm text-gray-600 dark:text-gray-400 mb-4"></p>
+                <div id="tagCardsModalContent" class="space-y-2">
+                    <!-- Content will be populated by JavaScript -->
                 </div>
             </div>
         </div>
@@ -1098,6 +1120,12 @@
             generateCategoryNav();
             renderTagFilters();
             renderContent();
+            
+            // Set up multi-select toggle button (same as index.html)
+            const multiSelectToggle = document.getElementById('multiSelectToggle');
+            if (multiSelectToggle) {
+                multiSelectToggle.addEventListener('click', toggleMultiSelect);
+            }
         });
         
         // Download PDF for current category
@@ -1105,6 +1133,113 @@
             if (currentMainTag) {
                 downloadMainTagPDF(currentMainTag);
             }
+        }
+
+        // Toggle tag filters visibility
+        function toggleTagFilters() {
+            const container = document.getElementById('tagFiltersContainer');
+            if (!container) return;
+            
+            const isHidden = container.classList.contains('hidden');
+            
+            if (isHidden) {
+                container.classList.remove('hidden');
+                // Load tags from URL hash if present
+                loadFiltersFromURL();
+                renderTagFilters();
+            } else {
+                container.classList.add('hidden');
+                // Clear filters and URL hash when closing
+                activeFilters.clear();
+                updateURLHash();
+                renderTagFilters();
+                renderContent();
+            }
+        }
+        
+        // Toggle multi-select mode for category page (same as app.js)
+        function toggleMultiSelect() {
+            window.multiSelectMode = !window.multiSelectMode;
+            multiSelectMode = window.multiSelectMode; // Keep local var in sync if it exists
+            
+            const toggle = document.getElementById('multiSelectToggle');
+            if (toggle) {
+                const offSpans = toggle.querySelectorAll('.multi-select-off');
+                const onSpans = toggle.querySelectorAll('.multi-select-on');
+                
+                if (window.multiSelectMode) {
+                    // Show "Single-select" text and change color to indicate active state
+                    offSpans.forEach(span => span.classList.add('hidden'));
+                    onSpans.forEach(span => span.classList.remove('hidden'));
+                    toggle.classList.remove('bg-gray-200', 'dark:bg-gray-700');
+                    toggle.classList.add('bg-blue-500', 'dark:bg-blue-600', 'text-white');
+                } else {
+                    // Show "Multi-select" text and restore default color
+                    offSpans.forEach(span => span.classList.remove('hidden'));
+                    onSpans.forEach(span => span.classList.add('hidden'));
+                    toggle.classList.remove('bg-blue-500', 'dark:bg-blue-600', 'text-white');
+                    toggle.classList.add('bg-gray-200', 'dark:bg-gray-700');
+                }
+            }
+        }
+
+        // Render tag filter buttons (mirrors app.js logic but for category page)
+        function renderTagFilters() {
+            const container = document.getElementById('tagFilters');
+            const multiSelectToggle = document.getElementById('multiSelectToggle');
+            
+            if (!container || !window.tagDefinitions) return;
+            
+            // Collect all unique tags from items in current category (or all if no category)
+            const tagsInUse = new Set();
+            window.contentData.forEach(item => {
+                // Filter by category if one is selected
+                if (currentMainTag) {
+                    const itemMainTags = item.mainTags || [item.mainTag];
+                    if (!itemMainTags.includes(currentMainTag)) return;
+                }
+                
+                if (item.tags && Array.isArray(item.tags)) {
+                    item.tags.forEach(tag => tagsInUse.add(tag));
+                }
+            });
+            
+            // Clear and rebuild
+            container.innerHTML = '';
+            
+            // Render buttons for tags that are actually in use
+            Object.keys(window.tagDefinitions).forEach(tagId => {
+                if (!tagsInUse.has(tagId)) return;
+                
+                const tagDef = window.tagDefinitions[tagId];
+                const button = document.createElement('button');
+                
+                // Active state styling
+                if (activeFilters.has(tagId)) {
+                    button.className = 'px-4 py-2 rounded-lg font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2';
+                } else {
+                    button.className = 'px-4 py-2 rounded-lg font-medium transition-colors bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center gap-2';
+                }
+                
+                // Add icon if tag has one
+                if (tagDef.icon) {
+                    const iconSpan = document.createElement('span');
+                    iconSpan.className = 'flex-shrink-0 w-5 h-5';
+                    if (tagDef.icon.startsWith('http')) {
+                        iconSpan.innerHTML = `<img src="${tagDef.icon}" alt="" class="w-full h-full object-contain">`;
+                    } else {
+                        iconSpan.textContent = tagDef.icon;
+                    }
+                    button.appendChild(iconSpan);
+                }
+                
+                const textSpan = document.createElement('span');
+                textSpan.textContent = tagDef[currentLang];
+                button.appendChild(textSpan);
+                
+                button.onclick = () => toggleFilter(tagId);
+                container.appendChild(button);
+            });
         }
     </script>
 
